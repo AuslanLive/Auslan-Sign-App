@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Video Lookup</title>
+  <style>
+    .container {
+      width: 50%;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .input-box, .video-box {
+      margin: 20px 0;
+    }
+    video {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .error-message {
+      color: red;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Enter words to find videos</h1>
+
+    <div id="errorContainer" class="error-message"></div>
+
+    <div class="input-box">
+      <input type="text" id="wordInput" placeholder="Enter words separated by spaces" />
+      <button onclick="checkVideos()">Find Videos</button>
+    </div>
+
+    <div class="video-box" id="videoBox"></div>
+  </div>
+
+  <script>
+    let currentVideoIndex = 0;  
+    let videoWords = [];       
+
+    async function checkVideos() {
+      const wordInput = document.getElementById('wordInput').value.trim();
+      const videoBox = document.getElementById('videoBox');
+      const errorContainer = document.getElementById('errorContainer');
+      
+      errorContainer.innerHTML = '';
+      videoBox.innerHTML = '';
+      currentVideoIndex = 0;  
+      videoWords = [];        
+      if (!wordInput) {
+        alert('Please enter one or more words.');
+        return;
+      }
+
+//I know I should split the css html and js across 3 files but I didn't I just have too many videos attached to this
+      const words = wordInput.split(' ').map(word => word.replace(/\W/g, ''));
+
+      for (const word of words) {
+        if (word) { 
+          try {
+            const response = await fetch(`/video/${word}`);
+
+            if (response.ok) {
+              videoWords.push(word);
+            } else {
+              const errorMsg = `No video found for word: ${word}`;
+              errorContainer.innerHTML += `<p>${errorMsg}</p>`;
+            }
+
+          } catch (error) {
+            console.error(`Error fetching video for word "${word}":`, error);
+            const errorMsg = `Error fetching video for word: ${word}`;
+            errorContainer.innerHTML += `<p>${errorMsg}</p>`;
+          }
+        }
+      }
+
+      if (videoWords.length > 0) {
+        playVideo(videoWords[currentVideoIndex]);
+      }
+    }
+
+    function playVideo(word) {
+      const videoBox = document.getElementById('videoBox');
+      const videoElement = document.createElement('video');
+
+      videoElement.src = `/video/${word}`;
+      videoElement.controls = true;
+      videoElement.autoplay = true;  
+
+      videoBox.innerHTML = '';  
+      videoBox.appendChild(videoElement);
+
+      videoElement.addEventListener('ended', () => {
+        currentVideoIndex++;
+        if (currentVideoIndex < videoWords.length) {
+          playVideo(videoWords[currentVideoIndex]); 
+        } else {
+          videoBox.innerHTML = '<p>All videos have been played.</p>';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

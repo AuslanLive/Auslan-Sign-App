@@ -1,0 +1,6 @@
+Add all the python files here such:
+- model connector
+- result parser
+- input parser
+- frame cacher
+- pose annotation stuff

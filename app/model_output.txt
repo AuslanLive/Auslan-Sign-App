@@ -1,0 +1,209 @@
+
+Time: 1730118750.6721077, Phrase: 
+Time: 1730118752.169628, Phrase: 
+Time: 1730118753.6676517, Phrase: 
+Time: 1730118755.167953, Phrase: 
+Time: 1730118756.679596, Phrase: 
+Time: 1730118758.198064, Phrase: 
+Time: 1730119227.9917917, Phrase: 
+Time: 1730119229.4987497, Phrase: 
+Time: 1730119242.4125314, Phrase: 
+Time: 1730119364.7428877, Phrase: , cubbyhouse
+Time: 1730119366.251652, Phrase: , cubbyhouse
+Time: 1730119367.7610476, Phrase: , cubbyhouse
+Time: 1730119460.8491762, Phrase: , thirtyfive
+Time: 1730119462.349175, Phrase: , thirtyfive
+Time: 1730119463.8512874, Phrase: , thirtyfive
+Time: 1730119465.3682559, Phrase: , thirtyfive
+Time: 1730119466.8714569, Phrase: , thirtyfive
+Time: 1730119475.6602826, Phrase: , thirtyfive
+Time: 1730119477.1602335, Phrase: , thirtyfive
+Time: 1730119478.6626134, Phrase: , thirtyfive
+Time: 1730119480.179572, Phrase: , thirtyfive
+Time: 1730119481.685611, Phrase: , thirtyfive
+Time: 1730119483.2024858, Phrase: , thirtyfive
+Time: 1730119497.29857, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730119497.6021833, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730119499.1080947, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730119500.6169796, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730119502.1158943, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730119503.6326377, Phrase: Hello! Hello! Hello! It's me!
+Time: 1730167610.32958, Phrase: Swing, swing, swing, swing, swing, bright!
+Time: 1730167611.121624, Phrase: Swing, swing, swing, swing, swing, bright!
+Time: 1730167612.4177809, Phrase: Swing, swing, swing, swing, swing, bright!
+Time: 1730176453.8606098, Phrase: There are thirty-five swings. 
+Time: 1730176454.5597148, Phrase: There are thirty-five swings. 
+Time: 1730176455.5414965, Phrase: There are thirty-five swings. 
+Time: 1730176456.5578568, Phrase: There are thirty-five swings. 
+Time: 1730181623.4524555, Phrase: 
+Time: 1730181631.895321, Phrase: , cubbyhouse
+Time: 1730181632.8994071, Phrase: , cubbyhouse
+Time: 1730181633.929967, Phrase: , cubbyhouse
+Time: 1730181634.9589791, Phrase: , cubbyhouse
+Time: 1730181635.9705112, Phrase: , cubbyhouse
+Time: 1730181637.048693, Phrase: , cubbyhouse
+Time: 1730181638.1188965, Phrase: , cubbyhouse
+Time: 1730181639.1508327, Phrase: , cubbyhouse
+Time: 1730181649.2472298, Phrase: There are 35 cubbyhouses. 
+Time: 1730181649.8942134, Phrase: There are 35 cubbyhouses. 
+Time: 1730181650.9171963, Phrase: There are 35 cubbyhouses. 
+Time: 1730181651.9549377, Phrase: There are 35 cubbyhouses. 
+Time: 1730181652.9906697, Phrase: There are 35 cubbyhouses. 
+Time: 1730181654.0003996, Phrase: There are 35 cubbyhouses. 
+Time: 1730181655.0221415, Phrase: There are 35 cubbyhouses. 
+Time: 1730181671.5097623, Phrase: Press, swing, hello, hello, hello
+Time: 1730181672.7387114, Phrase: Press, swing, hello, hello, hello
+Time: 1730181674.0551205, Phrase: Press, swing, hello, hello, hello
+Time: 1730181675.075575, Phrase: Press, swing, hello, hello, hello
+Time: 1730181676.067391, Phrase: Press, swing, hello, hello, hello
+Time: 1730181677.07168, Phrase: Press, swing, hello, hello, hello
+Time: 1730181678.073513, Phrase: Press, swing, hello, hello, hello
+Time: 1730181679.0780404, Phrase: Press, swing, hello, hello, hello
+Time: 1730181680.0721433, Phrase: Press, swing, hello, hello, hello
+Time: 1730181681.0762148, Phrase: Press, swing, hello, hello, hello
+Time: 1730181682.0712779, Phrase: Press, swing, hello, hello, hello
+Time: 1730181683.0772822, Phrase: Press, swing, hello, hello, hello
+Time: 1730181684.069061, Phrase: Press, swing, hello, hello, hello
+Time: 1730181685.1077762, Phrase: Press, swing, hello, hello, hello
+Time: 1730181687.7655234, Phrase: Press, swing, hello, hello, hello
+Time: 1730181688.774837, Phrase: Press, swing, hello, hello, hello
+Time: 1730181919.7527854, Phrase: Press, swing, hello, hello, hello
+Time: 1730181920.8100264, Phrase: Press, swing, hello, hello, hello
+Time: 1730181921.975896, Phrase: Press, swing, hello, hello, hello
+Time: 1730181923.3095195, Phrase: Press, swing, hello, hello, hello
+Time: 1730181924.4124615, Phrase: Press, swing, hello, hello, hello
+Time: 1730181925.4292583, Phrase: Press, swing, hello, hello, hello
+Time: 1730181926.4979517, Phrase: Press, swing, hello, hello, hello
+Time: 1730181927.5534244, Phrase: Press, swing, hello, hello, hello
+Time: 1730181940.341749, Phrase: Thirty-five swings. 
+Time: 1730181941.0287092, Phrase: Thirty-five swings. 
+Time: 1730181942.0650253, Phrase: Thirty-five swings. 
+Time: 1730181943.0937474, Phrase: Thirty-five swings. 
+Time: 1730181953.8317218, Phrase: Thirty-five, thirty-five, thirty-five, thirty-five, thirty-five. 
+Time: 1730181954.4322758, Phrase: Thirty-five, thirty-five, thirty-five, thirty-five, thirty-five. 
+Time: 1730181955.4556406, Phrase: Thirty-five, thirty-five, thirty-five, thirty-five, thirty-five. 
+Time: 1730181956.475172, Phrase: Thirty-five, thirty-five, thirty-five, thirty-five, thirty-five. 
+Time: 1730181957.4709241, Phrase: Thirty-five, thirty-five, thirty-five, thirty-five, thirty-five. 
+Time: 1730181969.5476556, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181970.0645118, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181971.0643177, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181972.0985768, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181973.1317787, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181974.1392493, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181975.1320739, Phrase: The sentence could be: Hello, hello, from my cubbyhouse! 
+Time: 1730181987.6702678, Phrase: 1. Thirty-five as a word:
+Time: 1730181988.0287597, Phrase: 1. Thirty-five as a word:
+Time: 1730181989.091982, Phrase: 1. Thirty-five as a word:
+Time: 1730181990.1601684, Phrase: 1. Thirty-five as a word:
+Time: 1730181991.20289, Phrase: 1. Thirty-five as a word:
+Time: 1730182422.892946, Phrase: Hello. 
+Time: 1730182423.5918653, Phrase: Hello. 
+Time: 1730182424.5897264, Phrase: Hello. 
+Time: 1730182425.5871513, Phrase: Hello. 
+Time: 1730182426.595778, Phrase: Hello. 
+Time: 1730182438.752897, Phrase: Hello. 
+Time: 1730182439.3543556, Phrase: Hello. 
+Time: 1730182440.448277, Phrase: Hello. 
+Time: 1730182441.4546485, Phrase: Hello. 
+Time: 1730182442.4377537, Phrase: Hello. 
+Time: 1730182443.449799, Phrase: Hello. 
+Time: 1730182444.4621558, Phrase: Hello. 
+Time: 1730182445.7468138, Phrase: Hello. 
+Time: 1730182447.030886, Phrase: Hello. 
+Time: 1730182448.2282355, Phrase: Hello. 
+Time: 1730182449.456164, Phrase: Hello. 
+Time: 1730182450.6600683, Phrase: Hello. 
+Time: 1730182451.72817, Phrase: Hello. 
+Time: 1730182452.724995, Phrase: Hello. 
+Time: 1730182453.7319105, Phrase: Hello. 
+Time: 1730182454.8402746, Phrase: Hello. 
+Time: 1730182455.8720622, Phrase: Hello. 
+Time: 1730182456.9444616, Phrase: Hello. 
+Time: 1730182458.1241233, Phrase: Hello. 
+Time: 1730182459.1954315, Phrase: Hello. 
+Time: 1730182460.1947982, Phrase: Hello. 
+Time: 1730182461.2497294, Phrase: Hello. 
+Time: 1730182472.5651863, Phrase: Thirty-five, thirty-five, and 35. 
+Time: 1730182473.1496296, Phrase: Thirty-five, thirty-five, and 35. 
+Time: 1730182474.1369576, Phrase: Thirty-five, thirty-five, and 35. 
+Time: 1730182475.1736484, Phrase: Thirty-five, thirty-five, and 35. 
+Time: 1730182476.23213, Phrase: Thirty-five, thirty-five, and 35. 
+Time: 1730198722.095382, Phrase: 
+Time: 1730198730.34198, Phrase: , cubbyhouse
+Time: 1730198731.971528, Phrase: , cubbyhouse
+Time: 1730198957.3351, Phrase: , cubbyhouse
+Time: 1730198958.4682932, Phrase: , cubbyhouse
+Time: 1730199071.5914629, Phrase: , cubbyhouse
+Time: 1730199072.9145422, Phrase: , cubbyhouse
+Time: 1730199074.173533, Phrase: , cubbyhouse
+Time: 1730199082.626647, Phrase: , swing
+Time: 1730199083.906497, Phrase: , swing
+Time: 1730199085.2051451, Phrase: , swing
+Time: 1730199095.3592389, Phrase: Hello. 
+Time: 1730199095.371758, Phrase: Hello. 
+Time: 1730199096.6778, Phrase: Hello. 
+Time: 1730199098.02404, Phrase: Hello. 
+Time: 1730199109.534977, Phrase: Option 1 (Simple):
+Time: 1730199109.827656, Phrase: Option 1 (Simple):
+Time: 1730199111.108581, Phrase: Option 1 (Simple):
+Time: 1730199112.405417, Phrase: Option 1 (Simple):
+Time: 1730199166.310272, Phrase: Hello, hello, hello. 
+Time: 1730199167.2124312, Phrase: Hello, hello, hello. 
+Time: 1730199168.4910378, Phrase: Hello, hello, hello. 
+Time: 1730199182.9377122, Phrase: Hello, hello, hello. 
+Time: 1730199184.224892, Phrase: Hello, hello, hello. 
+Time: 1730199200.541655, Phrase: Hello, hello, swung the cubbyhouse. 
+Time: 1730199201.394688, Phrase: Hello, hello, swung the cubbyhouse. 
+Time: 1730199202.7136772, Phrase: Hello, hello, swung the cubbyhouse. 
+Time: 1730199214.599778, Phrase: There is no sentence to be formed as hello, cubbyhouse does not form a complete thought.  However, you could use these words to create a sentence like:I built a cubbyhouse, and said hello to my friends. 
+Time: 1730199215.1633332, Phrase: There is no sentence to be formed as hello, cubbyhouse does not form a complete thought.  However, you could use these words to create a sentence like:I built a cubbyhouse, and said hello to my friends. 
+Time: 1730199216.440821, Phrase: There is no sentence to be formed as hello, cubbyhouse does not form a complete thought.  However, you could use these words to create a sentence like:I built a cubbyhouse, and said hello to my friends. 
+Time: 1730199405.761102, Phrase: 
+Time: 1730199410.7322502, Phrase: , hello
+Time: 1730199411.807523, Phrase: , hello
+Time: 1730199412.899849, Phrase: , hello
+Time: 1730199421.697037, Phrase: , hello
+Time: 1730199422.959088, Phrase: , hello
+Time: 1730199424.339481, Phrase: , hello
+Time: 1730199425.676362, Phrase: , hello
+Time: 1730199438.9680681, Phrase: Hello, cubbyhouse!
+Time: 1730199440.138913, Phrase: Hello, cubbyhouse!
+Time: 1730199441.448318, Phrase: Hello, cubbyhouse!
+Time: 1730199581.509325, Phrase: Hello, cubbyhouse!
+Time: 1730199582.870274, Phrase: Hello, cubbyhouse!
+Time: 1730199592.739763, Phrase: Swing, hello, swing, she shouted, enjoying the rhythm of the playground.
+Time: 1730199593.6560361, Phrase: Swing, hello, swing, she shouted, enjoying the rhythm of the playground.
+Time: 1730199594.720448, Phrase: Swing, hello, swing, she shouted, enjoying the rhythm of the playground.
+Time: 1730199595.7444859, Phrase: Swing, hello, swing, she shouted, enjoying the rhythm of the playground.
+Time: 1730199646.0075362, Phrase: Swing, hello, swing, she shouted, enjoying the rhythm of the playground.
+Time: 1730199656.1761081, Phrase: , hello
+Time: 1730199657.474784, Phrase: , hello
+Time: 1730199658.7814589, Phrase: , hello
+Time: 1730199660.858697, Phrase: , hello
+Time: 1730199670.899193, Phrase: Hello, hello, swing! 
+Time: 1730199671.8076842, Phrase: Hello, hello, swing! 
+Time: 1730199673.090454, Phrase: Hello, hello, swing! 
+Time: 1730199997.318201, Phrase: Hello, hello, swing! 
+Time: 1730200004.071434, Phrase: Swing, swing. 
+Time: 1730200004.915452, Phrase: Swing, swing. 
+Time: 1730200005.965587, Phrase: Swing, swing. 
+Time: 1730200215.418175, Phrase: Swing, swing. 
+Time: 1730200216.7266932, Phrase: Swing, swing. 
+Time: 1730200225.671762, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200226.424501, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200227.428315, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200228.606712, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200230.007804, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200231.330313, Phrase: Hello, hello, swing the antenna. 
+Time: 1730200241.6854699, Phrase: Hello, hello, sprinkle. 
+Time: 1730200242.6271539, Phrase: Hello, hello, sprinkle. 
+Time: 1730200243.925941, Phrase: Hello, hello, sprinkle. 
+Time: 1730200315.2441878, Phrase: Hello, hello, cubbyhouse, cubbyhouse.  This is a grammatically correct sentence, but it doesn't convey much meaning.  It's possible that the sentence is intended to be playful or repetitive, but without context, it's hard to know for sure. 
+Time: 1730200315.8766289, Phrase: Hello, hello, cubbyhouse, cubbyhouse.  This is a grammatically correct sentence, but it doesn't convey much meaning.  It's possible that the sentence is intended to be playful or repetitive, but without context, it's hard to know for sure. 
+Time: 1730200317.159581, Phrase: Hello, hello, cubbyhouse, cubbyhouse.  This is a grammatically correct sentence, but it doesn't convey much meaning.  It's possible that the sentence is intended to be playful or repetitive, but without context, it's hard to know for sure. 
+Time: 1730886854.018432, Phrase: 
+Time: 1730886864.281826, Phrase: Hello, hello, swing.
+Time: 1730886864.914578, Phrase: Hello, hello, swing.
+Time: 1730886865.920086, Phrase: Hello, hello, swing.
+Time: 1731154137.5550451, Phrase: 
+Time: 1731154138.546586, Phrase: 

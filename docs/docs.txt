@@ -1,0 +1,1 @@
+#Folder for writing in Documentation regarding the functions of this app
