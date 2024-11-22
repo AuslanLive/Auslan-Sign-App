@@ -21,32 +21,6 @@ connectinator = Connectinator(model_path)
 def index():
     return render_template('keypoints.html')
 
-
-@app.route("/cam_model_test")
-async def model_test():
-    start_time = time()
-
-    def get_model_result(data, time_):
-        result = connectinator.predict_model(data)
-
-        print(result)
-        print("time " + str(time() - time_))
-
-        return result
-
-    sally_test_data = np.load(
-        r"C:\Users\camch\Documents\GitHub\Auslan-sign-app\app\sally_shingata.npy")
-    print(await get_model_result(sally_test_data, start_time))
-
-    # Fails
-    cubby_test_data = np.load(
-        r"C:\Users\camch\Documents\GitHub\Auslan-sign-app\app\cubbyhouse_shingata.npy")
-    print(await get_model_result(cubby_test_data, start_time))
-    print(type(cubby_test_data))
-    print("final time " + str(time() - start_time))
-    return render_template('index.html')
-
-
 @app.route('/sign_to_text')
 def run_text_to_sign():
     return render_template('text_to_sign.html')

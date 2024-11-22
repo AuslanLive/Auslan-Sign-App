@@ -49,7 +49,8 @@ class ResultsParser:
 
             # print("GETTING RESULT")
             response = self.model.generate_content(
-                "Convert these words into a correct English sentence, each of the words are separated by a comma and wrap the phrase in **: " + best_model_phrase)
+                "Convert these words into a correct English sentence, each of the words are separated by a comma and wrap the phrase in **: " + best_model_phrase
+                )
 
             # Parse the response
             response_dict = response.to_dict()
