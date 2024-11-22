@@ -220,3 +220,21 @@ time: 1730886855.9852412, predict:"{'model_output': [['hello', 0.5725463], ['swi
 
 time: 1730886856.916082, predict:"{'model_output': [['swing', 0.321247], ['hello', 0.13248505], ['me', 0.10789219], ['bright', 0.0692364], ['doorbell', 0.059518907], ['see', 0.055459395], ['invite', 0.028442843], ['yes', 0.02160071], ['fine', 0.019809516], ['bad', 0.01130811]]}"
 
+time: 1732242075.5402281, predict:"{'model_output': [['swing', np.float32(0.31517294)], ['hello', np.float32(0.13946697)], ['bright', np.float32(0.072238386)], ['doorbell', np.float32(0.063178726)], ['me', np.float32(0.06010859)], ['see', np.float32(0.035187613)], ['invite', np.float32(0.031238468)], ['cubbyhouse', np.float32(0.021300146)], ['yes', np.float32(0.021021347)], ['fine', np.float32(0.018934438)]]}"
+
+time: 1732242075.585305, predict:"{'model_output': [['hello', np.float32(0.26234)], ['swing', np.float32(0.24987167)], ['bright', np.float32(0.08275856)], ['doorbell', np.float32(0.05808928)], ['me', np.float32(0.035838798)], ['see', np.float32(0.029931802)], ['cubbyhouse', np.float32(0.024044234)], ['wait', np.float32(0.021537013)], ['fine', np.float32(0.017953366)], ['invite', np.float32(0.017096791)]]}"
+
+time: 1732242076.28555, predict:"{'model_output': [['swing', np.float32(0.3029125)], ['hello', np.float32(0.118762136)], ['doorbell', np.float32(0.07799449)], ['me', np.float32(0.077152476)], ['bright', np.float32(0.065427326)], ['see', np.float32(0.04068682)], ['invite', np.float32(0.024333922)], ['cubbyhouse', np.float32(0.022417776)], ['yummy', np.float32(0.020148076)], ['press', np.float32(0.016530123)]]}"
+
+time: 1732242076.919926, predict:"{'model_output': [['swing', np.float32(0.272437)], ['hello', np.float32(0.25248584)], ['bright', np.float32(0.07476464)], ['doorbell', np.float32(0.054239366)], ['me', np.float32(0.038381204)], ['see', np.float32(0.03156008)], ['cubbyhouse', np.float32(0.029910268)], ['wait', np.float32(0.017780997)], ['invite', np.float32(0.017587708)], ['fine', np.float32(0.015311566)]]}"
+
+time: 1732242077.566422, predict:"{'model_output': [['hello', np.float32(0.27355084)], ['swing', np.float32(0.2683137)], ['doorbell', np.float32(0.061926898)], ['bright', np.float32(0.056504708)], ['me', np.float32(0.03531212)], ['cubbyhouse', np.float32(0.032634493)], ['see', np.float32(0.03032706)], ['press', np.float32(0.017711904)], ['wait', np.float32(0.016228417)], ['invite', np.float32(0.016107436)]]}"
+
+time: 1732242078.311898, predict:"{'model_output': [['swing', np.float32(0.33730716)], ['hello', np.float32(0.12776844)], ['doorbell', np.float32(0.0765019)], ['me', np.float32(0.044674665)], ['bright', np.float32(0.04346882)], ['cubbyhouse', np.float32(0.032391794)], ['press', np.float32(0.031231951)], ['invite', np.float32(0.023207473)], ['see', np.float32(0.023197787)], ['yummy', np.float32(0.02297338)]]}"
+
+time: 1732242079.63373, predict:"{'model_output': [['antenna', np.float32(0.57655793)], ['thirtyfive', np.float32(0.13061611)], ['swing', np.float32(0.0541712)], ['35', np.float32(0.046774823)], ['press', np.float32(0.027938282)], ['wave', np.float32(0.02589718)], ['cubbyhouse', np.float32(0.024575615)], ['bright', np.float32(0.012314337)], ['hello', np.float32(0.009550052)], ['mache', np.float32(0.008146984)]]}"
+
+time: 1732242080.46575, predict:"{'model_output': [['antenna', np.float32(0.5159464)], ['thirtyfive', np.float32(0.07435775)], ['swing', np.float32(0.056335468)], ['cubbyhouse', np.float32(0.041357495)], ['press', np.float32(0.039474785)], ['mache', np.float32(0.030505009)], ['auslan', np.float32(0.029322697)], ['35', np.float32(0.02860391)], ['wave', np.float32(0.025832178)], ['bright', np.float32(0.015855003)]]}"
+
+time: 1732242081.2973409, predict:"{'model_output': [['antenna', np.float32(0.6486007)], ['thirtyfive', np.float32(0.053870574)], ['swing', np.float32(0.04187965)], ['press', np.float32(0.03156923)], ['cubbyhouse', np.float32(0.02657482)], ['mache', np.float32(0.020711755)], ['auslan', np.float32(0.02008172)], ['35', np.float32(0.019872572)], ['wave', np.float32(0.018509151)], ['swimming', np.float32(0.0107826125)]]}"
+

@@ -10,6 +10,7 @@ import cv2
 from concurrent.futures import ProcessPoolExecutor
 from school.text_to_animation.spoken_to_signed.gloss_to_pose import concatenate_poses
 from dotenv import load_dotenv
+import ffmpeg
 
 # Required for subprocess.run
 import subprocess
@@ -42,6 +43,22 @@ firebase_admin.initialize_app(
     cred, {'storageBucket': 'auslan-194e5.appspot.com'})
 
 # Process pose file from Firebase Storage
+
+
+def convert_video(temp_video_path, output_path):
+    try:
+        # Run FFmpeg conversion
+        ffmpeg.input(temp_video_path).output(output_path, vcodec='libx264',
+                                             acodec='aac').run(capture_stdout=True, capture_stderr=True)
+        print("Video conversion completed successfully.")
+        return output_path
+    except ffmpeg.Error as e:
+        error_message = e.stderr.decode(
+            'utf-8') if e.stderr else "No error message."
+        print(f"Error during video conversion: {error_message}")
+        raise
+
+
 def process_pose_file(blob_name):
     try:
         bucket = storage.bucket()
@@ -60,8 +77,9 @@ def process_pose_file(blob_name):
         print(f"Error processing {blob_name}: {e}")
         return None
 
+
 # Concatenate poses and upload the video back to Firebase
-import subprocess
+
 
 def concatenate_poses_and_upload(blob_names, sentence):
     all_poses = []
@@ -73,10 +91,12 @@ def concatenate_poses_and_upload(blob_names, sentence):
     for pose, blob_name in zip(results, blob_names):
         if pose:
             all_poses.append(pose)
-            valid_filenames.append(os.path.splitext(os.path.basename(blob_name))[0])
+            valid_filenames.append(os.path.splitext(
+                os.path.basename(blob_name))[0])
 
     if len(all_poses) > 1:
-        concatenated_pose, frame_ranges = concatenate_poses(all_poses, valid_filenames)
+        concatenated_pose, frame_ranges = concatenate_poses(
+            all_poses, valid_filenames)
         visualizer = PoseVisualizer(concatenated_pose)
 
         # Create a temporary file to store the video
@@ -97,17 +117,8 @@ def concatenate_poses_and_upload(blob_names, sentence):
         # Convert the video to a more compatible format
         output_path = temp_video_path.replace('.mp4', '_converted.mp4')
         try:
-            # Capture output to check for errors
-
-            #! FFMPEG will need to be install on all computers
-            result = subprocess.run(['ffmpeg', '-i', temp_video_path, '-vcodec', 'libx264', '-acodec', 'aac', output_path], 
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-            if result.returncode != 0:
-                print(f"FFmpeg failed with the following error:\n{result.stderr}")
-                return  # Stop the function if FFmpeg failed
-            else:
-                print(f"Video successfully converted to: {output_path}")
+            convert_video(temp_video_path, output_path)
+            print(f"Video successfully converted to: {output_path}")
         except Exception as e:
             print(f"Error during video conversion: {e}")
             return  # Stop the function if an exception occurred
@@ -119,7 +130,8 @@ def concatenate_poses_and_upload(blob_names, sentence):
 
         # Optionally make the file publicly accessible (if needed)
         blob.make_public()
-        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {blob.public_url}")
+        print(f"Video uploaded to Firebase at 'output_videos/{
+              sentence}.mp4' and accessible at: {blob.public_url}")
 
         # Remove the temporary files after uploading
         os.remove(temp_video_path)
@@ -128,6 +140,8 @@ def concatenate_poses_and_upload(blob_names, sentence):
         print("Not enough .pose files to concatenate")
 
 # Check if a word has a corresponding pose file in Firebase
+
+
 def get_valid_blobs_from_sentence(sentence):
     words = sentence.split()  # Split the sentence into words
     valid_blob_names = []
@@ -142,9 +156,11 @@ def get_valid_blobs_from_sentence(sentence):
         if lowercase_blob.exists():
             valid_blob_names.append(word.lower())  # Add lowercase if exists
         elif capitalized_blob.exists():
-            valid_blob_names.append(word.capitalize())  # Add capitalized if exists
+            # Add capitalized if exists
+            valid_blob_names.append(word.capitalize())
         else:
-            print(f"Skipping word '{word}', no corresponding .pose file found.")
+            print(f"Skipping word '{
+                  word}', no corresponding .pose file found.")
 
     return valid_blob_names
 

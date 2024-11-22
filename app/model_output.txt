@@ -207,3 +207,26 @@ Time: 1730886864.914578, Phrase: Hello, hello, swing.
 Time: 1730886865.920086, Phrase: Hello, hello, swing.
 Time: 1731154137.5550451, Phrase: 
 Time: 1731154138.546586, Phrase: 
+Time: 1732242083.973151, Phrase: Hello, swing, swing, swing, swing, antenna, antenna, antenna.
+Time: 1732242084.8438709, Phrase: Hello, swing, swing, swing, swing, antenna, antenna, antenna.
+Time: 1732242086.149187, Phrase: Hello, swing, swing, swing, swing, antenna, antenna, antenna.
+Time: 1732242657.4557362, Phrase: 
+Time: 1732242658.753268, Phrase: 
+Time: 1732242660.073676, Phrase: 
+Time: 1732242661.352866, Phrase: 
+Time: 1732242662.9387982, Phrase: 
+Time: 1732242664.305142, Phrase: 
+Time: 1732242666.200293, Phrase: 
+Time: 1732242667.5382679, Phrase: 
+Time: 1732242668.962421, Phrase: 
+Time: 1732242670.401484, Phrase: 
+Time: 1732242671.797956, Phrase: 
+Time: 1732242675.080568, Phrase: 
+Time: 1732242679.20291, Phrase: 
+Time: 1732242679.231186, Phrase: 
+Time: 1732242679.25952, Phrase: 
+Time: 1732242680.3127072, Phrase: 
+Time: 1732242681.6518772, Phrase: 
+Time: 1732242682.987421, Phrase: 
+Time: 1732242684.250077, Phrase: 
+Time: 1732242685.556937, Phrase: 
