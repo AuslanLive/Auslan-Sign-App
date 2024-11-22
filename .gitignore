@@ -28,7 +28,11 @@ results_parser.cpython-312.pyc
 *.pyc
 *.env
 app/.env
+text_to_animation/**/__pycache__/
 
 # Model spam
 app/model_output.txt
 app/ball.txt
+
+# Environment
+venv
