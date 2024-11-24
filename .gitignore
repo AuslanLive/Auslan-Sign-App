@@ -36,3 +36,4 @@ app/ball.txt
 
 # Environment
 venv
+.venv

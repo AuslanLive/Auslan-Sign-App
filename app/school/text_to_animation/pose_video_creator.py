@@ -44,21 +44,6 @@ firebase_admin.initialize_app(
 
 # Process pose file from Firebase Storage
 
-
-def convert_video(temp_video_path, output_path):
-    try:
-        # Run FFmpeg conversion
-        ffmpeg.input(temp_video_path).output(output_path, vcodec='libx264',
-                                             acodec='aac').run(capture_stdout=True, capture_stderr=True)
-        print("Video conversion completed successfully.")
-        return output_path
-    except ffmpeg.Error as e:
-        error_message = e.stderr.decode(
-            'utf-8') if e.stderr else "No error message."
-        print(f"Error during video conversion: {error_message}")
-        raise
-
-
 def process_pose_file(blob_name):
     try:
         bucket = storage.bucket()
@@ -79,8 +64,6 @@ def process_pose_file(blob_name):
 
 
 # Concatenate poses and upload the video back to Firebase
-
-
 def concatenate_poses_and_upload(blob_names, sentence):
     all_poses = []
     valid_filenames = []
@@ -99,49 +82,45 @@ def concatenate_poses_and_upload(blob_names, sentence):
             all_poses, valid_filenames)
         visualizer = PoseVisualizer(concatenated_pose)
 
+        # Create a temporary directory to store the video frames
+        temp_video_dir = tempfile.mkdtemp()
+        frame_files = []
+
+        for i, frame in enumerate(visualizer.draw_frame_with_filename(frame_ranges)):
+            frame_file = os.path.join(temp_video_dir, f"frame_{i:04d}.png")
+            cv2.imwrite(frame_file, frame)
+            frame_files.append(frame_file)
+
         # Create a temporary file to store the video
-        temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-        temp_video_path = temp_video.name
+        temp_video_path = os.path.join(temp_video_dir, 'output.mp4')
 
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        # Can change video fps here
-        video_writer = cv2.VideoWriter(temp_video_path, fourcc, concatenated_pose.body.fps,
-                                       (concatenated_pose.header.dimensions.width, concatenated_pose.header.dimensions.height))
+        # Use FFmpeg to create the video
+        (
+            ffmpeg
+            .input(os.path.join(temp_video_dir, 'frame_%04d.png'), framerate=concatenated_pose.body.fps)
+            .output(temp_video_path, vcodec='libx264', pix_fmt='yuv420p')
+            .run(capture_stdout=True, capture_stderr=True)
+        )
 
-        for frame in visualizer.draw_frame_with_filename(frame_ranges):
-            video_writer.write(frame)
-
-        video_writer.release()
-        temp_video.close()
-
-        # Convert the video to a more compatible format
-        output_path = temp_video_path.replace('.mp4', '_converted.mp4')
-        try:
-            convert_video(temp_video_path, output_path)
-            print(f"Video successfully converted to: {output_path}")
-        except Exception as e:
-            print(f"Error during video conversion: {e}")
-            return  # Stop the function if an exception occurred
-
-        # Upload the converted video to Firebase Storage in the 'output_videos/' folder with the sentence as the filename
+        # Upload the video to Firebase Storage in the 'output_videos/' folder with the sentence as the filename
         bucket = storage.bucket()
         blob = bucket.blob(f"output_videos/{sentence}.mp4")
-        blob.upload_from_filename(output_path, content_type="video/mp4")
+        blob.upload_from_filename(temp_video_path, content_type="video/mp4")
 
         # Optionally make the file publicly accessible (if needed)
         blob.make_public()
-        print(f"Video uploaded to Firebase at 'output_videos/{
-              sentence}.mp4' and accessible at: {blob.public_url}")
+        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {blob.public_url}")
 
         # Remove the temporary files after uploading
+        for frame_file in frame_files:
+            os.remove(frame_file)
         os.remove(temp_video_path)
-        os.remove(output_path)
+        os.rmdir(temp_video_dir)
     else:
         print("Not enough .pose files to concatenate")
 
+
 # Check if a word has a corresponding pose file in Firebase
-
-
 def get_valid_blobs_from_sentence(sentence):
     words = sentence.split()  # Split the sentence into words
     valid_blob_names = []
@@ -159,8 +138,7 @@ def get_valid_blobs_from_sentence(sentence):
             # Add capitalized if exists
             valid_blob_names.append(word.capitalize())
         else:
-            print(f"Skipping word '{
-                  word}', no corresponding .pose file found.")
+            print(f"Skipping word '{word}', no corresponding .pose file found.")
 
     return valid_blob_names
 
