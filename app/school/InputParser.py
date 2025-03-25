@@ -144,6 +144,7 @@ class InputParser:
         self.call_func()
         return None, True
 
+    # IMPORTANT DO NOT DELETE
     def call_func(self):
         self.reset()
 

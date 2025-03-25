@@ -2,9 +2,6 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-import asyncio
-from flask import Flask, jsonify, request
-import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import re
 
@@ -26,7 +23,6 @@ class ResultsParser:
             self.model = genai.GenerativeModel("gemini-1.5-flash")
 
     def parse_model_output(self, model_output):
-        executor = ThreadPoolExecutor()
         print(model_output)
         if len(model_output) == 0:
             # return {"error": "No output from model"}

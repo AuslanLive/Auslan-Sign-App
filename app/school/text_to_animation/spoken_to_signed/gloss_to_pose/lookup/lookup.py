@@ -2,9 +2,9 @@ import os
 from collections import defaultdict
 from typing import List
 
-from  school.text_to_animation.pose_format import Pose
+from  app.school.text_to_animation.pose_format import Pose
 
-from school.text_to_animation.spoken_to_signed.text_to_gloss.types import Gloss
+from app.school.text_to_animation.spoken_to_signed.text_to_gloss.types import Gloss
 
 
 class PoseLookup:

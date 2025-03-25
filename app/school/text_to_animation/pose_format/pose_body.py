@@ -3,8 +3,8 @@ from typing import BinaryIO, List, Tuple
 
 import numpy as np
 
-from school.text_to_animation.pose_format.pose_header import PoseHeader
-from school.text_to_animation.pose_format.utils.reader import BufferReader, ConstStructs
+from app.school.text_to_animation.pose_format.pose_header import PoseHeader
+from app.school.text_to_animation.pose_format.utils.reader import BufferReader, ConstStructs
 
 POINTS_DIMS = (2, 1, 0, 3)
 

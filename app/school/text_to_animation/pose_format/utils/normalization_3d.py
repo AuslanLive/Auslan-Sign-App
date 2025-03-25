@@ -4,7 +4,7 @@ import numpy as np
 import numpy.ma as ma
 from scipy.spatial.transform import Rotation
 
-from  school.text_to_animation.pose_format.pose_header import PoseNormalizationInfo
+from  app.school.text_to_animation.pose_format.pose_header import PoseNormalizationInfo
 
 
 class PoseNormalizer:

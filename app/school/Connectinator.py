@@ -1,11 +1,11 @@
-from school.Model_Owner import Model
-from school.InputParser import InputParser
+from app.school.Model_Owner import Model
+from app.school.InputParser import InputParser
 import logging
-from school.results_parser import ResultsParser
-from school.results_parser import textAnimationTranslation
+from app.school.results_parser import ResultsParser
+from app.school.results_parser import textAnimationTranslation
 from time import time
 import json
-from school.text_to_animation.pose_video_creator import process_sentence
+from app.school.text_to_animation.pose_video_creator import process_sentence
 
 
 def create_logger():
@@ -91,7 +91,7 @@ class Connectinator:
 
         return processed_t2s_phrase
 
-    def get_trnasltio(self):
+    def get_transltion(self):
         return self.front_end_translation_variable
 
     def get_gem_flag(self):
@@ -127,10 +127,6 @@ class Connectinator:
                 f.write(json.dumps(str(predicted_result)))
                 f.write("\n\n")
                 
-            # print(self.end_phrase_flag, self.prevFlag)
-            # print('EBFORE THE APPEND')
-            # print(predicted_result)
-
             print(predicted_result['model_output'])
             self.full_phrase.append(predicted_result['model_output'])
 
@@ -168,9 +164,6 @@ class AsyncResultsList(list):
 
         # Reset the flag
         self.connectinator.logger.info("Parsing results asynchronously...")
-        # print("FORMATTING RESULTS")
-        # print(self.saved_results)
-        # print(self)
-        # print(len(self.saved_results))
+   
         # change to pass saves results
         self.connectinator.format_model_output(self.saved_results)

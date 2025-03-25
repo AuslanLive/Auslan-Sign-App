@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
+const API_BASE_URL = "http://localhost:8080";
+
+
 // Import necessary MediaPipe scripts
 const cameraUtilsUrl =
     "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
@@ -163,7 +166,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                 ];
 
                 // Send keypoints data to backend
-                fetch("http://127.0.0.1:8001/api/keypoints", {
+                fetch(API_BASE_URL + "/api/keypoints", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

@@ -270,3 +270,15 @@ time: 1732245596.8976696, predict:"{'model_output': [['me', np.float32(0.1777104
 
 time: 1732245598.5869052, predict:"{'model_output': [['swing', np.float32(0.3706449)], ['cubbyhouse', np.float32(0.13181451)], ['bright', np.float32(0.11506717)], ['press', np.float32(0.032524332)], ['bad', np.float32(0.018599037)], ['hunt', np.float32(0.018389998)], ['measurement', np.float32(0.0150109315)], ['hello', np.float32(0.014665414)], ['see', np.float32(0.012788431)], ['fine', np.float32(0.012722354)]]}"
 
+time: 1742717434.4138036, predict:"{'model_output': [['hello', np.float32(0.5362212)], ['see', np.float32(0.08133317)], ['swing', np.float32(0.06714974)], ['doorbell', np.float32(0.03818214)], ['bright', np.float32(0.03428609)], ['me', np.float32(0.031017534)], ['fine', np.float32(0.017489318)], ['cubbyhouse', np.float32(0.016506273)], ['yummy', np.float32(0.013617562)], ['look', np.float32(0.012691163)]]}"
+
+time: 1742717434.999803, predict:"{'model_output': [['hello', np.float32(0.7130457)], ['see', np.float32(0.047887765)], ['swing', np.float32(0.03016257)], ['bright', np.float32(0.025877612)], ['doorbell', np.float32(0.024765918)], ['look', np.float32(0.017729575)], ['fine', np.float32(0.013587312)], ['me', np.float32(0.013385788)], ['cubbyhouse', np.float32(0.013258963)], ['wait', np.float32(0.011586695)]]}"
+
+time: 1742717503.7501535, predict:"{'model_output': [['hello', np.float32(0.49787822)], ['see', np.float32(0.07333297)], ['swing', np.float32(0.06180368)], ['doorbell', np.float32(0.048966315)], ['bright', np.float32(0.036381677)], ['cubbyhouse', np.float32(0.030985013)], ['me', np.float32(0.02987864)], ['fine', np.float32(0.016804432)], ['yummy', np.float32(0.015844176)], ['wait', np.float32(0.0149646625)]]}"
+
+time: 1742717547.9460702, predict:"{'model_output': [['hello', np.float32(0.3574417)], ['cubbyhouse', np.float32(0.15492623)], ['swing', np.float32(0.14269048)], ['bright', np.float32(0.052245215)], ['see', np.float32(0.043863595)], ['doorbell', np.float32(0.037437852)], ['measurement', np.float32(0.02453529)], ['press', np.float32(0.016336361)], ['fine', np.float32(0.0116805835)], ['wait', np.float32(0.011600299)]]}"
+
+time: 1742717576.1917737, predict:"{'model_output': [['cubbyhouse', np.float32(0.23980409)], ['35', np.float32(0.19959414)], ['thirtyfive', np.float32(0.07853372)], ['swing', np.float32(0.06641139)], ['press', np.float32(0.0627908)], ['measurement', np.float32(0.049327664)], ['hello', np.float32(0.039012037)], ['possum', np.float32(0.025224423)], ['2', np.float32(0.018158795)], ['m', np.float32(0.013974855)]]}"
+
+time: 1742717582.0850394, predict:"{'model_output': [['hello', np.float32(0.17204848)], ['measurement', np.float32(0.12004883)], ['cubbyhouse', np.float32(0.085516445)], ['front', np.float32(0.08354508)], ['bright', np.float32(0.06323541)], ['swing', np.float32(0.061335076)], ['mache', np.float32(0.036329377)], ['swimming', np.float32(0.03238629)], ['press', np.float32(0.028652849)], ['shine', np.float32(0.021619381)]]}"
+

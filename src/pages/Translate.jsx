@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
 
 
+const API_BASE_URL = "http://localhost:8080";
 
 
 const TranslateApp = () => {
@@ -32,7 +33,7 @@ const TranslateApp = () => {
     const get_sign_trans = async () => {
         try {
             const response = await fetch(
-                "http://127.0.0.1:8001/get_sign_to_text",
+                API_BASE_URL + "/get_sign_to_text",
                 {
                     method: "GET",
                 }
@@ -55,7 +56,7 @@ const TranslateApp = () => {
     };
     const getGemFlag = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8001/getGemFlag", {
+            const response = await fetch(API_BASE_URL + "/getGemFlag", {
                 method: "GET",
             });
 
@@ -126,7 +127,7 @@ const TranslateApp = () => {
 
         // Step 1: API call to parse sentence to Auslan grammar
         try {
-            const response = await fetch("http://127.0.0.1:8001/t2s", {
+            const response = await fetch(API_BASE_URL + "/t2s", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ t2s_input: fixedSourceText }),

@@ -1,6 +1,6 @@
 from typing import Union
 
-from school.text_to_animation.pose_format.pose import Pose
+from app.school.text_to_animation.pose_format.pose import Pose
 
 from .concatenate import concatenate_poses
 from .lookup import PoseLookup, CSVPoseLookup

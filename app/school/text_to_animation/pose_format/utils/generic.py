@@ -2,11 +2,11 @@ from typing import Tuple
 
 import numpy as np
 from numpy import ma
-from  school.text_to_animation.pose_format import Pose
-from  school.text_to_animation.pose_format.numpy import NumPyPoseBody
-from  school.text_to_animation.pose_format.pose_header import PoseHeader, PoseHeaderDimensions
-from  school.text_to_animation.pose_format.utils.normalization_3d import PoseNormalizer
-from  school.text_to_animation.pose_format.utils.openpose import OpenPose_Components
+from app.school.text_to_animation.pose_format import Pose
+from app.school.text_to_animation.pose_format.numpy import NumPyPoseBody
+from app.school.text_to_animation.pose_format.pose_header import PoseHeader, PoseHeaderDimensions
+from app.school.text_to_animation.pose_format.utils.normalization_3d import PoseNormalizer
+from app.school.text_to_animation.pose_format.utils.openpose import OpenPose_Components
 
 
 def pose_hide_legs(pose: Pose):

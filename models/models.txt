@@ -1,1 +1,0 @@
-#Folder containing machine learning models for pose, hand, and sign identification

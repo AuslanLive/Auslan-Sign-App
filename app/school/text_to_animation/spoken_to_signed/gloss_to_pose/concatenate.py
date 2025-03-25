@@ -1,8 +1,8 @@
 from typing import List
 
 import numpy as np
-from school.text_to_animation.pose_format.pose import Pose
-from school.text_to_animation.pose_format.utils.generic import reduce_holistic, correct_wrists, pose_normalization_info
+from app.school.text_to_animation.pose_format.pose import Pose
+from app.school.text_to_animation.pose_format.utils.generic import reduce_holistic, correct_wrists, pose_normalization_info
 
 from .smoothing import smooth_concatenate_poses
 

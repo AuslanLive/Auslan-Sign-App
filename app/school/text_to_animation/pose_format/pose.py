@@ -4,13 +4,13 @@ from typing import BinaryIO, Dict, List, Tuple, Type
 import numpy as np
 import numpy.ma as ma
 
-from school.text_to_animation.pose_format.numpy import NumPyPoseBody
-from school.text_to_animation.pose_format.pose_body import PoseBody
-from school.text_to_animation.pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
+from app.school.text_to_animation.pose_format.numpy import NumPyPoseBody
+from app.school.text_to_animation.pose_format.pose_body import PoseBody
+from app.school.text_to_animation.pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions,
                                      PoseNormalizationInfo)
-from school.text_to_animation.pose_format.utils.fast_math import distance_batch
-from school.text_to_animation.pose_format.utils.reader import BufferReader
+from app.school.text_to_animation.pose_format.utils.fast_math import distance_batch
+from app.school.text_to_animation.pose_format.utils.reader import BufferReader
 
 
 class Pose:

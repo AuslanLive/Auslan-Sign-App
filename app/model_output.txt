@@ -256,3 +256,37 @@ Time: 1732245605.6416895, Phrase: Hello, hello, hello, hello, me, swing.
 Time: 1732245606.6439114, Phrase: Hello, hello, hello, hello, me, swing.
 Time: 1732245607.6551354, Phrase: Hello, hello, hello, hello, me, swing.
 Time: 1732245608.64644, Phrase: Hello, hello, hello, hello, me, swing.
+Time: 1742717439.3019257, Phrase: Hello, hello.
+Time: 1742717440.2980232, Phrase: Hello, hello.
+Time: 1742717442.0153434, Phrase: Hello, hello.
+Time: 1742717443.5486996, Phrase: Hello, hello.
+Time: 1742717445.1127322, Phrase: Hello, hello.
+Time: 1742717450.3163195, Phrase: Hello, hello.
+Time: 1742717451.8529005, Phrase: Hello, hello.
+Time: 1742717453.4184368, Phrase: Hello, hello.
+Time: 1742717454.982279, Phrase: Hello, hello.
+Time: 1742717456.51747, Phrase: Hello, hello.
+Time: 1742717458.0568285, Phrase: Hello, hello.
+Time: 1742717459.5944989, Phrase: Hello, hello.
+Time: 1742717500.5808787, Phrase: Hello, hello.
+Time: 1742717505.8234613, Phrase: , hello
+Time: 1742717508.883434, Phrase: , hello
+Time: 1742717510.420147, Phrase: , hello
+Time: 1742717512.0170503, Phrase: , hello
+Time: 1742717521.8028002, Phrase: , hello
+Time: 1742717523.3316047, Phrase: , hello
+Time: 1742717524.8702757, Phrase: , hello
+Time: 1742717526.4099822, Phrase: , hello
+Time: 1742717527.947164, Phrase: , hello
+Time: 1742717529.49886, Phrase: , hello
+Time: 1742717537.9953234, Phrase: , hello
+Time: 1742717554.1695168, Phrase: , hello
+Time: 1742717555.9259903, Phrase: , hello
+Time: 1742717591.5019665, Phrase: Hello, cubbyhouse.
+Time: 1742717592.7798789, Phrase: Hello, cubbyhouse.
+Time: 1742717594.6072743, Phrase: Hello, cubbyhouse.
+Time: 1742717596.2100196, Phrase: Hello, cubbyhouse.
+Time: 1742717657.6181247, Phrase: Hello, cubbyhouse.
+Time: 1742717659.1633182, Phrase: Hello, cubbyhouse.
+Time: 1742717663.7734375, Phrase: Hello, cubbyhouse.
+Time: 1742717665.3124356, Phrase: Hello, cubbyhouse.

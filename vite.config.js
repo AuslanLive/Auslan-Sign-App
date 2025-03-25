@@ -7,4 +7,8 @@ export default defineConfig({
   server: {
     historyApiFallback: true,
   },
+  root: "src", // 👈 Set the root to 'src' if index.html is inside src/
+  build: {
+    outDir: "../dist", // 👈 Ensure output goes outside src/
+  },
 })

@@ -43,6 +43,7 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.66.0
 grpcio==1.68.0
 grpcio-status==1.68.0
+gunicorn==23.0.0
 h5py==3.12.1
 httplib2==0.22.0
 idna==3.10
@@ -104,7 +105,7 @@ requests==2.32.3
 rich==13.9.4
 rpds-py==0.21.0
 rsa==4.9
-scipy==1.14.1
+scipy==1.13.1
 setuptools==75.1.0
 six==1.16.0
 soupsieve==2.6

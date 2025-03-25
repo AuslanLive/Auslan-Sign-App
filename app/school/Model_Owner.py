@@ -5,9 +5,10 @@ import json
 import numpy as np
 import tensorflow as tf
 import asyncio
+import os
 
 # Define a custom layer so that the model can load
-
+CLASS_LABEL_PATH = os.path.join('app', r"class_label_index.json")
 
 @tf.keras.utils.register_keras_serializable()
 class ExpandAxisLayer(tf.keras.layers.Layer):
@@ -31,7 +32,7 @@ class Model:
 
         # Just remember that indexed are strings
         # Opening the classes
-        with open("class_label_index.json") as f:
+        with open(CLASS_LABEL_PATH) as f:
             self.outputs = json.load(f)
 
         # Create model here

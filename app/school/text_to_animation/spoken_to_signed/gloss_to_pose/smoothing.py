@@ -2,8 +2,8 @@ from typing import List
 
 import numpy as np
 import scipy.signal
-from school.text_to_animation.pose_format import Pose
-from school.text_to_animation.pose_format.numpy import NumPyPoseBody
+from app.school.text_to_animation.pose_format import Pose
+from app.school.text_to_animation.pose_format.numpy import NumPyPoseBody
 from scipy.spatial.distance import cdist
 
 

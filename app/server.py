@@ -1,17 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from school.Connectinator import Connectinator
-import logging
-from markupsafe import escape
-import asyncio
-import numpy as np
-from time import time
+from app.school.Connectinator import Connectinator
+import os
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-model_path = 'loaded_bananamode_AAAAAAAAAAAAAAAAAAAAAAAAaa.keras'
+model_path = os.path.join('app', r'loaded_bananamode_AAAAAAAAAAAAAAAAAAAAAAAAaa.keras')
 
 # MAIN CLASS WHICH CONNECTS TO ALL THE BACK END STUFF
 connectinator = Connectinator(model_path)
@@ -58,7 +54,7 @@ def model_output_parse():
 
 @app.route('/get_sign_to_text', methods=["GET", "POST"])
 def get_sign_to_text():
-    translated_message = connectinator.get_trnasltio()
+    translated_message = connectinator.get_transltion()
 
     return jsonify({"translation": translated_message}), 200
 
@@ -91,4 +87,4 @@ def get_phrase():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8001, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

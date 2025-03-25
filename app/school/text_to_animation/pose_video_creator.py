@@ -3,12 +3,12 @@ import tempfile
 import json
 import firebase_admin
 from firebase_admin import credentials, storage
-from school.text_to_animation.pose_format.pose import Pose
-from school.text_to_animation.pose_format.pose_visualizer import PoseVisualizer
+from app.school.text_to_animation.pose_format.pose import Pose
+from app.school.text_to_animation.pose_format.pose_visualizer import PoseVisualizer
 import io
 import cv2
 from concurrent.futures import ProcessPoolExecutor
-from school.text_to_animation.spoken_to_signed.gloss_to_pose import concatenate_poses
+from app.school.text_to_animation.spoken_to_signed.gloss_to_pose import concatenate_poses
 from dotenv import load_dotenv
 import ffmpeg
 
