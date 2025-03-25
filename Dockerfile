@@ -23,9 +23,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend files
 COPY . ./
 
-# Set PYTHONPATH to include /app so you can import modules easily
-ENV PYTHONPATH=/app
-
 # Copy frontend build from previous stage
 COPY --from=frontend /front-end/dist /app/front-end/dist
 
