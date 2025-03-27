@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
 
 
-const API_BASE_URL = "http://0.0.0.0:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 
 const TranslateApp = () => {

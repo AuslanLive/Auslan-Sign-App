@@ -26,12 +26,17 @@ COPY . ./
 # Copy frontend build from previous stage
 COPY --from=frontend /front-end/dist /app/front-end/dist
 
-# Install `concurrently`
-RUN apt-get update && apt-get install -y nodejs npm && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
-RUN npm install -g concurrently serve
+# Install `supervisord` and required dependencies
+RUN apt-get update && apt-get install -y supervisor nodejs npm ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN npm install -g serve
 
-# Expose required ports
-EXPOSE 8080 5173
+# Create Supervisord config file
+RUN echo "[supervisord]\nnodaemon=true\n" > /etc/supervisord.conf && \
+    echo "[program:backend]\ncommand=gunicorn --bind 0.0.0.0:8080 --workers 2 -k gthread --threads 8 --timeout 600 app.server:app\nautostart=true\nautorestart=true\nstderr_logfile=/dev/stderr\nstdout_logfile=/dev/stdout\n" >> /etc/supervisord.conf && \
+    echo "[program:frontend]\ncommand=serve -s /app/front-end/dist -l 8080\nautostart=true\nautorestart=true\nstderr_logfile=/dev/stderr\nstdout_logfile=/dev/stdout\n" >> /etc/supervisord.conf
 
-# Start both frontend and backend using `concurrently`
-CMD concurrently "serve -s /app/front-end/dist -l 5173" "gunicorn --bind 0.0.0.0:8080 --workers 2 -k gthread --threads 8 --timeout 600 app.server:app"
+# Expose only the backend port
+EXPOSE 8080
+
+# Start Supervisor to manage both backend & frontend
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
