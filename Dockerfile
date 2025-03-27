@@ -39,4 +39,4 @@ RUN echo "[supervisord]\nnodaemon=true\n" > /etc/supervisord.conf && \
 EXPOSE 8080
 
 # Start Supervisor to manage both backend & frontend
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["supervisord", "-c", "supervisord.conf"]
