@@ -37,9 +37,6 @@ firebase_credentials = {
 if None in firebase_credentials.values():
     raise ValueError("Firebase credentials not found in .env file.")
 
-print("ENVIROMENBT VARIABLES", os.environ)
-print("FIRBASE", firebase_credentials.values())
-
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate(firebase_credentials)
 firebase_admin.initialize_app(

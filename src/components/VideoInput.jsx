@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+const API_BASE_URL = "/api"
 
 
 // Import necessary MediaPipe scripts
@@ -166,7 +166,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                 ];
 
                 // Send keypoints data to backend
-                fetch(API_BASE_URL + "/api/keypoints", {
+                fetch(API_BASE_URL + "/keypoints", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
