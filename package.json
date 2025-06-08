@@ -3,19 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "proxy": "http://localhost:8001/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "start": "concurrently \"npm run start_react\" \"npm run start_flask\"",
-    "start_react": "npm run dev",
-    "start_flask": "cd app && python server.py run"
+    "lint": "eslint ."
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "firebase": "^11.0.1",
     "react": "^18.3.1",

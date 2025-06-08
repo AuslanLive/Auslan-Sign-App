@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import { storage, ref, getDownloadURL } from "../firebase";
-import { data } from "autoprefixer";
 import namesData from '../namesdatapose.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';

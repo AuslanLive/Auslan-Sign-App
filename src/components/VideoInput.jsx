@@ -7,7 +7,7 @@ const API_BASE_URL = "/api"
 const cameraUtilsUrl =
     "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
 const controlUtilsUrl =
-    "https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js";
+    "https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js";   
 const drawingUtilsUrl =
     "https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js";
 const holisticUrl =
@@ -170,7 +170,6 @@ const VideoInput = React.forwardRef((props, ref) => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "localhost:5173",
                     },
                     body: JSON.stringify({ keypoints }), // Convert data to JSON
                 })
