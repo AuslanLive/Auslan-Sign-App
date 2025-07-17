@@ -234,6 +234,83 @@ def download_all_files():
     except Exception as e:
         print(f"Error during download process: {e}")
 
+def create_dict_from_json(json_file):
+    """Create a dictionary from a JSON file"""
+    try:
+        with open(json_file, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            if isinstance(data, dict):
+                print (f"Dictionary contains {len(data)} items")
+            elif isinstance(data, list):
+                print(f"List contains {len(data)} items")
+            else:
+                print(f"Data is of type {type(data)}")
+        
+        return data
+                
+    except FileNotFoundError:
+        print(f"Error: JSON file {json_file} not found")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error: JSON file {json_file} is not valid")
+        return None
+    except Exception as e:
+        print(f"Error reading JSON file {json_file}: {e}")
+        return None
+
+def classifyUnclearWords(clarified_dict):
+    """Rename Firebase files based on dictionary keys and values"""
+    if not clarified_dict:
+        print("Error: No dictionary provided")
+        return
+    
+    bucket = initialize_firebase()
+    if not bucket:
+        return
+    
+    try:
+        # Get all blobs from Firebase Storage
+        blobs = bucket.list_blobs()
+        
+        # Create a dictionary to track files that need renaming
+        rename_mapping = {}
+        
+        print(f"Searching for files matching {len(clarified_dict)} dictionary keys...")
+        print("-" * 60)
+        
+        # Check each blob against dictionary keys
+        for blob in blobs:
+            filename = blob.name
+            
+            # Check if filename exactly matches any key in the dictionary
+            for key, value in clarified_dict.items():
+                if filename == key + ".pose":
+                    new_filename = f"{key} ({value}).pose"
+                    rename_mapping[filename] = new_filename
+                    print(f"Found match: '{filename}' -> '{new_filename}'")
+                    break
+        
+        if rename_mapping:
+            print(f"\nFound {len(rename_mapping)} files to rename:")
+            print("-" * 60)
+            
+            for old_name, new_name in rename_mapping.items():
+                print(f"  {old_name}")
+                print(f"  -> {new_name}")
+                print()
+            
+            # Ask for confirmation
+            response = input(f"Proceed with renaming {len(rename_mapping)} files? (y/N): ")
+            if response.lower() == 'y':
+                batch_rename_files(rename_mapping)
+            else:
+                print("Operation cancelled")
+        else:
+            print("No files found matching dictionary keys")
+            
+    except Exception as e:
+        print(f"Error during classification process: {e}")
+
 def main():
     """Rename operations in Firebase Storage"""
     print("Firebase Storage File Manager")
@@ -242,16 +319,15 @@ def main():
     # download all files for backup if needed
     # download_all_files()
     
-    # Replace substring with spaces (default behavior)
-    # replace_substring_with_spaces("_20")
+    # Or replace any custom substring with whatever you want
+    # replace_substring("_", "'")
     
-    # Replace substring with custom replacement
-    # replace_substring_with_spaces("%20", " ")
-    # replace_substring_with_spaces("_old", "_new")
+    # create a dictionary from a JSON file
+    dictionary = create_dict_from_json("/Users/albert/Downloads/clarified_definitions_openai.json")
     
-    # Or replace any custom substring with spaces
-
-    replace_substring("_", "'")
+    # print(dictionary)
+    # use the dictionary to rename files in Firebase
+    classifyUnclearWords(dictionary)
 
 if __name__ == "__main__":
     main()
