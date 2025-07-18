@@ -69,3 +69,23 @@ html, body {
 .read-the-docs {
   color: #888;
 }
+
+/* Add this CSS either in a separate file or in a <style> tag in your component */
+textarea:hover,
+
+textarea:focus {
+    box-shadow: 
+        0 0 20px rgba(0, 123, 255, 0.3),
+        0 0 40px rgba(0, 123, 255, 0.2),
+        0 0 60px rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+}
+
+/* Add this CSS either in a separate file or in a <style> tag in your component */
+button:hover {
+    box-shadow: 
+        0 0 20px rgba(0, 123, 255, 0.4),
+        0 0 40px rgba(0, 123, 255, 0.3),
+        0 0 60px rgba(0, 123, 255, 0.2);
+    transform: translateY(-2px);
+}

@@ -170,7 +170,7 @@ const TranslateApp = () => {
             {mode === "videoToText" ? (
                 <>
                     <div style={styles.panel}>
-                        <h2>Sign</h2>
+                        <h2>Auslan</h2>
                         <VideoInput />
                     </div>
 
@@ -222,7 +222,7 @@ const TranslateApp = () => {
                     </div>
 
                     <div style={styles.panel}>
-                        <h2>Sign Video</h2>
+                        <h2>Auslan</h2>
                         {loading ? ( // Display loading animation if loading is true
                             <div style={styles.loadingPlaceholder}>
                                 {/* Loading... */}
@@ -285,6 +285,8 @@ const styles = {
         color: "#ffffff",
         border: "1px solid #555555",
         borderRadius: "8px",
+        transition: "box-shadow 0.3s ease, border-color 0.3s ease",
+        outline: "none",
     },
     buttons: {
         display: "flex",
@@ -292,7 +294,7 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
         color: "white",
-        gap: "10px",
+        gap: "30px",
     },
     button: {
         padding: "10px 20px",
@@ -302,6 +304,8 @@ const styles = {
         cursor: "pointer",
         border: "none", // Optional: removes default border for a cleaner look
         borderRadius: "5px", // Optional: adds rounded corners
+        transition: "box-shadow 0.3s ease, transform 0.2s ease",
+        outline: "none",
     },
     videoContainer: {
         width: "100%",
