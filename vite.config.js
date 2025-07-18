@@ -5,10 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    historyApiFallback: true,
-  },
-  root: "src", // 👈 Set the root to 'src' if index.html is inside src/
-  build: {
-    outDir: "../dist", // 👈 Ensure output goes outside src/
+    // historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5173', // Adjust to the backend server URL if needed
+        changeOrigin: true,
+      },
+    },
   },
 })

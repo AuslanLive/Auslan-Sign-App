@@ -58,17 +58,17 @@ def get_gem_flag():
 
 @app.route('/api/t2s', methods=['POST'])
 def t2s_parse():
-    # try:
-    t2s_input = request.get_json()
-    connectinator.logger.info('Received request on /t2s: %s', t2s_input)
+    try:
+        t2s_input = request.get_json()
+        connectinator.logger.info('Received request on /t2s: %s', t2s_input)
 
-    processed_t2s_phrase = connectinator.format_sign_text(
-        t2s_input['t2s_input'])
+        processed_t2s_phrase = connectinator.format_sign_text(
+            t2s_input['t2s_input'])
 
-    return jsonify({"message": processed_t2s_phrase}), 200
-    # except Exception as e:
-    #     connectinator.logger.error(f'Error processing request: {e}')
-    #     return jsonify({"error": "Internal Server Error. Check JSON Format"}), 500
+        return jsonify({"message": processed_t2s_phrase}), 200
+    except Exception as e:
+        connectinator.logger.error(f'Error processing request: {e}')
+        return jsonify({"error": "Internal Server Error. Check JSON Format"}), 500
 
 
 @app.route('/api/get_phrase')
@@ -77,4 +77,4 @@ def get_phrase():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5173)
