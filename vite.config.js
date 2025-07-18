@@ -6,9 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     // historyApiFallback: true,
+    port: 3173,
+
+    // set up a proxy to redirect API calls to the backend server
     proxy: {
       '/api': {
-        target: 'http://localhost:5173', // Adjust to the backend server URL if needed
+        target: 'http://localhost:5173', // Adjust to the backend server URL in server.py
         changeOrigin: true,
       },
     },
