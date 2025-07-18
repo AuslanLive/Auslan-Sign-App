@@ -4,6 +4,8 @@ import { storage, ref, getDownloadURL } from "../firebase";
 import namesData from '../namesdatapose.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
+import { styles } from '../styles/TranslateStyles';
+import '../styles/TranslateStyles.css';
 
 
 const API_BASE_URL = "/api"
@@ -163,33 +165,48 @@ const TranslateApp = () => {
     };
 
     // React code for UI rendering
-
     return (
         <div style={styles.container}>
-            <Toaster position="top-right" />
+            <Toaster 
+                position="top-right"
+                toastOptions={{
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        color: '#ffffff',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                    },
+                }}
+            />
             {mode === "videoToText" ? (
                 <>
                     <div style={styles.panel}>
-                        <h2>Auslan</h2>
-                        <VideoInput />
+                        <h2 style={styles.panelTitle}>Auslan</h2>
+                        <div style={styles.videoInputContainer}>
+                            <VideoInput />
+                        </div>
                     </div>
 
                     <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.button}>
-                            Swap
+                        <button onClick={handleSwap} style={styles.swapButton}>
+                            <div style={styles.buttonContent}>
+                                <span style={styles.swapIcon}>⇄</span>
+                                Swap
+                            </div>
                         </button>
                     </div>
 
                     <div style={styles.panel}>
-                        <h2>Text</h2>
-                        {loading ? ( // Display loading animation if loading is true
+                        <h2 style={styles.panelTitle}>Text</h2>
+                        {loading ? (
                             <div style={styles.loadingPlaceholder}>
-                                {/* Loading... */}
-                                <div className='spinner'></div>
+                                <div style={styles.spinner}></div>
+                                <p style={styles.loadingText}>Processing sign language...</p>
                             </div>
                         ) : (
                             <textarea
-                                placeholder='Translation will appear here'
+                                placeholder='Translation will appear here...'
                                 value={translatedText}
                                 readOnly
                                 style={styles.textarea}
@@ -200,9 +217,9 @@ const TranslateApp = () => {
             ) : (
                 <>
                     <div style={styles.panel}>
-                        <h2>Text</h2>
+                        <h2 style={styles.panelTitle}>Text</h2>
                         <textarea
-                            placeholder='Enter text to convert to sign language'
+                            placeholder='Enter text to convert to sign language...'
                             value={sourceText}
                             onChange={(e) => setSourceText(e.target.value)}
                             style={styles.textarea}
@@ -210,23 +227,29 @@ const TranslateApp = () => {
                     </div>
 
                     <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.button}>
-                            Swap
+                        <button onClick={handleSwap} style={styles.swapButton}>
+                            <div style={styles.buttonContent}>
+                                <span style={styles.swapIcon}>⇄</span>
+                                Swap
+                            </div>
                         </button>
                         <button
                             onClick={handleTextToVideo}
-                            style={styles.button}
+                            style={styles.translateButton}
                         >
-                            Translate
+                            <div style={styles.buttonContent}>
+                                <span style={styles.translateIcon}>✨</span>
+                                Translate
+                            </div>
                         </button>
                     </div>
 
                     <div style={styles.panel}>
-                        <h2>Auslan</h2>
-                        {loading ? ( // Display loading animation if loading is true
+                        <h2 style={styles.panelTitle}>Auslan</h2>
+                        {loading ? (
                             <div style={styles.loadingPlaceholder}>
-                                {/* Loading... */}
-                                <div className='spinner'></div>
+                                <div style={styles.spinner}></div>
+                                <p style={styles.loadingText}>Generating sign language video...</p>
                             </div>
                         ) : animatedSignVideo ? (
                             <div style={styles.videoContainer}>
@@ -243,7 +266,10 @@ const TranslateApp = () => {
                             </div>
                         ) : (
                             <div style={styles.videoPlaceholder}>
-                                Please type in a sentence and click translate!
+                                <div style={styles.placeholderIcon}>🎬</div>
+                                <p style={styles.placeholderText}>
+                                    Enter text and click translate to see the sign language video
+                                </p>
                             </div>
                         )}
                     </div>
@@ -251,102 +277,6 @@ const TranslateApp = () => {
             )}
         </div>
     );
-};
-
-const styles = {
-    container: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-around",
-        gap: "20px",
-        width: "100%",
-        margin: "0 auto",
-    },
-    panel: {
-        display: "flex",
-        flex: "1",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "600px",
-        height: "600px",
-        boxSizing: "border-box",
-        padding: "20px",
-    },
-    textarea: {
-        width: "530px",
-        height: "540px",
-        padding: "10px",
-        fontSize: "20px",
-        resize: "none",
-        boxSizing: "border-box",
-        backgroundColor: "#333333",
-        color: "#ffffff",
-        border: "1px solid #555555",
-        borderRadius: "8px",
-        transition: "box-shadow 0.3s ease, border-color 0.3s ease",
-        outline: "none",
-    },
-    buttons: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "white",
-        gap: "30px",
-    },
-    button: {
-        padding: "10px 20px",
-        fontSize: "20px",
-        backgroundColor: "#007bff", // Existing button background color
-        color: "#ffffff", // White text color
-        cursor: "pointer",
-        border: "none", // Optional: removes default border for a cleaner look
-        borderRadius: "5px", // Optional: adds rounded corners
-        transition: "box-shadow 0.3s ease, transform 0.2s ease",
-        outline: "none",
-    },
-    videoContainer: {
-        width: "100%",
-        maxWidth: "800px",
-        height: "auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        borderRadius: "8px",
-        color: "#ffffff",
-        backgroundColor: "#333333",
-    },
-    video: {
-        width: "100%",
-        height: "100%",
-        objectFit: "contain",
-    },
-    videoPlaceholder: {
-        width: "530px", // Full width placeholder
-        height: "540px", // Set a height for the placeholder
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#333333", // A background color for the placeholder
-        color: "darkgray",
-        borderRadius: "8px",
-    },
-    loadingPlaceholder: {
-        // New loading animation style
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "530px",
-        height: "540px",
-        fontSize: "20px",
-        color: "white",
-        backgroundColor: "#333333",
-        borderRadius: "8px",
-        border: "1px solid #555555",
-    },
 };
 
 export default TranslateApp;

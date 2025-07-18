@@ -1,11 +1,13 @@
 /* App.css */
 html, body {
   height: 100%;
+  width: 100%;
   margin: 0; /* Remove default margins */
   padding: 0; /* Remove default padding */
   background-color: #1a1a1a; /* Darker shade of gray */
   color: white; /* Set default text color to white */
   overflow-x: hidden; /* Prevent horizontal scroll due to overflow */
+  overflow-y: auto; /* Enable vertical scroll if needed */
 }
 
 #root {
@@ -15,8 +17,8 @@ html, body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .logo {
