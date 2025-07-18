@@ -311,6 +311,83 @@ def classifyUnclearWords(clarified_dict):
     except Exception as e:
         print(f"Error during classification process: {e}")
 
+def get_all_folders_with_urls():
+    """Get all folders in Firebase Storage and return their URL paths with file counts"""
+    bucket = initialize_firebase()
+    if not bucket:
+        return []
+    
+    try:
+        # Get all blobs from Firebase Storage
+        blobs = bucket.list_blobs()
+        
+        folders = set()  # Use set to avoid duplicates
+        folder_urls = {}
+        folder_file_counts = {}
+        
+        print("Scanning Firebase Storage for folders...")
+        print("-" * 60)
+        
+        # Check each blob to identify folders and count files
+        for blob in blobs:
+            blob_name = blob.name
+            
+            # Skip if this is a folder marker (ends with '/')
+            if blob_name.endswith('/'):
+                folder_path = blob_name[:-1]  # Remove trailing slash
+                folders.add(folder_path)
+                # Initialize file count for this folder if not exists
+                if folder_path not in folder_file_counts:
+                    folder_file_counts[folder_path] = 0
+                continue
+            
+            # Check if file is in a folder (contains '/')
+            if '/' in blob_name:
+                # Extract folder path (everything before the last '/')
+                folder_path = '/'.join(blob_name.split('/')[:-1])
+                folders.add(folder_path)
+                # Count files in this folder
+                folder_file_counts[folder_path] = folder_file_counts.get(folder_path, 0) + 1
+            else:
+                # File is in root directory
+                folder_file_counts['root'] = folder_file_counts.get('root', 0) + 1
+        
+        # Add root to folders if it has files
+        if 'root' in folder_file_counts:
+            folders.add('root')
+        
+        # Generate URLs for each folder and display info
+        for folder in sorted(folders):
+            file_count = folder_file_counts.get(folder, 0)
+            
+            if folder == 'root':
+                folder_url = f"gs://{bucket.name}/"
+                print(f"Folder: / (root)")
+            else:
+                folder_url = f"gs://{bucket.name}/{folder}/"
+                print(f"Folder: {folder}")
+            
+            print(f"URL: {folder_url}")
+            print(f"Files: {file_count}")
+            print()
+            
+            folder_urls[folder] = {
+                'url': folder_url,
+                'file_count': file_count
+            }
+        
+        if folders:
+            total_files = sum(folder_file_counts.values())
+            print(f"Found {len(folders)} folders with {total_files} total files in Firebase Storage")
+        else:
+            print("No folders found in Firebase Storage")
+        
+        return folder_urls
+        
+    except Exception as e:
+        print(f"Error scanning for folders: {e}")
+        return {}
+
 def main():
     """Rename operations in Firebase Storage"""
     print("Firebase Storage File Manager")
@@ -323,11 +400,17 @@ def main():
     # replace_substring("_", "'")
     
     # create a dictionary from a JSON file
-    dictionary = create_dict_from_json("/Users/albert/Downloads/clarified_definitions_openai.json")
+    # dictionary = create_dict_from_json("/Users/albert/Downloads/clarified_definitions_openai.json")
     
     # print(dictionary)
     # use the dictionary to rename files in Firebase
-    classifyUnclearWords(dictionary)
+    # classifyUnclearWords(dictionary)
+    
+    # get all folders and their URLs
+    folder_urls = get_all_folders_with_urls()
+    print("Folder URLs:")
+    for folder, url in folder_urls.items():
+        print(f"{folder}: {url}")
 
 if __name__ == "__main__":
     main()
