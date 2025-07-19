@@ -215,7 +215,7 @@ export const styles = {
         border: "3px solid rgba(255, 255, 255, 0.1)",
         borderTop: "3px solid rgba(255, 255, 255, 0.6)",
         borderRadius: "50%",
-        animation: "spin 1s linear infinite",
+        animation: "spin 1.33s linear infinite",
         marginBottom: "15px",
     },
     loadingText: {

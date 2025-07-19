@@ -22,6 +22,9 @@ const TranslateApp = () => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [showClearButton, setShowClearButton] = useState(false);
     const [clearButtonAnimation, setClearButtonAnimation] = useState('');
+    const [swapButtonRepositioning, setSwapButtonRepositioning] = useState(false);
+    const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
+    const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -36,7 +39,16 @@ const TranslateApp = () => {
         if (isAnimating) return; // Prevent multiple swaps during animation
         
         setIsAnimating(true);
+        setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
+
+        // Handle translate button exit animation if switching from textToVideo
+        if (mode === "textToVideo") {
+            setTranslateButtonAnimation('translate-button-exit');
+            setTimeout(() => {
+                setShowTranslateButton(false);
+            }, 400); // 50% faster from 600ms
+        }
 
         if (mode === "videoToText" && videoInputRef.current) {
             videoInputRef.current.stopCamera(); // Stop the camera when switching to textToVideo
@@ -45,17 +57,25 @@ const TranslateApp = () => {
         // Reset polling state when switching modes
         setIsPolling(true);
 
-        // Add delay for animation effect - smoother timing
+        // Synchronized with panel animation - mode change happens at panel midpoint
         setTimeout(() => {
             setMode((prevMode) =>
                 prevMode === "videoToText" ? "textToVideo" : "videoToText"
             );
             
-            // Reset animation state after mode change - longer for smoother transition
+            // Handle translate button enter animation - starts with panel slide-in
+            if (mode === "videoToText") {
+                setShowTranslateButton(true);
+                setTranslateButtonAnimation('translate-button-enter');
+            }
+            
+            // Reset animation state - synchronized with panel animation completion
             setTimeout(() => {
                 setIsAnimating(false);
-            }, 600);
-        }, 300);
+                setSwapButtonRepositioning(false);
+                setTranslateButtonAnimation('');
+            }, 800); // 50% faster from 1200ms
+        }, 400); // 50% faster from 600ms
     };
     const get_sign_trans = async () => {
         try {
@@ -154,7 +174,7 @@ const TranslateApp = () => {
             setTimeout(() => {
                 setShowClearButton(false);
                 setClearButtonAnimation('');
-            }, 200);
+            }, 270); // 50% faster from 400ms
         }
     }, [translatedText, showClearButton]);
 
@@ -168,7 +188,7 @@ const TranslateApp = () => {
             if (videoInputRef.current) {
                 videoInputRef.current.stopTransmission();
             }
-        }, 100);
+        }, 133); // 50% faster from 200ms
     };
 
     // Function to convert text to video
@@ -287,7 +307,7 @@ const TranslateApp = () => {
                             <button 
                                 onClick={handleSwap} 
                                 style={styles.swapButton} 
-                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''}`}
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
                                 disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
@@ -341,7 +361,7 @@ const TranslateApp = () => {
                             <button 
                                 onClick={handleSwap} 
                                 style={styles.swapButton} 
-                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''}`}
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
                                 disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
@@ -349,16 +369,18 @@ const TranslateApp = () => {
                                     Swap
                                 </div>
                             </button>
-                            <button
-                                onClick={handleTextToVideo}
-                                style={styles.translateButton}
-                                className="translate-button"
-                            >
-                                <div style={styles.buttonContent}>
-                                    <span style={styles.translateIcon}>✨</span>
-                                    Translate
-                                </div>
-                            </button>
+                            {showTranslateButton && (
+                                <button
+                                    onClick={handleTextToVideo}
+                                    style={styles.translateButton}
+                                    className={`translate-button ${translateButtonAnimation}`}
+                                >
+                                    <div style={styles.buttonContent}>
+                                        <span style={styles.translateIcon}>✨</span>
+                                        Translate
+                                    </div>
+                                </button>
+                            )}
                         </div>
 
                         <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
