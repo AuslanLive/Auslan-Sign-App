@@ -6,10 +6,6 @@ import TranslateApp from './pages/Translate'
 const App = () => {
     return(
         <div style={styles.page}>
-            <h1 className="text-3xl font-bold underline">
-                <span style={styles.gradientText}>AuslanLive</span>
-                {/* <span style={styles.whiteText}>Live</span> */}
-            </h1>
             <TranslateApp />
         </div>
     )

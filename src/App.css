@@ -1,11 +1,13 @@
 /* App.css */
 html, body {
   height: 100%;
+  width: 100%;
   margin: 0; /* Remove default margins */
   padding: 0; /* Remove default padding */
   background-color: #1a1a1a; /* Darker shade of gray */
   color: white; /* Set default text color to white */
   overflow-x: hidden; /* Prevent horizontal scroll due to overflow */
+  overflow-y: auto; /* Enable vertical scroll if needed */
 }
 
 #root {
@@ -15,8 +17,8 @@ html, body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .logo {
@@ -68,4 +70,43 @@ html, body {
 
 .read-the-docs {
   color: #888;
+}
+
+/* Add this CSS either in a separate file or in a <style> tag in your component */
+textarea:hover,
+
+textarea:focus {
+    box-shadow: 
+        0 0 20px rgba(0, 123, 255, 0.3),
+        0 0 40px rgba(0, 123, 255, 0.2),
+        0 0 60px rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+}
+
+/* Add this CSS either in a separate file or in a <style> tag in your component */
+button:hover {
+    box-shadow: 
+        0 0 20px rgba(0, 123, 255, 0.4),
+        0 0 40px rgba(0, 123, 255, 0.3),
+        0 0 60px rgba(0, 123, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Add responsive design for smaller screens */
+@media (max-width: 1600px) {
+    #root {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 1400px) {
+    #root {
+        padding: 6px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #root {
+        padding: 4px;
+    }
 }

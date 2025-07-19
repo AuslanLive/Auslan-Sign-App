@@ -1,0 +1,321 @@
+@keyframes spin {
+    0% { 
+        transform: rotate(0deg); 
+    }
+    100% { 
+        transform: rotate(360deg); 
+    }
+}
+
+@keyframes swapFlip {
+    0% {
+        transform: rotateY(0deg) scale(1);
+    }
+    50% {
+        transform: rotateY(90deg) scale(0.8);
+    }
+    100% {
+        transform: rotateY(0deg) scale(1);
+    }
+}
+
+@keyframes swapIconRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes swapPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@keyframes panelSlideOut {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-30px) scale(0.95);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateX(30px) scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+@keyframes panelSlideIn {
+    0% {
+        transform: translateX(-30px) scale(0.95);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateX(30px) scale(0.95);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeSlide {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotateY(0deg);
+    }
+    50% {
+        opacity: 0.3;
+        transform: translateY(-10px) rotateY(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateY(0deg);
+    }
+}
+
+@keyframes smoothSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px) scale(0.98);
+    }
+}
+
+@keyframes smoothSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(20px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes gentleSwapPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@keyframes smoothIconFlip {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(90deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(180deg) scale(1);
+    }
+}
+
+@keyframes clearButtonSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes clearButtonSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.8);
+    }
+}
+
+@keyframes swapButtonReposition {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.02);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes translateButtonSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+    60% {
+        opacity: 0.8;
+        transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes translateButtonSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+}
+
+.swap-animation {
+    animation: swapFlip 0.8s ease-in-out;
+}
+
+.swap-icon-animation {
+    animation: smoothIconFlip 0.8s ease-in-out;
+}
+
+.swap-button-animation {
+    animation: gentleSwapPulse 0.8s ease-in-out;
+    pointer-events: none;
+}
+
+.clear-button-enter {
+    animation: clearButtonSlideIn 0.4s ease-out forwards;
+}
+
+.clear-button-exit {
+    animation: clearButtonSlideOut 0.27s ease-in forwards;
+}
+
+.swap-button-reposition {
+    animation: swapButtonReposition 0.8s ease-out;
+}
+
+.translate-button-enter {
+    animation: translateButtonSlideIn 0.8s ease-out 0.8s forwards;
+}
+
+.translate-button-exit {
+    animation: translateButtonSlideOut 0.4s ease-in forwards;
+}
+
+/* Button hover effects */
+.swap-button:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(79, 172, 254, 0.6),
+        0 0 40px rgba(79, 172, 254, 0.4),
+        0 0 60px rgba(79, 172, 254, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #00f2fe 0%, rgb(3, 115, 213) 100%) !important;
+}
+
+.swap-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.swap-button:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.translate-button:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.6),
+        0 0 40px rgba(168, 85, 247, 0.4),
+        0 0 60px rgba(168, 85, 247, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%) !important;
+}
+
+.translate-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.camera-button:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.6),
+        0 0 40px rgba(168, 85, 247, 0.4),
+        0 0 60px rgba(168, 85, 247, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%) !important;
+}
+
+.camera-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.clear-button:hover {
+    transform: translateY(-1px) scale(1.05) !important;
+    box-shadow: 
+        0 0 15px rgba(239, 68, 68, 0.6),
+        0 0 30px rgba(239, 68, 68, 0.4),
+        0 0 45px rgba(239, 68, 68, 0.3),
+        0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+}
+
+.clear-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.camera-button-off:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(239, 68, 68, 0.6),
+        0 0 40px rgba(239, 68, 68, 0.4),
+        0 0 60px rgba(239, 68, 68, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+}
+
+.camera-button-off:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.panel-swap-animation {
+    animation: smoothSlideOut 0.4s ease-out forwards, smoothSlideIn 0.4s ease-out 0.4s forwards !important;
+}
+
+/* Add smooth transitions for all panels */
+.panel {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Override the panel transition during animation */
+.panel-swap-animation {
+    transition: none !important;
+}

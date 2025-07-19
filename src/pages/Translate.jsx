@@ -4,6 +4,8 @@ import { storage, ref, getDownloadURL } from "../firebase";
 import namesData from '../namesdatapose.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
+import { styles } from '../styles/TranslateStyles';
+import '../styles/TranslateStyles.css';
 
 
 const API_BASE_URL = "/api"
@@ -16,18 +18,64 @@ const TranslateApp = () => {
     const [animatedSignVideo, setAnimatedSignVideo] = useState(null);
     const videoInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [isPolling, setIsPolling] = useState(true); // State to control API polling
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [showClearButton, setShowClearButton] = useState(false);
+    const [clearButtonAnimation, setClearButtonAnimation] = useState('');
+    const [swapButtonRepositioning, setSwapButtonRepositioning] = useState(false);
+    const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
+    const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
+
+    // Function to handle camera start notification
+    const handleCameraStart = () => {
+        setIsPolling(true);
+        if (videoInputRef.current) {
+            videoInputRef.current.startTransmission();
+        }
+    };
 
     // Function to swap between modes
     const handleSwap = () => {
+        if (isAnimating) return; // Prevent multiple swaps during animation
+        
+        setIsAnimating(true);
+        setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
+
+        // Handle translate button exit animation if switching from textToVideo
+        if (mode === "textToVideo") {
+            setTranslateButtonAnimation('translate-button-exit');
+            setTimeout(() => {
+                setShowTranslateButton(false);
+            }, 400); // 50% faster from 600ms
+        }
 
         if (mode === "videoToText" && videoInputRef.current) {
             videoInputRef.current.stopCamera(); // Stop the camera when switching to textToVideo
         }
 
-        setMode((prevMode) =>
-            prevMode === "videoToText" ? "textToVideo" : "videoToText"
-        );
+        // Reset polling state when switching modes
+        setIsPolling(true);
+
+        // Synchronized with panel animation - mode change happens at panel midpoint
+        setTimeout(() => {
+            setMode((prevMode) =>
+                prevMode === "videoToText" ? "textToVideo" : "videoToText"
+            );
+            
+            // Handle translate button enter animation - starts with panel slide-in
+            if (mode === "videoToText") {
+                setShowTranslateButton(true);
+                setTranslateButtonAnimation('translate-button-enter');
+            }
+            
+            // Reset animation state - synchronized with panel animation completion
+            setTimeout(() => {
+                setIsAnimating(false);
+                setSwapButtonRepositioning(false);
+                setTranslateButtonAnimation('');
+            }, 800); // 50% faster from 1200ms
+        }, 400); // 50% faster from 600ms
     };
     const get_sign_trans = async () => {
         try {
@@ -83,10 +131,10 @@ const TranslateApp = () => {
     // old code - trigger every second
     // setInterval(get_sign_trans, 1000);
 
-    // new code - only trigger when mode is videoToText
+    // new code - only trigger when mode is videoToText and polling is enabled
     useEffect(() => {
         let interval;
-        if (mode === "videoToText") {
+        if (mode === "videoToText" && isPolling) {
             interval = setInterval(function () {
                 get_sign_trans();
                 getGemFlag();
@@ -96,7 +144,7 @@ const TranslateApp = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode]);
+    }, [mode, isPolling]);
 
 
     
@@ -114,6 +162,33 @@ const TranslateApp = () => {
             console.log(`The following words do not exist: ${missingWords}`);
             toast.error(`The following words do not exist: ${missingWords.join(', ')}`);
         }
+    };
+
+    // Monitor translatedText changes to animate clear button
+    useEffect(() => {
+        if (translatedText && !showClearButton) {
+            setShowClearButton(true);
+            setClearButtonAnimation('clear-button-enter');
+        } else if (!translatedText && showClearButton) {
+            setClearButtonAnimation('clear-button-exit');
+            setTimeout(() => {
+                setShowClearButton(false);
+                setClearButtonAnimation('');
+            }, 270); // 50% faster from 400ms
+        }
+    }, [translatedText, showClearButton]);
+
+    // Function to clear translated text
+    const handleClearText = () => {
+        setClearButtonAnimation('clear-button-exit');
+        setTimeout(() => {
+            setTranslatedText("");
+            setIsPolling(false); // Stop API polling when clearing text
+            // Stop keypoint transmission when clearing text
+            if (videoInputRef.current) {
+                videoInputRef.current.stopTransmission();
+            }
+        }, 133); // 50% faster from 200ms
     };
 
     // Function to convert text to video
@@ -161,188 +236,187 @@ const TranslateApp = () => {
             setLoading(false); // Set loading to false after fetching video
         }
     };
-
     // React code for UI rendering
-
     return (
-        <div style={styles.container}>
-            <Toaster position="top-right" />
-            {mode === "videoToText" ? (
-                <>
-                    <div style={styles.panel}>
-                        <h2>Sign</h2>
-                        <VideoInput />
-                    </div>
-
-                    <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.button}>
-                            Swap
-                        </button>
-                    </div>
-
-                    <div style={styles.panel}>
-                        <h2>Text</h2>
-                        {loading ? ( // Display loading animation if loading is true
-                            <div style={styles.loadingPlaceholder}>
-                                {/* Loading... */}
-                                <div className='spinner'></div>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            width: "100%",
+            maxWidth: "100vw",
+            margin: "0 auto",
+            padding: "10px",
+            minHeight: "100vh",
+            background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+            position: "relative",
+            boxSizing: "border-box",
+        }}>
+            <div style={{
+                textAlign: 'center',
+                marginBottom: '2rem',
+                paddingTop: '1rem'
+            }}>
+                <h1 style={{
+                    fontSize: '3rem',
+                    fontWeight: 'bold',
+                    background: 'linear-gradient(135deg, #00f2fe 0%, #3b82f6 50%,  #a855f7 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    margin: 0,
+                    textShadow: 'none',
+                    filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5))'
+                }}>
+                    AuslanLive
+                </h1>
+            </div>
+            
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "25px",
+                width: "100%",
+                maxWidth: "100vw",
+                flex: 1,
+            }}>
+                <Toaster 
+                    position="top-right"
+                    toastOptions={{
+                        style: {
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            color: '#ffffff',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '12px',
+                        },
+                    }}
+                />
+                {mode === "videoToText" ? (
+                    <>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                            <h2 style={styles.panelTitle}>Auslan</h2>
+                            <div style={styles.videoInputContainer}>
+                                <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} />
                             </div>
-                        ) : (
+                        </div>
+
+                        <div style={styles.buttons}>
+                            <button 
+                                onClick={handleSwap} 
+                                style={styles.swapButton} 
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
+                                disabled={isAnimating}
+                            >
+                                <div style={styles.buttonContent}>
+                                    <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
+                                    Swap
+                                </div>
+                            </button>
+                        </div>
+
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                            <h2 style={styles.panelTitle}>Text</h2>
+                            {loading ? (
+                                <div style={styles.loadingPlaceholder}>
+                                    <div style={styles.spinner}></div>
+                                    <p style={styles.loadingText}>Processing sign language...</p>
+                                </div>
+                            ) : (
+                                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                    <textarea
+                                        placeholder='Translation will appear here...'
+                                        value={translatedText}
+                                        readOnly
+                                        style={styles.textarea}
+                                    />
+                                    {showClearButton && (
+                                        <button 
+                                            onClick={handleClearText} 
+                                            style={styles.clearButton}
+                                            className={`clear-button ${clearButtonAnimation}`}
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                            <h2 style={styles.panelTitle}>Text</h2>
                             <textarea
-                                placeholder='Translation will appear here'
-                                value={translatedText}
-                                readOnly
+                                placeholder='Enter text to convert to sign language...'
+                                value={sourceText}
+                                onChange={(e) => setSourceText(e.target.value)}
                                 style={styles.textarea}
                             />
-                        )}
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div style={styles.panel}>
-                        <h2>Text</h2>
-                        <textarea
-                            placeholder='Enter text to convert to sign language'
-                            value={sourceText}
-                            onChange={(e) => setSourceText(e.target.value)}
-                            style={styles.textarea}
-                        />
-                    </div>
+                        </div>
 
-                    <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.button}>
-                            Swap
-                        </button>
-                        <button
-                            onClick={handleTextToVideo}
-                            style={styles.button}
-                        >
-                            Translate
-                        </button>
-                    </div>
+                        <div style={styles.buttons}>
+                            <button 
+                                onClick={handleSwap} 
+                                style={styles.swapButton} 
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
+                                disabled={isAnimating}
+                            >
+                                <div style={styles.buttonContent}>
+                                    <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
+                                    Swap
+                                </div>
+                            </button>
+                            {showTranslateButton && (
+                                <button
+                                    onClick={handleTextToVideo}
+                                    style={styles.translateButton}
+                                    className={`translate-button ${translateButtonAnimation}`}
+                                >
+                                    <div style={styles.buttonContent}>
+                                        <span style={styles.translateIcon}>✨</span>
+                                        Translate
+                                    </div>
+                                </button>
+                            )}
+                        </div>
 
-                    <div style={styles.panel}>
-                        <h2>Sign Video</h2>
-                        {loading ? ( // Display loading animation if loading is true
-                            <div style={styles.loadingPlaceholder}>
-                                {/* Loading... */}
-                                <div className='spinner'></div>
-                            </div>
-                        ) : animatedSignVideo ? (
-                            <div style={styles.videoContainer}>
-                                <video
-                                    src={animatedSignVideo}
-                                    controls
-                                    autoPlay
-                                    loop
-                                    style={styles.video}
-                                    onLoadedMetadata={(e) =>
-                                        (e.target.playbackRate = 1.0)
-                                    }
-                                />
-                            </div>
-                        ) : (
-                            <div style={styles.videoPlaceholder}>
-                                Please type in a sentence and click translate!
-                            </div>
-                        )}
-                    </div>
-                </>
-            )}
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                            <h2 style={styles.panelTitle}>Auslan</h2>
+                            {loading ? (
+                                <div style={styles.loadingPlaceholder}>
+                                    <div style={styles.spinner}></div>
+                                    <p style={styles.loadingText}>Generating sign language video...</p>
+                                </div>
+                            ) : animatedSignVideo ? (
+                                <div style={styles.videoContainer}>
+                                    <video
+                                        src={animatedSignVideo}
+                                        controls
+                                        autoPlay
+                                        loop
+                                        style={styles.video}
+                                        onLoadedMetadata={(e) =>
+                                            (e.target.playbackRate = 1.0)
+                                        }
+                                    />
+                                </div>
+                            ) : (
+                                <div style={{...styles.videoPlaceholder, padding: "5px"}}>
+                                    <div style={styles.placeholderIcon}>🎬</div>
+                                    <p style={styles.placeholderText}>
+                                        Enter text and click translate to see the sign language video
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-around",
-        gap: "20px",
-        width: "100%",
-        margin: "0 auto",
-    },
-    panel: {
-        display: "flex",
-        flex: "1",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "600px",
-        height: "600px",
-        boxSizing: "border-box",
-        padding: "20px",
-    },
-    textarea: {
-        width: "530px",
-        height: "540px",
-        padding: "10px",
-        fontSize: "20px",
-        resize: "none",
-        boxSizing: "border-box",
-        backgroundColor: "#333333",
-        color: "#ffffff",
-        border: "1px solid #555555",
-        borderRadius: "8px",
-    },
-    buttons: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "white",
-        gap: "10px",
-    },
-    button: {
-        padding: "10px 20px",
-        fontSize: "20px",
-        backgroundColor: "#007bff", // Existing button background color
-        color: "#ffffff", // White text color
-        cursor: "pointer",
-        border: "none", // Optional: removes default border for a cleaner look
-        borderRadius: "5px", // Optional: adds rounded corners
-    },
-    videoContainer: {
-        width: "100%",
-        maxWidth: "800px",
-        height: "auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        borderRadius: "8px",
-        color: "#ffffff",
-        backgroundColor: "#333333",
-    },
-    video: {
-        width: "100%",
-        height: "100%",
-        objectFit: "contain",
-    },
-    videoPlaceholder: {
-        width: "530px", // Full width placeholder
-        height: "540px", // Set a height for the placeholder
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#333333", // A background color for the placeholder
-        color: "darkgray",
-        borderRadius: "8px",
-    },
-    loadingPlaceholder: {
-        // New loading animation style
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "530px",
-        height: "540px",
-        fontSize: "20px",
-        color: "white",
-        backgroundColor: "#333333",
-        borderRadius: "8px",
-        border: "1px solid #555555",
-    },
 };
 
 export default TranslateApp;
