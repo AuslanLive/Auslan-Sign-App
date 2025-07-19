@@ -163,119 +163,162 @@ const TranslateApp = () => {
             setLoading(false); // Set loading to false after fetching video
         }
     };
-
     // React code for UI rendering
     return (
-        <div style={styles.container}>
-            <Toaster 
-                position="top-right"
-                toastOptions={{
-                    style: {
-                        background: 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        color: '#ffffff',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '12px',
-                    },
-                }}
-            />
-            {mode === "videoToText" ? (
-                <>
-                    <div style={styles.panel}>
-                        <h2 style={styles.panelTitle}>Auslan</h2>
-                        <div style={styles.videoInputContainer}>
-                            <VideoInput />
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            width: "100%",
+            maxWidth: "100vw",
+            margin: "0 auto",
+            padding: "10px",
+            minHeight: "100vh",
+            background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+            position: "relative",
+            boxSizing: "border-box",
+        }}>
+            <div style={{
+                textAlign: 'center',
+                marginBottom: '2rem',
+                paddingTop: '1rem'
+            }}>
+                <h1 style={{
+                    fontSize: '3rem',
+                    fontWeight: 'bold',
+                    background: 'linear-gradient(135deg, #00f2fe 0%, #3b82f6 50%,  #a855f7 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    margin: 0,
+                    textShadow: 'none',
+                    filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5))'
+                }}>
+                    AuslanLive
+                </h1>
+            </div>
+            
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "25px",
+                width: "100%",
+                maxWidth: "100vw",
+                flex: 1,
+            }}>
+                <Toaster 
+                    position="top-right"
+                    toastOptions={{
+                        style: {
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            color: '#ffffff',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '12px',
+                        },
+                    }}
+                />
+                {mode === "videoToText" ? (
+                    <>
+                        <div style={styles.panel}>
+                            <h2 style={styles.panelTitle}>Auslan</h2>
+                            <div style={styles.videoInputContainer}>
+                                <VideoInput />
+                            </div>
                         </div>
-                    </div>
 
-                    <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
-                            <div style={styles.buttonContent}>
-                                <span style={styles.swapIcon}>⇄</span>
-                                Swap
-                            </div>
-                        </button>
-                    </div>
+                        <div style={styles.buttons}>
+                            <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
+                                <div style={styles.buttonContent}>
+                                    <span style={styles.swapIcon}>⇄</span>
+                                    Swap
+                                </div>
+                            </button>
+                        </div>
 
-                    <div style={styles.panel}>
-                        <h2 style={styles.panelTitle}>Text</h2>
-                        {loading ? (
-                            <div style={styles.loadingPlaceholder}>
-                                <div style={styles.spinner}></div>
-                                <p style={styles.loadingText}>Processing sign language...</p>
-                            </div>
-                        ) : (
+                        <div style={styles.panel}>
+                            <h2 style={styles.panelTitle}>Text</h2>
+                            {loading ? (
+                                <div style={styles.loadingPlaceholder}>
+                                    <div style={styles.spinner}></div>
+                                    <p style={styles.loadingText}>Processing sign language...</p>
+                                </div>
+                            ) : (
+                                <textarea
+                                    placeholder='Translation will appear here...'
+                                    value={translatedText}
+                                    readOnly
+                                    style={styles.textarea}
+                                />
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={styles.panel}>
+                            <h2 style={styles.panelTitle}>Text</h2>
                             <textarea
-                                placeholder='Translation will appear here...'
-                                value={translatedText}
-                                readOnly
+                                placeholder='Enter text to convert to sign language...'
+                                value={sourceText}
+                                onChange={(e) => setSourceText(e.target.value)}
                                 style={styles.textarea}
                             />
-                        )}
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div style={styles.panel}>
-                        <h2 style={styles.panelTitle}>Text</h2>
-                        <textarea
-                            placeholder='Enter text to convert to sign language...'
-                            value={sourceText}
-                            onChange={(e) => setSourceText(e.target.value)}
-                            style={styles.textarea}
-                        />
-                    </div>
+                        </div>
 
-                    <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
-                            <div style={styles.buttonContent}>
-                                <span style={styles.swapIcon}>⇄</span>
-                                Swap
-                            </div>
-                        </button>
-                        <button
-                            onClick={handleTextToVideo}
-                            style={styles.translateButton}
-                            className="translate-button"
-                        >
-                            <div style={styles.buttonContent}>
-                                <span style={styles.translateIcon}>✨</span>
-                                Translate
-                            </div>
-                        </button>
-                    </div>
+                        <div style={styles.buttons}>
+                            <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
+                                <div style={styles.buttonContent}>
+                                    <span style={styles.swapIcon}>⇄</span>
+                                    Swap
+                                </div>
+                            </button>
+                            <button
+                                onClick={handleTextToVideo}
+                                style={styles.translateButton}
+                                className="translate-button"
+                            >
+                                <div style={styles.buttonContent}>
+                                    <span style={styles.translateIcon}>✨</span>
+                                    Translate
+                                </div>
+                            </button>
+                        </div>
 
-                    <div style={styles.panel}>
-                        <h2 style={styles.panelTitle}>Auslan</h2>
-                        {loading ? (
-                            <div style={styles.loadingPlaceholder}>
-                                <div style={styles.spinner}></div>
-                                <p style={styles.loadingText}>Generating sign language video...</p>
-                            </div>
-                        ) : animatedSignVideo ? (
-                            <div style={styles.videoContainer}>
-                                <video
-                                    src={animatedSignVideo}
-                                    controls
-                                    autoPlay
-                                    loop
-                                    style={styles.video}
-                                    onLoadedMetadata={(e) =>
-                                        (e.target.playbackRate = 1.0)
-                                    }
-                                />
-                            </div>
-                        ) : (
-                            <div style={styles.videoPlaceholder}>
-                                <div style={styles.placeholderIcon}>🎬</div>
-                                <p style={styles.placeholderText}>
-                                    Enter text and click translate to see the sign language video
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                </>
-            )}
+                        <div style={styles.panel}>
+                            <h2 style={styles.panelTitle}>Auslan</h2>
+                            {loading ? (
+                                <div style={styles.loadingPlaceholder}>
+                                    <div style={styles.spinner}></div>
+                                    <p style={styles.loadingText}>Generating sign language video...</p>
+                                </div>
+                            ) : animatedSignVideo ? (
+                                <div style={styles.videoContainer}>
+                                    <video
+                                        src={animatedSignVideo}
+                                        controls
+                                        autoPlay
+                                        loop
+                                        style={styles.video}
+                                        onLoadedMetadata={(e) =>
+                                            (e.target.playbackRate = 1.0)
+                                        }
+                                    />
+                                </div>
+                            ) : (
+                                <div style={styles.videoPlaceholder}>
+                                    <div style={styles.placeholderIcon}>🎬</div>
+                                    <p style={styles.placeholderText}>
+                                        Enter text and click translate to see the sign language video
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     );
 };
