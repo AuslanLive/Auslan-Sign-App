@@ -308,7 +308,7 @@ const TranslateApp = () => {
                                     />
                                 </div>
                             ) : (
-                                <div style={styles.videoPlaceholder}>
+                                <div style={{...styles.videoPlaceholder, padding: "5px"}}>
                                     <div style={styles.placeholderIcon}>🎬</div>
                                     <p style={styles.placeholderText}>
                                         Enter text and click translate to see the sign language video
