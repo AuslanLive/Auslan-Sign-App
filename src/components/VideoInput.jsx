@@ -32,6 +32,7 @@ const VideoInput = React.forwardRef((props, ref) => {
     const holisticRef = useRef(null); // Reference to the holistic object
     const [isCameraOn, setIsCameraOn] = useState(false); // State to track if the camera is on
     const [error, setError] = useState(null); // State to handle errors
+    const [isTransmitting, setIsTransmitting] = useState(true); // State to control keypoint transmission
 
     useEffect(() => {
         const loadMediaPipe = async () => {
@@ -148,38 +149,41 @@ const VideoInput = React.forwardRef((props, ref) => {
                 }
                 canvasCtx.restore();
 
-                // Prepare keypoints to send to backend
-                const keypoints = [
-                    results.poseLandmarks,
-                    results.leftHandLandmarks
-                        ? results.leftHandLandmarks.map((landmark) => ({
-                              ...landmark,
-                              visibility: 0.0,
-                          }))
-                        : null,
-                    results.rightHandLandmarks
-                        ? results.rightHandLandmarks.map((landmark) => ({
-                              ...landmark,
-                              visibility: 0.0,
-                          }))
-                        : null,
-                ];
+                // Only send keypoints if transmission is enabled
+                if (isTransmitting) {
+                    // Prepare keypoints to send to backend
+                    const keypoints = [
+                        results.poseLandmarks,
+                        results.leftHandLandmarks
+                            ? results.leftHandLandmarks.map((landmark) => ({
+                                  ...landmark,
+                                  visibility: 0.0,
+                              }))
+                            : null,
+                        results.rightHandLandmarks
+                            ? results.rightHandLandmarks.map((landmark) => ({
+                                  ...landmark,
+                                  visibility: 0.0,
+                              }))
+                            : null,
+                    ];
 
-                // Send keypoints data to backend
-                fetch(API_BASE_URL + "/keypoints", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ keypoints }), // Convert data to JSON
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log("Data saved successfully:", data);
+                    // Send keypoints data to backend
+                    fetch(API_BASE_URL + "/keypoints", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ keypoints }), // Convert data to JSON
                     })
-                    .catch((error) => {
-                        console.error("Error saving data:", error);
-                    });
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log("Data saved successfully:", data);
+                        })
+                        .catch((error) => {
+                            console.error("Error saving data:", error);
+                        });
+                }
             });
 
             if (!cameraRef.current) {
@@ -195,6 +199,11 @@ const VideoInput = React.forwardRef((props, ref) => {
 
             cameraRef.current.start();
             setIsCameraOn(true);
+            
+            // Notify parent that camera started (to resume polling)
+            if (props.onCameraStart) {
+                props.onCameraStart();
+            }
         } catch (err) {
             handleCameraError(err);
         }
@@ -222,8 +231,18 @@ const VideoInput = React.forwardRef((props, ref) => {
         }
     };
 
+    const stopTransmission = () => {
+        setIsTransmitting(false);
+    };
+
+    const startTransmission = () => {
+        setIsTransmitting(true);
+    };
+
     React.useImperativeHandle(ref, () => ({
         stopCamera,
+        stopTransmission,
+        startTransmission,
     }));
 
     const toggleCamera = () => {
@@ -279,7 +298,16 @@ const VideoInput = React.forwardRef((props, ref) => {
                     />
                 </>
             )}
-            <button onClick={toggleCamera} style={styles.button} className="camera-button">
+            <button 
+                onClick={toggleCamera} 
+                style={{
+                    ...styles.button,
+                    background: isCameraOn 
+                        ? "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" 
+                        : "linear-gradient(135deg, #a855f7 0%, #3b82f6 100%)"
+                }} 
+                className={isCameraOn ? "camera-button-off" : "camera-button"}
+            >
                 {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
             </button>
         </div>
@@ -334,7 +362,7 @@ const styles = {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        background: "rgba(10, 10, 20, 0.6)",
+        background: "#0D0E1A",
         backdropFilter: "blur(10px)",
         color: "rgba(255, 255, 255, 0.5)",
         borderRadius: "10px",

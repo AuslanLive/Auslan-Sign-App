@@ -97,3 +97,31 @@
 .camera-button:active {
     transform: translateY(0) scale(0.98) !important;
 }
+
+.clear-button:hover {
+    transform: translateY(-1px) scale(1.05) !important;
+    box-shadow: 
+        0 0 15px rgba(239, 68, 68, 0.6),
+        0 0 30px rgba(239, 68, 68, 0.4),
+        0 0 45px rgba(239, 68, 68, 0.3),
+        0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+}
+
+.clear-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.camera-button-off:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(239, 68, 68, 0.6),
+        0 0 40px rgba(239, 68, 68, 0.4),
+        0 0 60px rgba(239, 68, 68, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+}
+
+.camera-button-off:active {
+    transform: translateY(0) scale(0.98) !important;
+}

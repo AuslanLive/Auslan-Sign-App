@@ -18,6 +18,15 @@ const TranslateApp = () => {
     const [animatedSignVideo, setAnimatedSignVideo] = useState(null);
     const videoInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [isPolling, setIsPolling] = useState(true); // State to control API polling
+
+    // Function to handle camera start notification
+    const handleCameraStart = () => {
+        setIsPolling(true);
+        if (videoInputRef.current) {
+            videoInputRef.current.startTransmission();
+        }
+    };
 
     // Function to swap between modes
     const handleSwap = () => {
@@ -26,6 +35,9 @@ const TranslateApp = () => {
         if (mode === "videoToText" && videoInputRef.current) {
             videoInputRef.current.stopCamera(); // Stop the camera when switching to textToVideo
         }
+
+        // Reset polling state when switching modes
+        setIsPolling(true);
 
         setMode((prevMode) =>
             prevMode === "videoToText" ? "textToVideo" : "videoToText"
@@ -85,10 +97,10 @@ const TranslateApp = () => {
     // old code - trigger every second
     // setInterval(get_sign_trans, 1000);
 
-    // new code - only trigger when mode is videoToText
+    // new code - only trigger when mode is videoToText and polling is enabled
     useEffect(() => {
         let interval;
-        if (mode === "videoToText") {
+        if (mode === "videoToText" && isPolling) {
             interval = setInterval(function () {
                 get_sign_trans();
                 getGemFlag();
@@ -98,7 +110,7 @@ const TranslateApp = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode]);
+    }, [mode, isPolling]);
 
 
     
@@ -115,6 +127,16 @@ const TranslateApp = () => {
         if (missingWords.length > 0) {
             console.log(`The following words do not exist: ${missingWords}`);
             toast.error(`The following words do not exist: ${missingWords.join(', ')}`);
+        }
+    };
+
+    // Function to clear translated text
+    const handleClearText = () => {
+        setTranslatedText("");
+        setIsPolling(false); // Stop API polling when clearing text
+        // Stop keypoint transmission when clearing text
+        if (videoInputRef.current) {
+            videoInputRef.current.stopTransmission();
         }
     };
 
@@ -226,7 +248,7 @@ const TranslateApp = () => {
                         <div style={styles.panel}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
                             <div style={styles.videoInputContainer}>
-                                <VideoInput />
+                                <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} />
                             </div>
                         </div>
 
@@ -247,12 +269,23 @@ const TranslateApp = () => {
                                     <p style={styles.loadingText}>Processing sign language...</p>
                                 </div>
                             ) : (
-                                <textarea
-                                    placeholder='Translation will appear here...'
-                                    value={translatedText}
-                                    readOnly
-                                    style={styles.textarea}
-                                />
+                                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                    <textarea
+                                        placeholder='Translation will appear here...'
+                                        value={translatedText}
+                                        readOnly
+                                        style={styles.textarea}
+                                    />
+                                    {translatedText && (
+                                        <button 
+                                            onClick={handleClearText} 
+                                            style={styles.clearButton}
+                                            className="clear-button"
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
                     </>
