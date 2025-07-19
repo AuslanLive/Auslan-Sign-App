@@ -259,12 +259,23 @@ const VideoInput = React.forwardRef((props, ref) => {
                         className='input_video'
                         style={{ display: "none" }}
                     ></video>
+                    {!isCameraOn && (
+                        <div style={styles.placeholder}>
+                            <div style={styles.placeholderIcon}>📹</div>
+                            <p style={styles.placeholderText}>
+                                Click "Turn Camera On" to start sign language detection
+                            </p>
+                        </div>
+                    )}
                     <canvas
                         ref={canvasRef}
                         className='output_canvas'
                         width='1280'
                         height='720'
-                        style={styles.canvas}
+                        style={{
+                            ...styles.canvas,
+                            display: isCameraOn ? 'block' : 'none'
+                        }}
                     />
                 </>
             )}
@@ -312,6 +323,36 @@ const styles = {
         backdropFilter: "blur(10px)",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
         transform: "translateY(0) scale(1)",
+    },
+    placeholder: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "rgba(10, 10, 20, 0.6)",
+        backdropFilter: "blur(10px)",
+        color: "rgba(255, 255, 255, 0.5)",
+        borderRadius: "10px",
+        textAlign: "center",
+        padding: "20px",
+        boxSizing: "border-box",
+    },
+    placeholderIcon: {
+        fontSize: "32px",
+        marginBottom: "12px",
+        opacity: "0.6",
+    },
+    placeholderText: {
+        fontSize: "14px",
+        lineHeight: "1.4",
+        margin: "0",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+        maxWidth: "280px",
     },
 };
 
