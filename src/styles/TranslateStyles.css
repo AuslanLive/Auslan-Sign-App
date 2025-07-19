@@ -83,3 +83,17 @@
 .translate-button:active {
     transform: translateY(0) scale(0.98) !important;
 }
+
+.camera-button:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.6),
+        0 0 40px rgba(168, 85, 247, 0.4),
+        0 0 60px rgba(168, 85, 247, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%) !important;
+}
+
+.camera-button:active {
+    transform: translateY(0) scale(0.98) !important;
+}

@@ -268,7 +268,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                     />
                 </>
             )}
-            <button onClick={toggleCamera} style={styles.button}>
+            <button onClick={toggleCamera} style={styles.button} className="camera-button">
                 {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
             </button>
         </div>
@@ -298,13 +298,20 @@ const styles = {
         position: "absolute",
         bottom: "20px",
         left: "20px",
-        padding: "10px 20px",
-        backgroundColor: "#007bff",
-        color: "white",
+        padding: "12px 24px",
+        fontSize: "14px",
+        fontWeight: "600",
+        background: "linear-gradient(135deg, #a855f7 0%, #3b82f6 100%)",
+        color: "#ffffff",
         border: "none",
-        borderRadius: "5px",
+        borderRadius: "25px",
         cursor: "pointer",
         zIndex: 11,
+        transition: "all 0.3s ease",
+        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.4)",
+        backdropFilter: "blur(10px)",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+        transform: "translateY(0) scale(1)",
     },
 };
 
