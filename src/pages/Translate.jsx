@@ -19,6 +19,9 @@ const TranslateApp = () => {
     const videoInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [isPolling, setIsPolling] = useState(true); // State to control API polling
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [showClearButton, setShowClearButton] = useState(false);
+    const [clearButtonAnimation, setClearButtonAnimation] = useState('');
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -30,6 +33,9 @@ const TranslateApp = () => {
 
     // Function to swap between modes
     const handleSwap = () => {
+        if (isAnimating) return; // Prevent multiple swaps during animation
+        
+        setIsAnimating(true);
         setTranslatedText(""); // Clear the translated text on swap
 
         if (mode === "videoToText" && videoInputRef.current) {
@@ -39,9 +45,17 @@ const TranslateApp = () => {
         // Reset polling state when switching modes
         setIsPolling(true);
 
-        setMode((prevMode) =>
-            prevMode === "videoToText" ? "textToVideo" : "videoToText"
-        );
+        // Add delay for animation effect - smoother timing
+        setTimeout(() => {
+            setMode((prevMode) =>
+                prevMode === "videoToText" ? "textToVideo" : "videoToText"
+            );
+            
+            // Reset animation state after mode change - longer for smoother transition
+            setTimeout(() => {
+                setIsAnimating(false);
+            }, 600);
+        }, 300);
     };
     const get_sign_trans = async () => {
         try {
@@ -130,14 +144,31 @@ const TranslateApp = () => {
         }
     };
 
+    // Monitor translatedText changes to animate clear button
+    useEffect(() => {
+        if (translatedText && !showClearButton) {
+            setShowClearButton(true);
+            setClearButtonAnimation('clear-button-enter');
+        } else if (!translatedText && showClearButton) {
+            setClearButtonAnimation('clear-button-exit');
+            setTimeout(() => {
+                setShowClearButton(false);
+                setClearButtonAnimation('');
+            }, 200);
+        }
+    }, [translatedText, showClearButton]);
+
     // Function to clear translated text
     const handleClearText = () => {
-        setTranslatedText("");
-        setIsPolling(false); // Stop API polling when clearing text
-        // Stop keypoint transmission when clearing text
-        if (videoInputRef.current) {
-            videoInputRef.current.stopTransmission();
-        }
+        setClearButtonAnimation('clear-button-exit');
+        setTimeout(() => {
+            setTranslatedText("");
+            setIsPolling(false); // Stop API polling when clearing text
+            // Stop keypoint transmission when clearing text
+            if (videoInputRef.current) {
+                videoInputRef.current.stopTransmission();
+            }
+        }, 100);
     };
 
     // Function to convert text to video
@@ -245,7 +276,7 @@ const TranslateApp = () => {
                 />
                 {mode === "videoToText" ? (
                     <>
-                        <div style={styles.panel}>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
                             <div style={styles.videoInputContainer}>
                                 <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} />
@@ -253,15 +284,20 @@ const TranslateApp = () => {
                         </div>
 
                         <div style={styles.buttons}>
-                            <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
+                            <button 
+                                onClick={handleSwap} 
+                                style={styles.swapButton} 
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''}`}
+                                disabled={isAnimating}
+                            >
                                 <div style={styles.buttonContent}>
-                                    <span style={styles.swapIcon}>⇄</span>
+                                    <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
                                     Swap
                                 </div>
                             </button>
                         </div>
 
-                        <div style={styles.panel}>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Text</h2>
                             {loading ? (
                                 <div style={styles.loadingPlaceholder}>
@@ -276,11 +312,11 @@ const TranslateApp = () => {
                                         readOnly
                                         style={styles.textarea}
                                     />
-                                    {translatedText && (
+                                    {showClearButton && (
                                         <button 
                                             onClick={handleClearText} 
                                             style={styles.clearButton}
-                                            className="clear-button"
+                                            className={`clear-button ${clearButtonAnimation}`}
                                         >
                                             Clear
                                         </button>
@@ -291,7 +327,7 @@ const TranslateApp = () => {
                     </>
                 ) : (
                     <>
-                        <div style={styles.panel}>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Text</h2>
                             <textarea
                                 placeholder='Enter text to convert to sign language...'
@@ -302,9 +338,14 @@ const TranslateApp = () => {
                         </div>
 
                         <div style={styles.buttons}>
-                            <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
+                            <button 
+                                onClick={handleSwap} 
+                                style={styles.swapButton} 
+                                className={`swap-button ${isAnimating ? 'swap-button-animation' : ''}`}
+                                disabled={isAnimating}
+                            >
                                 <div style={styles.buttonContent}>
-                                    <span style={styles.swapIcon}>⇄</span>
+                                    <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
                                     Swap
                                 </div>
                             </button>
@@ -320,7 +361,7 @@ const TranslateApp = () => {
                             </button>
                         </div>
 
-                        <div style={styles.panel}>
+                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
                             {loading ? (
                                 <div style={styles.loadingPlaceholder}>

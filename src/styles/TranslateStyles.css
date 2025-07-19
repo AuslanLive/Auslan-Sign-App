@@ -43,6 +43,122 @@
     }
 }
 
+@keyframes panelSlideOut {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-30px) scale(0.95);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateX(30px) scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+@keyframes panelSlideIn {
+    0% {
+        transform: translateX(-30px) scale(0.95);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateX(30px) scale(0.95);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeSlide {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotateY(0deg);
+    }
+    50% {
+        opacity: 0.3;
+        transform: translateY(-10px) rotateY(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateY(0deg);
+    }
+}
+
+@keyframes smoothSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px) scale(0.98);
+    }
+}
+
+@keyframes smoothSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(20px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes gentleSwapPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@keyframes smoothIconFlip {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(90deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(180deg) scale(1);
+    }
+}
+
+@keyframes clearButtonSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes clearButtonSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.8);
+    }
+}
+
 .swap-animation {
     animation: swapFlip 0.6s ease-in-out;
 }
@@ -52,7 +168,16 @@
 }
 
 .swap-button-animation {
-    animation: swapPulse 0.3s ease-in-out;
+    animation: gentleSwapPulse 0.6s ease-in-out;
+    pointer-events: none;
+}
+
+.clear-button-enter {
+    animation: clearButtonSlideIn 0.3s ease-out forwards;
+}
+
+.clear-button-exit {
+    animation: clearButtonSlideOut 0.2s ease-in forwards;
 }
 
 /* Button hover effects */
@@ -68,6 +193,11 @@
 
 .swap-button:active {
     transform: translateY(0) scale(0.98) !important;
+}
+
+.swap-button:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
 }
 
 .translate-button:hover {
@@ -124,4 +254,18 @@
 
 .camera-button-off:active {
     transform: translateY(0) scale(0.98) !important;
+}
+
+.panel-swap-animation {
+    animation: smoothSlideOut 0.3s ease-out forwards, smoothSlideIn 0.3s ease-out 0.3s forwards !important;
+}
+
+/* Add smooth transitions for all panels */
+.panel {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Override the panel transition during animation */
+.panel-swap-animation {
+    transition: none !important;
 }
