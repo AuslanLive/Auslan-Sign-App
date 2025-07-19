@@ -189,7 +189,7 @@ const TranslateApp = () => {
                     </div>
 
                     <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.swapButton}>
+                        <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
                             <div style={styles.buttonContent}>
                                 <span style={styles.swapIcon}>⇄</span>
                                 Swap
@@ -227,7 +227,7 @@ const TranslateApp = () => {
                     </div>
 
                     <div style={styles.buttons}>
-                        <button onClick={handleSwap} style={styles.swapButton}>
+                        <button onClick={handleSwap} style={styles.swapButton} className="swap-button">
                             <div style={styles.buttonContent}>
                                 <span style={styles.swapIcon}>⇄</span>
                                 Swap
@@ -236,6 +236,7 @@ const TranslateApp = () => {
                         <button
                             onClick={handleTextToVideo}
                             style={styles.translateButton}
+                            className="translate-button"
                         >
                             <div style={styles.buttonContent}>
                                 <span style={styles.translateIcon}>✨</span>

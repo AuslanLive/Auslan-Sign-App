@@ -91,3 +91,22 @@ button:hover {
         0 0 60px rgba(0, 123, 255, 0.2);
     transform: translateY(-2px);
 }
+
+/* Add responsive design for smaller screens */
+@media (max-width: 1600px) {
+    #root {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 1400px) {
+    #root {
+        padding: 6px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #root {
+        padding: 4px;
+    }
+}
