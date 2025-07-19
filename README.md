@@ -8,6 +8,11 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
+## Dependencies
+
+1. Install pip (python package manager), then from the root folder, run: pip install -r requirements.txt
+2. Install FFMPeg for video conversion. This process is different between Mac and Windows, please consult the documentation online. Go to: https://ffmpeg.org/download.html
+
 ## Run Locally
 
 In the root folder, run the below two commands:
