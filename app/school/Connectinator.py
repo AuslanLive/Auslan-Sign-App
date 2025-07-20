@@ -2,7 +2,7 @@ from app.school.Model_Owner import Model
 from app.school.InputParser import InputParser
 import logging
 from app.school.results_parser import ResultsParser
-from app.school.results_parser import textAnimationTranslation
+from app.school.TextToAnimation import TextToAnimation
 from time import time
 import json
 from app.school.text_to_animation.pose_video_creator import process_sentence
@@ -53,8 +53,8 @@ class Connectinator:
         # Create result parser
         self.results_parser = ResultsParser(self)
 
-        # Create text ani transltior
-        self.text_animation_translation = textAnimationTranslation()
+        # Create text animation translator
+        self.text_animation_translation = TextToAnimation()
 
         self.predictionList = []
         self.prevFlag = False

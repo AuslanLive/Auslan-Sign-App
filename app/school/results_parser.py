@@ -2,7 +2,6 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from concurrent.futures import ThreadPoolExecutor
 import re
 
 load_dotenv(override=True)
@@ -75,41 +74,3 @@ class ResultsParser:
             # print(f"Saved parsed result to {output_filename}")
 
             # Define a function to perform the API call and file write operation
-
-
-class textAnimationTranslation:
-
-    def parse_text_to_sign(self, t2s_input):
-        if not t2s_input:
-            return {"error": "Invalid input from user"}
-
-        if len(t2s_input.split()) > 2:
-            # print("Contacting Gemini")
-
-            model = genai.GenerativeModel("gemini-1.5-flash")
-
-            response = model.generate_content(
-                "Convert this phrase into an Auslan English sentence (as text) Provide only the text no other explanation: " + t2s_input
-            )
-
-            response_dict = response.to_dict()
-
-            result = (
-                response_dict["candidates"][0]["content"]["parts"][0]["text"].strip().replace(
-                    "\n", "").replace("\"", "")
-                if response_dict["candidates"]
-                else "No valid response"
-            )
-
-            # print(result)
-            # print(result2)
-
-        else:
-            result = t2s_input
-
-        return result
-
-    def save_as_json(self, parsed_result, output_filename="parsed_input.json"):
-        with open(output_filename, 'w') as outfile:
-            json.dump(parsed_result, outfile, indent=4)
-            # print(f"Saved parsed result to {output_filename}")
