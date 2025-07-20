@@ -1,8 +1,8 @@
-from app.school.Model_Owner import Model
-from app.school.InputParser import InputParser
+from app.school.video_to_text.Model_Owner import Model
+from app.school.video_to_text.InputParser import InputParser
 import logging
-from app.school.results_parser import ResultsParser
-from app.school.GrammarParser import GrammarParser
+from app.school.video_to_text.results_parser import ResultsParser
+from app.school.text_to_animation.GrammarParser import GrammarParser
 from time import time
 import json
 from app.school.text_to_animation.pose_video_creator import process_sentence
