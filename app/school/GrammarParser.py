@@ -32,7 +32,10 @@ class GrammarParser:
                 Maintain the meaning, not the exact English structure.
                 If relevant, use facial expressions or body shifts to indicate questions or contrast (annotate this in brackets).
                 
-                Example:
+                Examples:
+                
+                -- START OF EXAMPLES --
+                
                 English: "I am going to the shop."
                 Auslan gloss: SHOP I GO
                 
@@ -48,6 +51,8 @@ class GrammarParser:
 
                 English: “After lunch, we will walk to the park.”
                 Auslan gloss: LUNCH FINISH PARK WE WALK
+                
+                -- END OF EXAMPLES --
                 
                 If there is no other explanation, simply return the original input sentence.
                 
