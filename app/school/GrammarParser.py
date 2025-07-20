@@ -2,16 +2,17 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv(override=True)
 
 genai_api_key = os.getenv("GOOGLE_API_KEY")
 genai.configure()
 
-class TextToAnimation:
+class GrammarParser:
 
-    def parse_text_to_sign(self, t2s_input):
+    def parse_text_to_auslan_grammar(self, t2s_input):
+        # takes a regular sentence and converts it to Auslan grammar
+
         if not t2s_input:
             return {"error": "Invalid input from user"}
 
