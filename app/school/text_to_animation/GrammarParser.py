@@ -2,6 +2,7 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
+from WordSenseDisambig import disambiguate_words
 
 load_dotenv(override=True)
 
@@ -17,8 +18,18 @@ class GrammarParser:
             return {"error": "Invalid input from user"}
 
         if len(t2s_input.split()) > 2:
-            # print("Contacting Gemini")
 
+            # 1. Lemmatise words using something like spaCy or NLTK
+            # pseudocode:
+            # lemmatized_sentence = lemmatize(t2s_input)
+
+            # 2. Use WSD to disambiguate words if necessary
+            #    (e.g., "bank" as a financial institution vs. "bank"
+            #    as the side of a river)
+            # pseudocode:
+            # disambiguated_sentence = disambiguate_words(lemmatized_sentence)
+            
+            # 3. Use model for grammar parsing here
             model = genai.GenerativeModel("gemini-1.5-flash")
 
             response = model.generate_content(
