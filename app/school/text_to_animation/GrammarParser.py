@@ -39,14 +39,14 @@ class GrammarParser:
             
             # Extract the lemma (base form) of each word and join them
             lemmatized_sentence = " ".join([token.lemma_ for token in doc])
-            print(f"Lemmatized sentence: {lemmatized_sentence}")  # Debug print
+
             return lemmatized_sentence
         
 
         except OSError:
             # Handle case where spaCy model is not installed
-            print("Error: spaCy English model not found. Please install with: pip install spacy, or use requirements.txt.")
-            print("Install the model with: python -m spacy download en_core_web_sm")
+            print("Error: spaCy English model not found. Please install with: pip install spacy, or run pip install -r requirements.txt.")
+            print("If missing, install the model with: python -m spacy download en_core_web_sm")
             return sentence  # Return original sentence as fallback
         except Exception as e:
             # Handle any other unexpected errors
@@ -64,11 +64,13 @@ class GrammarParser:
             # 1. Lemmatise words using spaCy
             lemmatized_sentence = self.lemmatize(t2s_input)
             
-            print(f"(GrammarParser): Lemmatized sentence: {lemmatized_sentence}")  # Debug print
+            print(f"(GrammarParser.py): Lemmatized sentence: {lemmatized_sentence}")
 
             # 2. Use WSD to disambiguate words if necessary
-            disambiguated_sentence = self.wsd.disambiguate_words(lemmatized_sentence)
-            
+            disambiguated_words = self.wsd.disambiguate_words(lemmatized_sentence)
+
+            print(f"(GrammarParser.py): Disambiguated words: {disambiguated_words}")
+
             # 3. Use model for grammar parsing here
             model = genai.GenerativeModel("gemini-1.5-flash")
 
