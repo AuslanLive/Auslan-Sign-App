@@ -2,7 +2,9 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from WordSenseDisambig import disambiguate_words
+from app.school.text_to_animation.WordSenseDisambig import WordSenseDisambiguation
+
+import spacy # Import spaCy for lemmatization mock
 
 load_dotenv(override=True)
 
@@ -10,6 +12,46 @@ genai_api_key = os.getenv("GOOGLE_API_KEY")
 genai.configure()
 
 class GrammarParser:
+    
+    def __init__(self):
+        """Initialize the GrammarParser with WordSenseDisambiguation instance."""
+        self.wsd = WordSenseDisambiguation()
+
+    def lemmatize(self, sentence):
+        """
+        Convert words in a sentence to their base/root forms using spaCy.
+        
+        Args:
+            sentence (str): Input sentence to lemmatize
+            
+        Returns:
+            str: Sentence with words converted to their lemma forms
+            
+        Example:
+            "I am running to the stores" → "I be run to the store"
+        """
+        try:
+            # Load English language model for natural language processing
+            nlp = spacy.load("en_core_web_sm")
+            
+            # Process the sentence to extract linguistic features
+            doc = nlp(sentence)
+            
+            # Extract the lemma (base form) of each word and join them
+            lemmatized_sentence = " ".join([token.lemma_ for token in doc])
+            print(f"Lemmatized sentence: {lemmatized_sentence}")  # Debug print
+            return lemmatized_sentence
+        
+
+        except OSError:
+            # Handle case where spaCy model is not installed
+            print("Error: spaCy English model not found. Please install with: pip install spacy, or use requirements.txt.")
+            print("Install the model with: python -m spacy download en_core_web_sm")
+            return sentence  # Return original sentence as fallback
+        except Exception as e:
+            # Handle any other unexpected errors
+            print(f"Error during lemmatization: {e}")
+            return sentence  # Return original sentence as fallback
 
     def parse_text_to_auslan_grammar(self, t2s_input):
         # takes a regular sentence and converts it to Auslan grammar
@@ -19,15 +61,13 @@ class GrammarParser:
 
         if len(t2s_input.split()) > 2:
 
-            # 1. Lemmatise words using something like spaCy or NLTK
-            # pseudocode:
-            # lemmatized_sentence = lemmatize(t2s_input)
+            # 1. Lemmatise words using spaCy
+            lemmatized_sentence = self.lemmatize(t2s_input)
+            
+            print(f"(GrammarParser): Lemmatized sentence: {lemmatized_sentence}")  # Debug print
 
             # 2. Use WSD to disambiguate words if necessary
-            #    (e.g., "bank" as a financial institution vs. "bank"
-            #    as the side of a river)
-            # pseudocode:
-            # disambiguated_sentence = disambiguate_words(lemmatized_sentence)
+            disambiguated_sentence = self.wsd.disambiguate_words(lemmatized_sentence)
             
             # 3. Use model for grammar parsing here
             model = genai.GenerativeModel("gemini-1.5-flash")
