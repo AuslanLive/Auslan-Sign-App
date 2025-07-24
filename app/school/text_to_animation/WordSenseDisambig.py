@@ -4,11 +4,15 @@ from transformers import pipeline
 
 class WordSenseDisambiguation:
     
+    # must be init with pytorch backend to avoid keras version conflict issues
+    # this is because keras is used in the Model_Owner.py file
+    # and transformers uses keras as well, so we need to use pytorch backend
     def __init__(self):
         """Initialize the word sense disambiguation with the ambiguous dictionary."""
         self.ambiguous_dict = self._load_ambiguous_dict()
         self.classifier = pipeline("zero-shot-classification", 
-                                 model="facebook/bart-large-mnli")
+                                 model="facebook/bart-large-mnli",
+                                 framework="pt")
     
     def _load_ambiguous_dict(self):
         """Load the ambiguous words dictionary from JSON file."""

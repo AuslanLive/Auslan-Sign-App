@@ -9,7 +9,7 @@ import spacy # Import spaCy for lemmatization mock
 load_dotenv(override=True)
 
 genai_api_key = os.getenv("GOOGLE_API_KEY")
-genai.configure()
+genai.configure(api_key=genai_api_key)
 
 class GrammarParser:
     
@@ -67,6 +67,9 @@ class GrammarParser:
             print(f"(GrammarParser.py): Lemmatized sentence: {lemmatized_sentence}")
 
             # 2. Use WSD to disambiguate words if necessary
+            
+            disambiguated_words = {}
+            
             disambiguated_words = self.wsd.disambiguate_words(lemmatized_sentence)
 
             print(f"(GrammarParser.py): Disambiguated words: {disambiguated_words}")
@@ -121,14 +124,29 @@ class GrammarParser:
             result = (
                 response_dict["candidates"][0]["content"]["parts"][0]["text"].strip().replace(
                     "\n", "").replace("\"", "")
+                
+                # if no response, set result to a default value
                 if response_dict["candidates"]
                 else "No valid response"
             )
+            
+            # from the result string, create a list of words
+            sentence = result.split()
+            
+            # loop over the sentence and clarify ambiguous words
+            for i, word in enumerate(sentence):
+                word_lower = word.lower()
+                if word_lower in disambiguated_words:
+                    # If the word is ambiguous, replace it with its disambiguated form
+                    print(f"(GrammarParser.py): Clarifying word '{word}' to '{disambiguated_words[word_lower]}'")
+                    sentence[i] = disambiguated_words[word_lower].upper()
 
         else:
-            result = t2s_input
+            sentence = t2s_input.split()
 
-        return result
+
+        print(f"(GrammarParser.py): Final parsed result: {sentence}")
+        return sentence
 
     def save_as_json(self, parsed_result, output_filename="parsed_input.json"):
         with open(output_filename, 'w') as outfile:

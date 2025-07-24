@@ -9,6 +9,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 model_path = os.path.join('app', r'loaded_bananamode_AAAAAAAAAAAAAAAAAAAAAAAAaa.keras')
 
+if not os.path.exists(model_path):
+    print(f"(server.py) Error: Model file not found at {model_path}")
+    print(f"(server.py) Current working directory: {os.getcwd()}")
+    print(f"(server.py) Files in app directory: {os.listdir('app') if os.path.exists('app') else 'app directory not found'}")
+    exit(1)
+
 # MAIN CLASS WHICH CONNECTS TO ALL THE SYSTEM
 connectinator = Connectinator(model_path)
 
@@ -61,11 +67,9 @@ def t2s_parse():
     try:
         t2s_input = request.get_json()
         connectinator.logger.info('Received request on /t2s: %s', t2s_input)
-
-        processed_t2s_phrase = connectinator.format_sign_text(
-            t2s_input['t2s_input'])
-
+        processed_t2s_phrase = connectinator.format_sign_text(t2s_input['t2s_input'])
         return jsonify({"message": processed_t2s_phrase}), 200
+    
     except Exception as e:
         connectinator.logger.error(f'Error processing request: {e}')
         return jsonify({"error": "Internal Server Error. Check JSON Format"}), 500

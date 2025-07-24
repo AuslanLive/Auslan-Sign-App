@@ -38,12 +38,11 @@ if None in firebase_credentials.values():
     raise ValueError("Firebase credentials not found in .env file.")
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate(firebase_credentials)
-firebase_admin.initialize_app(
-    cred, {'storageBucket': 'auslan-194e5.appspot.com'})
+if not firebase_admin._apps:
+    cred = credentials.Certificate(firebase_credentials)
+    firebase_admin.initialize_app(cred, {'storageBucket': 'auslan-194e5.appspot.com'})
 
 # Process pose file from Firebase Storage
-
 def process_pose_file(blob_name):
     try:
         bucket = storage.bucket()
@@ -122,12 +121,27 @@ def concatenate_poses_and_upload(blob_names, sentence):
 
 # Check if a word has a corresponding pose file in Firebase
 def get_valid_blobs_from_sentence(sentence):
-    words = sentence.split()  # Split the sentence into words
+    """Get valid blob names from the sentence.
+
+    Args:
+        sentence (list): The input sentence's words, as a list.
+
+    Returns:
+        list: A list of valid blob names.
+    """
+    
+    # if sentence is a string, return
+    if isinstance(sentence, str):
+        print("(pose_video_creator) Input sentence is a string, expected a list of words.")
+        return
+    
+    print("(pose_video_creator) Checking for valid pose files in Firebase Storage...")
+    
     valid_blob_names = []
 
     bucket = storage.bucket()
 
-    for word in words:
+    for word in sentence:
         # Check both lowercase and capitalized versions of the word
         lowercase_blob = bucket.blob(f"{word.lower()}.pose")
         capitalized_blob = bucket.blob(f"{word.capitalize()}.pose")
@@ -138,8 +152,9 @@ def get_valid_blobs_from_sentence(sentence):
             # Add capitalized if exists
             valid_blob_names.append(word.capitalize())
         else:
-            print(f"Skipping word '{word}', no corresponding .pose file found.")
+            print(f"(pose_video_creator) Skipping word '{word}', no corresponding .pose file found.")
 
+    print(f"(pose_video_creator) Valid blob names found: {valid_blob_names}")
     return valid_blob_names
 
 
@@ -148,7 +163,7 @@ def process_sentence(sentence):
     valid_blob_names = get_valid_blobs_from_sentence(sentence)
 
     if len(valid_blob_names) == 0:
-        print("No valid words found with corresponding .pose files.")
+        print("(pose_video_creator) No valid words found with corresponding .pose files.")
         return None
 
     # Get the path to the temporary video file
