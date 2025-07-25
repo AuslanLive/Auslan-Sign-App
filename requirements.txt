@@ -72,6 +72,7 @@ nbconvert==7.16.4
 nbformat==5.10.4
 npm==0.1.1
 numpy==2.0.2
+openai==1.97.1
 opencv-python==4.10.0.84
 opt_einsum==3.4.0
 optional-django==0.1.0
