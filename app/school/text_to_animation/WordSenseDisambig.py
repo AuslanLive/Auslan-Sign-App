@@ -1,6 +1,7 @@
 import json
 import os
 from transformers import pipeline
+import spacy
 
 class WordSenseDisambiguation:
     
@@ -13,6 +14,9 @@ class WordSenseDisambiguation:
         self.classifier = pipeline("zero-shot-classification", 
                                  model="facebook/bart-large-mnli",
                                  framework="pt")
+        """Load spaCy with only lemmatization capabilities."""
+        self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner", "tagger"])
+        
     
     def _load_ambiguous_dict(self):
         """Load the ambiguous words dictionary from JSON file."""
@@ -43,6 +47,13 @@ class WordSenseDisambiguation:
         words = sentence.lower().split()
         
         for word in words:
+            
+            ## Also check if lemmatized word is in the ambiguous dictionary
+            # lemmatize the word using spaCy
+            # load spaCy with only lemmatisation capabilities
+            doc = self.nlp(word)
+            lemmatized_word = doc[0].lemma_
+
             # check json file dictionary for words and their senses
             if word in self.ambiguous_dict:
                 # disambiguate words based on context using zero-shot classification model

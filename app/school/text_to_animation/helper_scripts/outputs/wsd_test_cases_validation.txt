@@ -1,0 +1,80 @@
+[11] ambiguous_word='admit' | answer='admit (truth declaration)' | options=['admit (let in)', 'admit (truth declaration)'] | sentence='After a long discussion, he finally admitted that he had made a mistake.'
+  -> Reasons: Sentence does not contain exact token "admit" as a standalone word.
+[27] ambiguous_word='alter' | answer='alter (clothing)' | options=['alter (clothing)', 'alter (change)'] | sentence='She took her dress to the tailor to have it altered for the wedding.'
+  -> Reasons: Sentence does not contain exact token "alter" as a standalone word.
+[90] ambiguous_word='boot' | answer='boot (shoe)' | options=['boot (shoe)', 'boot (car)'] | sentence='She wore a pair of sturdy hiking boots for the trek.'
+  -> Reasons: Sentence does not contain exact token "boot" as a standalone word.
+[92] ambiguous_word='bother' | answer='bother (can not be bothered)' | options=['bother (can not be bothered)', 'bother (trouble)', 'bother (no bother)'] | sentence='I just can’t be bothered to clean my room today.'
+  -> Reasons: Sentence does not contain exact token "bother" as a standalone word.
+[102] ambiguous_word='bowl' | answer='bowl (ball)' | options=['bowl (cricket)', 'bowl (dish)', 'bowl (ball)'] | sentence='During the game, she rolled a perfect strike with the bowling ball.'
+  -> Reasons: Sentence does not contain exact token "bowl" as a standalone word.
+[108] ambiguous_word='breasts' | answer='breasts (breasts)' | options=['breasts (large)', 'breasts (breasts)'] | sentence='The doctor explained the importance of regular check-ups for breast health.'
+  -> Reasons: Sentence does not contain exact token "breasts" as a standalone word.
+[210] ambiguous_word='crash' | answer='crash (vehicle)' | options=['crash (vehicle)', 'crash (plane)'] | sentence='The car lost control and crashed into the guardrail on the highway.'
+  -> Reasons: Sentence does not contain exact token "crash" as a standalone word.
+[233] ambiguous_word='degree' | answer='degree (temperature)' | options=['degree (temperature)', 'degree (diploma)'] | sentence='The weather forecast predicts a high of 30 degrees tomorrow.'
+  -> Reasons: Sentence does not contain exact token "degree" as a standalone word.
+[244] ambiguous_word='dismiss' | answer='dismiss (sport)' | options=['dismiss (reject)', 'dismiss (sport)'] | sentence='The batsman was dismissed after a superb catch in the slips.'
+  -> Reasons: Sentence does not contain exact token "dismiss" as a standalone word.
+[272] ambiguous_word='dribble' | answer='dribble (ball)' | options=['dribble (ball)', 'dribble (saliva)'] | sentence='The point guard skillfully dribbled the basketball down the court.'
+  -> Reasons: Sentence does not contain exact token "dribble" as a standalone word.
+[337] ambiguous_word='flame' | answer='flame (fire)' | options=['flame (fire)', 'flame (cooking)'] | sentence='The campfire cast a warm glow as its flames danced in the night.'
+  -> Reasons: Sentence does not contain exact token "flame" as a standalone word.
+[398] ambiguous_word='hair' | answer='hair (head hair)' | options=['hair (long)', 'hair (head hair)', 'hair (short)'] | sentence='She decided to change her hairstyle before the wedding.'
+  -> Reasons: Sentence does not contain exact token "hair" as a standalone word.
+[407] ambiguous_word='hassle' | answer='hassle (no hassle)' | options=['hassle (interruption)', 'hassle (no hassle)'] | sentence='Cancelling the subscription was quick and hassle-free.'
+  -> Reasons: Sentence does not contain exact token "hassle" as a standalone word.
+[457] ambiguous_word='late' | answer='late (too late)' | options=['late (Overdue)', 'late (too late)'] | sentence='She arrived at the airport to find the flight had already departed.'
+  -> Reasons: Sentence does not contain exact token "late" as a standalone word.
+[458] ambiguous_word='laugh' | answer='laugh (a lot)' | options=['laugh (a lot)', 'laugh (giggle)'] | sentence='The comedian's performance was so funny that the audience couldn't stop laughing.'
+  -> Reasons: Sentence does not contain exact token "laugh" as a standalone word.
+[479] ambiguous_word='like' | answer='like (fondness)' | options=['like (not like)', 'like (fondness)'] | sentence='Susan really likes her new neighbor's friendly dog.'
+  -> Reasons: Sentence does not contain exact token "like" as a standalone word.
+[489] ambiguous_word='love' | answer='love (tennis score)' | options=['love (affection)', 'love (tennis score)'] | sentence='The match began with the score at love-all.'
+  -> Reasons: Sentence does not contain exact token "love" as a standalone word.
+[512] ambiguous_word='meter' | answer='meter (length unit)' | options=['meter (gauge)', 'meter (length unit)'] | sentence='The swimming pool is fifty meters long.'
+  -> Reasons: Sentence does not contain exact token "meter" as a standalone word.
+[521] ambiguous_word='minute' | answer='minute (time)' | options=['minute (very small)', 'minute (time)'] | sentence='The meeting will start in five minutes.'
+  -> Reasons: Sentence does not contain exact token "minute" as a standalone word.
+[524] ambiguous_word='month' | answer='month (M-abbreviation)' | options=['month (this past month)', 'month (this month)', 'month (M-abbreviation)'] | sentence='January is abbreviated as Jan.'
+  -> Reasons: Sentence does not contain exact token "month" as a standalone word.
+[535] ambiguous_word='neck' | answer='neck (pet)' | options=['neck (neck)', 'neck (pet)'] | sentence='He gently necked the cat to soothe it.'
+  -> Reasons: Sentence does not contain exact token "neck" as a standalone word.
+[543] ambiguous_word='nurse' | answer='nurse (cradle)' | options=['nurse (baby)', 'nurse (cradle)'] | sentence='She gently nursed the fragile old violin back to its original beauty.'
+  -> Reasons: Sentence does not contain exact token "nurse" as a standalone word.
+[551] ambiguous_word='open' | answer='open (automatic doors)' | options=['open (make available)', 'open (book)', 'open (window)', 'open (automatic doors)', 'open (sliding', 'open (drawer)', 'open (folder)', 'open (door)'] | sentence='As I approached the supermarket, the doors opened by themselves.'
+  -> Reasons: Sentence does not contain exact token "open" as a standalone word.
+[569] ambiguous_word='overtake' | answer='overtake (surpass)' | options=['overtake (in vehicle)', 'overtake (surpass)'] | sentence='In recent years, digital sales overtook physical sales in the music industry.'
+  -> Reasons: Sentence does not contain exact token "overtake" as a standalone word.
+[573] ambiguous_word='page' | answer='page (use pager)' | options=['page (paper sheet)', 'page (use pager)'] | sentence='The doctor was paged urgently during the meeting.'
+  -> Reasons: Sentence does not contain exact token "page" as a standalone word.
+[612] ambiguous_word='point' | answer='point (geometry)' | options=['point (full stop)', 'point (indicate)', 'point (geometry)', 'point (dot)', 'point (purpose)'] | sentence='In geometry class, we learned that a line is defined by two distinct points.'
+  -> Reasons: Sentence does not contain exact token "point" as a standalone word.
+[686] ambiguous_word='run' | answer='run (running)' | options=['run (running)', 'run (flow)', 'run (machine)', 'run (engine)', 'run (nose)'] | sentence='She runs every morning to stay fit.'
+  -> Reasons: Sentence does not contain exact token "run" as a standalone word.
+[690] ambiguous_word='run' | answer='run (nose)' | options=['run (running)', 'run (flow)', 'run (machine)', 'run (engine)', 'run (nose)'] | sentence='Her cold was so bad that she constantly had to wipe her runny nose.'
+  -> Reasons: Sentence does not contain exact token "run" as a standalone word.
+[697] ambiguous_word='saw' | answer='saw (cut)' | options=['saw (tool)', 'saw (see)', 'saw (cut)'] | sentence='He carefully sawed through the thick log to prepare firewood.'
+  -> Reasons: Sentence does not contain exact token "saw" as a standalone word.
+[724] ambiguous_word='second' | answer='second (time)' | options=['second (of month)', 'second (every second)', 'second (runner-up)', 'second (list)', 'second (support)', 'second (time)'] | sentence='He held his breath for exactly one minute and sixty seconds.'
+  -> Reasons: Sentence does not contain exact token "second" as a standalone word.
+[729] ambiguous_word='self' | answer='self (affix)' | options=['self (individual)', 'self (oneself)', 'self (affix)'] | sentence='You should learn to be self-reliant to succeed in life.'
+  -> Reasons: Sentence does not contain exact token "self" as a standalone word.
+[779] ambiguous_word='smash' | answer='smash (forceful impact)' | options=['smash (vehicle)', 'smash (forceful impact)'] | sentence='The hammer smashed the delicate vase into pieces.'
+  -> Reasons: Sentence does not contain exact token "smash" as a standalone word.
+[793] ambiguous_word='square' | answer='square (equal-sided)' | options=['square (mathematics)', 'square (equal-sided)'] | sentence='The children drew squares of various colors with chalk on the sidewalk.'
+  -> Reasons: Sentence does not contain exact token "square" as a standalone word.
+[811] ambiguous_word='stop' | answer='stop (cease)' | options=['stop (prohibit)', 'stop (doing that)', 'stop (cease)'] | sentence='When the music stopped, everyone clapped.'
+  -> Reasons: Sentence does not contain exact token "stop" as a standalone word.
+[818] ambiguous_word='stroke' | answer='stroke (pat)' | options=['stroke (slash)', 'stroke (pat)', 'stroke (illness)'] | sentence='She gently stroked the cat's fur as it purred contentedly.'
+  -> Reasons: Sentence does not contain exact token "stroke" as a standalone word.
+[830] ambiguous_word='suspend' | answer='suspend (sport)' | options=['suspend (remove)', 'suspend (sport)', 'suspend (hang)'] | sentence='The player was suspended for three games due to unsportsmanlike conduct.'
+  -> Reasons: Sentence does not contain exact token "suspend" as a standalone word.
+[919] ambiguous_word='vanish' | answer='vanish (into distance)' | options=['vanish (disappear)', 'vanish (into distance)'] | sentence='The trail gradually vanished as we hiked further into the mountains.'
+  -> Reasons: Sentence does not contain exact token "vanish" as a standalone word.
+[945] ambiguous_word='week' | answer='week (this week)' | options=['week (last week)', 'week (next week)', 'week (week ago)', 'week (this past week)', 'week (week after)', 'week (calendar week)', 'week (this week)'] | sentence='I have a dentist appointment this Thursday.'
+  -> Reasons: Sentence does not contain exact token "week" as a standalone word.
+[958] ambiguous_word='wind up' | answer='wind up (watch)' | options=['wind up (crank)', 'wind up (watch)'] | sentence='He carefully wound up his grandfather's antique pocket watch each morning.'
+  -> Reasons: Sentence does not contain exact token "wind up" as a standalone word.
+[971] ambiguous_word='year' | answer='year (next year)' | options=['year (this past year)', 'year (for a year)', 'year (this year)', 'year (last year)', 'year (calendar year)', 'year (one year)', 'year (next year)'] | sentence='I plan to travel to Japan in 2024.'
+  -> Reasons: Sentence does not contain exact token "year" as a standalone word.

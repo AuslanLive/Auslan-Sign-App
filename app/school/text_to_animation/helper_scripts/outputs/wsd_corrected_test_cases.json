@@ -1,0 +1,1218 @@
+[
+  {
+    "ambiguous_word": "admit",
+    "options": [
+      "admit (let in)",
+      "admit (truth declaration)"
+    ],
+    "test_sentence": "The guard will only admit those with a valid pass.",
+    "answer": "admit (let in)"
+  },
+  {
+    "ambiguous_word": "admit",
+    "options": [
+      "admit (let in)",
+      "admit (truth declaration)"
+    ],
+    "test_sentence": "After hours of questioning, he finally had to admit that he was wrong.",
+    "answer": "admit (truth declaration)"
+  },
+  {
+    "ambiguous_word": "alter",
+    "options": [
+      "alter (clothing)",
+      "alter (change)"
+    ],
+    "test_sentence": "She needed to alter her dress before the wedding.",
+    "answer": "alter (clothing)"
+  },
+  {
+    "ambiguous_word": "alter",
+    "options": [
+      "alter (clothing)",
+      "alter (change)"
+    ],
+    "test_sentence": "They decided to alter the plans at the last moment to avoid the rain.",
+    "answer": "alter (change)"
+  },
+  {
+    "ambiguous_word": "boot",
+    "options": [
+      "boot (shoe)",
+      "boot (car)"
+    ],
+    "test_sentence": "She slipped on a sturdy boot before heading out into the snow.",
+    "answer": "boot (shoe)"
+  },
+  {
+    "ambiguous_word": "boot",
+    "options": [
+      "boot (shoe)",
+      "boot (car)"
+    ],
+    "test_sentence": "We packed all our suitcases into the boot before leaving for the airport.",
+    "answer": "boot (car)"
+  },
+  {
+    "ambiguous_word": "bother",
+    "options": [
+      "bother (can not be bothered)",
+      "bother (trouble)",
+      "bother (no bother)"
+    ],
+    "test_sentence": "He decided not to bother cleaning his room before leaving.",
+    "answer": "bother (can not be bothered)"
+  },
+  {
+    "ambiguous_word": "bother",
+    "options": [
+      "bother (can not be bothered)",
+      "bother (trouble)",
+      "bother (no bother)"
+    ],
+    "test_sentence": "If your neighbors are too loud, just let management know so they can handle the bother.",
+    "answer": "bother (trouble)"
+  },
+  {
+    "ambiguous_word": "bother",
+    "options": [
+      "bother (can not be bothered)",
+      "bother (trouble)",
+      "bother (no bother)"
+    ],
+    "test_sentence": "It's no bother for me to pick you up from the station.",
+    "answer": "bother (no bother)"
+  },
+  {
+    "ambiguous_word": "bowl",
+    "options": [
+      "bowl (cricket)",
+      "bowl (dish)",
+      "bowl (ball)"
+    ],
+    "test_sentence": "The bowler was ready to bowl after adjusting his fielders.",
+    "answer": "bowl (cricket)"
+  },
+  {
+    "ambiguous_word": "bowl",
+    "options": [
+      "bowl (cricket)",
+      "bowl (dish)",
+      "bowl (ball)"
+    ],
+    "test_sentence": "She filled the bowl with fresh strawberries and cream.",
+    "answer": "bowl (dish)"
+  },
+  {
+    "ambiguous_word": "bowl",
+    "options": [
+      "bowl (cricket)",
+      "bowl (dish)",
+      "bowl (ball)"
+    ],
+    "test_sentence": "The child eagerly awaited his turn to bowl down the pins at the alley.",
+    "answer": "bowl (ball)"
+  },
+  {
+    "ambiguous_word": "breasts",
+    "options": [
+      "breasts (large)",
+      "breasts (breasts)"
+    ],
+    "test_sentence": "The actress is known for her voluptuous figure and ample breasts.",
+    "answer": "breasts (large)"
+  },
+  {
+    "ambiguous_word": "breasts",
+    "options": [
+      "breasts (large)",
+      "breasts (breasts)"
+    ],
+    "test_sentence": "The baby was gently cradled while feeding from her breasts.",
+    "answer": "breasts (breasts)"
+  },
+  {
+    "ambiguous_word": "crash",
+    "options": [
+      "crash (vehicle)",
+      "crash (plane)"
+    ],
+    "test_sentence": "The busy highway witnessed a massive crash during rush hour.",
+    "answer": "crash (vehicle)"
+  },
+  {
+    "ambiguous_word": "crash",
+    "options": [
+      "crash (vehicle)",
+      "crash (plane)"
+    ],
+    "test_sentence": "The report detailed how the pilot managed to survive the crash against all odds.",
+    "answer": "crash (plane)"
+  },
+  {
+    "ambiguous_word": "degree",
+    "options": [
+      "degree (temperature)",
+      "degree (diploma)"
+    ],
+    "test_sentence": "The temperature dropped by one degree overnight.",
+    "answer": "degree (temperature)"
+  },
+  {
+    "ambiguous_word": "degree",
+    "options": [
+      "degree (temperature)",
+      "degree (diploma)"
+    ],
+    "test_sentence": "She received her degree in biology from Harvard University.",
+    "answer": "degree (diploma)"
+  },
+  {
+    "ambiguous_word": "dismiss",
+    "options": [
+      "dismiss (reject)",
+      "dismiss (sport)"
+    ],
+    "test_sentence": "The editor chose to dismiss the proposal after reading the first draft.",
+    "answer": "dismiss (reject)"
+  },
+  {
+    "ambiguous_word": "dismiss",
+    "options": [
+      "dismiss (reject)",
+      "dismiss (sport)"
+    ],
+    "test_sentence": "The bowler managed to dismiss the batsman with a perfect delivery.",
+    "answer": "dismiss (sport)"
+  },
+  {
+    "ambiguous_word": "dribble",
+    "options": [
+      "dribble (ball)",
+      "dribble (saliva)"
+    ],
+    "test_sentence": "He learned to dribble the basketball down the court like a pro.",
+    "answer": "dribble (ball)"
+  },
+  {
+    "ambiguous_word": "dribble",
+    "options": [
+      "dribble (ball)",
+      "dribble (saliva)"
+    ],
+    "test_sentence": "The baby started to dribble as she fell asleep in her crib.",
+    "answer": "dribble (saliva)"
+  },
+  {
+    "ambiguous_word": "flame",
+    "options": [
+      "flame (fire)",
+      "flame (cooking)"
+    ],
+    "test_sentence": "The campfire's lone flame flickered in the cold night air.",
+    "answer": "flame (fire)"
+  },
+  {
+    "ambiguous_word": "flame",
+    "options": [
+      "flame (fire)",
+      "flame (cooking)"
+    ],
+    "test_sentence": "He adjusted the flame under the pot to simmer the sauce.",
+    "answer": "flame (cooking)"
+  },
+  {
+    "ambiguous_word": "hair",
+    "options": [
+      "hair (long)",
+      "hair (head hair)",
+      "hair (short)"
+    ],
+    "test_sentence": "Rapunzel is known for letting her hair down from the tower.",
+    "answer": "hair (long)"
+  },
+  {
+    "ambiguous_word": "hair",
+    "options": [
+      "hair (long)",
+      "hair (head hair)",
+      "hair (short)"
+    ],
+    "test_sentence": "She went to the salon to get her hair styled for the party.",
+    "answer": "hair (head hair)"
+  },
+  {
+    "ambiguous_word": "hair",
+    "options": [
+      "hair (long)",
+      "hair (head hair)",
+      "hair (short)"
+    ],
+    "test_sentence": "There was barely a hair's breadth between the two cars.",
+    "answer": "hair (short)"
+  },
+  {
+    "ambiguous_word": "hassle",
+    "options": [
+      "hassle (interruption)",
+      "hassle (no hassle)"
+    ],
+    "test_sentence": "Getting the printer to work was a hassle that delayed the meeting.",
+    "answer": "hassle (interruption)"
+  },
+  {
+    "ambiguous_word": "hassle",
+    "options": [
+      "hassle (interruption)",
+      "hassle (no hassle)"
+    ],
+    "test_sentence": "The online order process was quick and hassle-free.",
+    "answer": "hassle (no hassle)"
+  },
+  {
+    "ambiguous_word": "late",
+    "options": [
+      "late (Overdue)",
+      "late (too late)"
+    ],
+    "test_sentence": "Her library books are late and she needs to return them.",
+    "answer": "late (Overdue)"
+  },
+  {
+    "ambiguous_word": "late",
+    "options": [
+      "late (Overdue)",
+      "late (too late)"
+    ],
+    "test_sentence": "We arrived at the station just as the train was pulling away, too late to board.",
+    "answer": "late (too late)"
+  },
+  {
+    "ambiguous_word": "laugh",
+    "options": [
+      "laugh (a lot)",
+      "laugh (giggle)"
+    ],
+    "test_sentence": "During the comedy show, everyone couldn't help but laugh at the hilarious jokes.",
+    "answer": "laugh (a lot)"
+  },
+  {
+    "ambiguous_word": "laugh",
+    "options": [
+      "laugh (a lot)",
+      "laugh (giggle)"
+    ],
+    "test_sentence": "The baby let out a soft laugh when I tickled her belly.",
+    "answer": "laugh (giggle)"
+  },
+  {
+    "ambiguous_word": "like",
+    "options": [
+      "like (not like)",
+      "like (fondness)"
+    ],
+    "test_sentence": "Square shapes do not fit into round holes like triangles do.",
+    "answer": "like (not like)"
+  },
+  {
+    "ambiguous_word": "like",
+    "options": [
+      "like (not like)",
+      "like (fondness)"
+    ],
+    "test_sentence": "I really like her sense of humor.",
+    "answer": "like (fondness)"
+  },
+  {
+    "ambiguous_word": "love",
+    "options": [
+      "love (affection)",
+      "love (tennis score)"
+    ],
+    "test_sentence": "Her eyes showed pure love as she hugged her mother tightly.",
+    "answer": "love (affection)"
+  },
+  {
+    "ambiguous_word": "love",
+    "options": [
+      "love (affection)",
+      "love (tennis score)"
+    ],
+    "test_sentence": "The match started slowly, with the score at love-all in the first game.",
+    "answer": "love (tennis score)"
+  },
+  {
+    "ambiguous_word": "meter",
+    "options": [
+      "meter (gauge)",
+      "meter (length unit)"
+    ],
+    "test_sentence": "The technician checked the water pressure using a meter.",
+    "answer": "meter (gauge)"
+  },
+  {
+    "ambiguous_word": "meter",
+    "options": [
+      "meter (gauge)",
+      "meter (length unit)"
+    ],
+    "test_sentence": "The swimming pool is exactly fifty meters long.",
+    "answer": "meter (length unit)"
+  },
+  {
+    "ambiguous_word": "minute",
+    "options": [
+      "minute (very small)",
+      "minute (time)"
+    ],
+    "test_sentence": "The scientist observed the minute particles under the microscope.",
+    "answer": "minute (very small)"
+  },
+  {
+    "ambiguous_word": "minute",
+    "options": [
+      "minute (very small)",
+      "minute (time)"
+    ],
+    "test_sentence": "Let's take a minute to review the meeting agenda.",
+    "answer": "minute (time)"
+  },
+  {
+    "ambiguous_word": "month",
+    "options": [
+      "month (this past month)",
+      "month (this month)",
+      "month (M-abbreviation)"
+    ],
+    "test_sentence": "We had frequent storms throughout the month.",
+    "answer": "month (this past month)"
+  },
+  {
+    "ambiguous_word": "month",
+    "options": [
+      "month (this past month)",
+      "month (this month)",
+      "month (M-abbreviation)"
+    ],
+    "test_sentence": "I have several deadlines to meet by the end of the month.",
+    "answer": "month (this month)"
+  },
+  {
+    "ambiguous_word": "month",
+    "options": [
+      "month (this past month)",
+      "month (this month)",
+      "month (M-abbreviation)"
+    ],
+    "test_sentence": "The horoscope column is usually labeled with month after each sign.",
+    "answer": "month (M-abbreviation)"
+  },
+  {
+    "ambiguous_word": "neck",
+    "options": [
+      "neck (neck)",
+      "neck (pet)"
+    ],
+    "test_sentence": "She wore a necklace that beautifully accentuated her neck.",
+    "answer": "neck (neck)"
+  },
+  {
+    "ambiguous_word": "neck",
+    "options": [
+      "neck (neck)",
+      "neck (pet)"
+    ],
+    "test_sentence": "The cat purred loudly as she began to neck it gently.",
+    "answer": "neck (pet)"
+  },
+  {
+    "ambiguous_word": "nurse",
+    "options": [
+      "nurse (baby)",
+      "nurse (cradle)"
+    ],
+    "test_sentence": "She watched the mother nurse her newborn in the hospital room.",
+    "answer": "nurse (baby)"
+  },
+  {
+    "ambiguous_word": "nurse",
+    "options": [
+      "nurse (baby)",
+      "nurse (cradle)"
+    ],
+    "test_sentence": "The young mother would gently nurse her newborn to sleep every night.",
+    "answer": "nurse (cradle)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "The museum will open its new exhibit to the public next week.",
+    "answer": "open (make available)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "Please open to page 32 for today's reading.",
+    "answer": "open (book)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "Can you open the window to let some fresh air in?",
+    "answer": "open (window)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "As she approached the supermarket entrance, the sensors activated to open the doors.",
+    "answer": "open (automatic doors)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "He watched as she used her foot to easily open the sliding door to the patio.",
+    "answer": "open (sliding"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "He reached out to open the drawer and pulled out an old photograph.",
+    "answer": "open (drawer)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "Please open the folder labeled 'Documents' on your desktop.",
+    "answer": "open (folder)"
+  },
+  {
+    "ambiguous_word": "open",
+    "options": [
+      "open (make available)",
+      "open (book)",
+      "open (window)",
+      "open (automatic doors)",
+      "open (sliding",
+      "open (drawer)",
+      "open (folder)",
+      "open (door)"
+    ],
+    "test_sentence": "Could you please open the door for the delivery person?",
+    "answer": "open (door)"
+  },
+  {
+    "ambiguous_word": "overtake",
+    "options": [
+      "overtake (in vehicle)",
+      "overtake (surpass)"
+    ],
+    "test_sentence": "You need to signal before you overtake the car ahead of you on the highway.",
+    "answer": "overtake (in vehicle)"
+  },
+  {
+    "ambiguous_word": "overtake",
+    "options": [
+      "overtake (in vehicle)",
+      "overtake (surpass)"
+    ],
+    "test_sentence": "This year's sales are expected to overtake last year's record.",
+    "answer": "overtake (surpass)"
+  },
+  {
+    "ambiguous_word": "page",
+    "options": [
+      "page (paper sheet)",
+      "page (use pager)"
+    ],
+    "test_sentence": "I wrote my notes on the last page of the notebook.",
+    "answer": "page (paper sheet)"
+  },
+  {
+    "ambiguous_word": "page",
+    "options": [
+      "page (paper sheet)",
+      "page (use pager)"
+    ],
+    "test_sentence": "Please page the doctor if there's an emergency in the ward.",
+    "answer": "page (use pager)"
+  },
+  {
+    "ambiguous_word": "point",
+    "options": [
+      "point (full stop)",
+      "point (indicate)",
+      "point (geometry)",
+      "point (dot)",
+      "point (purpose)"
+    ],
+    "test_sentence": "She ended the sentence with a point.",
+    "answer": "point (full stop)"
+  },
+  {
+    "ambiguous_word": "point",
+    "options": [
+      "point (full stop)",
+      "point (indicate)",
+      "point (geometry)",
+      "point (dot)",
+      "point (purpose)"
+    ],
+    "test_sentence": "She used her finger to point at the map on the wall.",
+    "answer": "point (indicate)"
+  },
+  {
+    "ambiguous_word": "point",
+    "options": [
+      "point (full stop)",
+      "point (indicate)",
+      "point (geometry)",
+      "point (dot)",
+      "point (purpose)"
+    ],
+    "test_sentence": "According to Euclidean geometry, a line is defined by two points.",
+    "answer": "point (geometry)"
+  },
+  {
+    "ambiguous_word": "point",
+    "options": [
+      "point (full stop)",
+      "point (indicate)",
+      "point (geometry)",
+      "point (dot)",
+      "point (purpose)"
+    ],
+    "test_sentence": "Please mark each question with a point to track the progress.",
+    "answer": "point (dot)"
+  },
+  {
+    "ambiguous_word": "point",
+    "options": [
+      "point (full stop)",
+      "point (indicate)",
+      "point (geometry)",
+      "point (dot)",
+      "point (purpose)"
+    ],
+    "test_sentence": "I don't see the point of arguing when it's clearly not going to change anything.",
+    "answer": "point (purpose)"
+  },
+  {
+    "ambiguous_word": "run",
+    "options": [
+      "run (running)",
+      "run (flow)",
+      "run (machine)",
+      "run (engine)",
+      "run (nose)"
+    ],
+    "test_sentence": "Every morning, she wakes up at dawn to run in the park.",
+    "answer": "run (running)"
+  },
+  {
+    "ambiguous_word": "run",
+    "options": [
+      "run (running)",
+      "run (flow)",
+      "run (machine)",
+      "run (engine)",
+      "run (nose)"
+    ],
+    "test_sentence": "Tears began to run down her cheeks when she heard the bad news.",
+    "answer": "run (flow)"
+  },
+  {
+    "ambiguous_word": "run",
+    "options": [
+      "run (running)",
+      "run (flow)",
+      "run (machine)",
+      "run (engine)",
+      "run (nose)"
+    ],
+    "test_sentence": "Make sure to run the dishwasher after dinner.",
+    "answer": "run (machine)"
+  },
+  {
+    "ambiguous_word": "run",
+    "options": [
+      "run (running)",
+      "run (flow)",
+      "run (machine)",
+      "run (engine)",
+      "run (nose)"
+    ],
+    "test_sentence": "Can you make sure the car can run smoothly before the road trip?",
+    "answer": "run (engine)"
+  },
+  {
+    "ambiguous_word": "run",
+    "options": [
+      "run (running)",
+      "run (flow)",
+      "run (machine)",
+      "run (engine)",
+      "run (nose)"
+    ],
+    "test_sentence": "I need a tissue because my nose started to run.",
+    "answer": "run (nose)"
+  },
+  {
+    "ambiguous_word": "saw",
+    "options": [
+      "saw (tool)",
+      "saw (see)",
+      "saw (cut)"
+    ],
+    "test_sentence": "He reached for the saw to finish the carpentry project.",
+    "answer": "saw (tool)"
+  },
+  {
+    "ambiguous_word": "saw",
+    "options": [
+      "saw (tool)",
+      "saw (see)",
+      "saw (cut)"
+    ],
+    "test_sentence": "I saw her waving from the other side of the street.",
+    "answer": "saw (see)"
+  },
+  {
+    "ambiguous_word": "saw",
+    "options": [
+      "saw (tool)",
+      "saw (see)",
+      "saw (cut)"
+    ],
+    "test_sentence": "He carefully saw through the thick log with precision.",
+    "answer": "saw (cut)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "Her birthday is on the second of September.",
+    "answer": "second (of month)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "The clock ticks once every second.",
+    "answer": "second (every second)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "She was thrilled to finish second in the national baking competition.",
+    "answer": "second (runner-up)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "She was the second person to sign the guestbook.",
+    "answer": "second (list)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "I second the motion to extend the meeting by 30 minutes.",
+    "answer": "second (support)"
+  },
+  {
+    "ambiguous_word": "second",
+    "options": [
+      "second (of month)",
+      "second (every second)",
+      "second (runner-up)",
+      "second (list)",
+      "second (support)",
+      "second (time)"
+    ],
+    "test_sentence": "The race was decided by just one second.",
+    "answer": "second (time)"
+  },
+  {
+    "ambiguous_word": "self",
+    "options": [
+      "self (individual)",
+      "self (oneself)",
+      "self (affix)"
+    ],
+    "test_sentence": "Each self has a unique set of fingerprints.",
+    "answer": "self (individual)"
+  },
+  {
+    "ambiguous_word": "self",
+    "options": [
+      "self (individual)",
+      "self (oneself)",
+      "self (affix)"
+    ],
+    "test_sentence": "She needed some time for self-reflection after the meeting.",
+    "answer": "self (oneself)"
+  },
+  {
+    "ambiguous_word": "self",
+    "options": [
+      "self (individual)",
+      "self (oneself)",
+      "self (affix)"
+    ],
+    "test_sentence": "We studied how different self-help books can influence behavior.",
+    "answer": "self (affix)"
+  },
+  {
+    "ambiguous_word": "smash",
+    "options": [
+      "smash (vehicle)",
+      "smash (forceful impact)"
+    ],
+    "test_sentence": "There was a terrible road smash involving three cars on the highway.",
+    "answer": "smash (vehicle)"
+  },
+  {
+    "ambiguous_word": "smash",
+    "options": [
+      "smash (vehicle)",
+      "smash (forceful impact)"
+    ],
+    "test_sentence": "I watched the hammer smash the glass vase into pieces.",
+    "answer": "smash (forceful impact)"
+  },
+  {
+    "ambiguous_word": "square",
+    "options": [
+      "square (mathematics)",
+      "square (equal-sided)"
+    ],
+    "test_sentence": "To find the area, multiply the side length of the square by itself.",
+    "answer": "square (mathematics)"
+  },
+  {
+    "ambiguous_word": "square",
+    "options": [
+      "square (mathematics)",
+      "square (equal-sided)"
+    ],
+    "test_sentence": "She sketched a perfect square with a ruler and pencil.",
+    "answer": "square (equal-sided)"
+  },
+  {
+    "ambiguous_word": "stop",
+    "options": [
+      "stop (prohibit)",
+      "stop (doing that)",
+      "stop (cease)"
+    ],
+    "test_sentence": "The new law will stop the sale of fireworks in the city limits.",
+    "answer": "stop (prohibit)"
+  },
+  {
+    "ambiguous_word": "stop",
+    "options": [
+      "stop (prohibit)",
+      "stop (doing that)",
+      "stop (cease)"
+    ],
+    "test_sentence": "Please stop hitting your brother right now.",
+    "answer": "stop (doing that)"
+  },
+  {
+    "ambiguous_word": "stop",
+    "options": [
+      "stop (prohibit)",
+      "stop (doing that)",
+      "stop (cease)"
+    ],
+    "test_sentence": "It is time to stop your work for the day.",
+    "answer": "stop (cease)"
+  },
+  {
+    "ambiguous_word": "stroke",
+    "options": [
+      "stroke (slash)",
+      "stroke (pat)",
+      "stroke (illness)"
+    ],
+    "test_sentence": "To access the hidden menu, use the key combination: alt stroke N.",
+    "answer": "stroke (slash)"
+  },
+  {
+    "ambiguous_word": "stroke",
+    "options": [
+      "stroke (slash)",
+      "stroke (pat)",
+      "stroke (illness)"
+    ],
+    "test_sentence": "She gently stroke the cat's fur as it purred contentedly.",
+    "answer": "stroke (pat)"
+  },
+  {
+    "ambiguous_word": "stroke",
+    "options": [
+      "stroke (slash)",
+      "stroke (pat)",
+      "stroke (illness)"
+    ],
+    "test_sentence": "After he experienced a stroke, he had to undergo extensive rehabilitation.",
+    "answer": "stroke (illness)"
+  },
+  {
+    "ambiguous_word": "suspend",
+    "options": [
+      "suspend (remove)",
+      "suspend (sport)",
+      "suspend (hang)"
+    ],
+    "test_sentence": "The manager decided to suspend the employee after repeated policy violations.",
+    "answer": "suspend (remove)"
+  },
+  {
+    "ambiguous_word": "suspend",
+    "options": [
+      "suspend (remove)",
+      "suspend (sport)",
+      "suspend (hang)"
+    ],
+    "test_sentence": "The athlete was found guilty of doping and had to suspend his competition schedule.",
+    "answer": "suspend (sport)"
+  },
+  {
+    "ambiguous_word": "suspend",
+    "options": [
+      "suspend (remove)",
+      "suspend (sport)",
+      "suspend (hang)"
+    ],
+    "test_sentence": "They decided to suspend the chandelier from the ceiling in the dining room.",
+    "answer": "suspend (hang)"
+  },
+  {
+    "ambiguous_word": "vanish",
+    "options": [
+      "vanish (disappear)",
+      "vanish (into distance)"
+    ],
+    "test_sentence": "The magician made the rabbit vanish right before our eyes.",
+    "answer": "vanish (disappear)"
+  },
+  {
+    "ambiguous_word": "vanish",
+    "options": [
+      "vanish (disappear)",
+      "vanish (into distance)"
+    ],
+    "test_sentence": "We watched the ship vanish over the horizon.",
+    "answer": "vanish (into distance)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "He mentioned that the project was completed last week.",
+    "answer": "week (last week)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "We will finalize the project details in a meeting during the week.",
+    "answer": "week (next week)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "I visited the museum exactly a week ago.",
+    "answer": "week (week ago)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "He's been working overtime this entire week to meet the deadline.",
+    "answer": "week (this past week)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "We have planned to take a vacation the week after the conference ends.",
+    "answer": "week (week after)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "Each week begins on Monday and ends on Sunday.",
+    "answer": "week (calendar week)"
+  },
+  {
+    "ambiguous_word": "week",
+    "options": [
+      "week (last week)",
+      "week (next week)",
+      "week (week ago)",
+      "week (this past week)",
+      "week (week after)",
+      "week (calendar week)",
+      "week (this week)"
+    ],
+    "test_sentence": "I have three important meetings scheduled for this week.",
+    "answer": "week (this week)"
+  },
+  {
+    "ambiguous_word": "wind up",
+    "options": [
+      "wind up (crank)",
+      "wind up (watch)"
+    ],
+    "test_sentence": "Before starting the toy car, you need to wind up the spring mechanism.",
+    "answer": "wind up (crank)"
+  },
+  {
+    "ambiguous_word": "wind up",
+    "options": [
+      "wind up (crank)",
+      "wind up (watch)"
+    ],
+    "test_sentence": "Every night, she would wind up her grandfather's antique watch before going to bed.",
+    "answer": "wind up (watch)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "This year saw major changes in my life, both personally and professionally.",
+    "answer": "year (this past year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "I signed the lease, agreeing to rent the apartment for a year.",
+    "answer": "year (for a year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "The city marathon will take place in May this year.",
+    "answer": "year (this year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "She traveled to three different countries last year.",
+    "answer": "year (last year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "The fiscal policies are updated based on the results of the previous calendar year.",
+    "answer": "year (calendar year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "The job requires a commitment of one year.",
+    "answer": "year (one year)"
+  },
+  {
+    "ambiguous_word": "year",
+    "options": [
+      "year (this past year)",
+      "year (for a year)",
+      "year (this year)",
+      "year (last year)",
+      "year (calendar year)",
+      "year (one year)",
+      "year (next year)"
+    ],
+    "test_sentence": "We plan to travel to Japan around this time next year.",
+    "answer": "year (next year)"
+  }
+]
