@@ -3349,7 +3349,7 @@
       "forget (not remember)",
       "forget (go blank)"
     ],
-    "test_sentence": "I forgot my brother's birthday last year.",
+    "test_sentence": "I often forget my brother's birthday.",
     "answer": "forget (not remember)"
   },
   {
@@ -3358,8 +3358,17 @@
       "forget (not remember)",
       "forget (go blank)"
     ],
-    "test_sentence": "During the presentation, I suddenly forgot what I was going to say.",
+    "test_sentence": "During presentations, I sometimes forget what I'm going to say.",
     "answer": "forget (go blank)"
+  },
+  {
+    "ambiguous_word": "formal",
+    "options": [
+      "formal (dress)",
+      "formal (situation)"
+    ],
+    "test_sentence": "The invitation specified that the event was formal, so everyone dressed accordingly.",
+    "answer": "formal (dress)"
   },
   {
     "ambiguous_word": "formal",
