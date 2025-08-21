@@ -44,7 +44,7 @@ def model_output_parse():
 
 @app.route('/api/get_sign_to_text', methods=["GET", "POST"])
 def get_sign_to_text():
-    translated_message = connectinator.get_transltion()
+    translated_message = connectinator.get_translation()
 
     return jsonify({"translation": translated_message}), 200
 
