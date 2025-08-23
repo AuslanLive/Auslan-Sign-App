@@ -211,7 +211,7 @@ def main():
     # Remove argparse and use only hardcoded/default values
     out_dir = "./wsd_out"
     model = "gpt-4o-mini"
-    per_sense = 40
+    per_sense = 20
     seed = 42
     confirm_labels = False
     cross_negatives = 2
