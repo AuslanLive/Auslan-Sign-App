@@ -209,7 +209,7 @@ def pick_cross_lemma_negatives(senses_by_lemma, lemma: str, k: int = 2, seed=42)
 
 def main():
     # Remove argparse and use only hardcoded/default values
-    out_dir = "./wsd_out"
+    out_dir = "app/school/text_to_animation/helper_scripts/outputs"
     model = "gpt-4o-mini"
     per_sense = 20
     seed = 42
@@ -258,6 +258,7 @@ def main():
     # 2) Generate a few sample sentences for preview
     print("=== SAMPLE SENTENCE GENERATION ===")
     sample_count = 3  # Just a few for preview
+    preview_data = []
     for lemma, senses in list(senses_by_lemma.items())[:2]:  # Only first 2 lemmas
         for se in senses[:1]:  # Only first sense per lemma
             # Extract label from sense_id format 'lemma (label)'
@@ -268,7 +269,21 @@ def main():
             batch = [s for s in batch if sentence_passes_rules(s, lemma)]
             for i, sentence in enumerate(batch[:sample_count], 1):
                 print(f"  {i}. {sentence}")
+                # Add to preview data
+                preview_data.append({
+                    "lemma": lemma,
+                    "sense_id": se.sense_id,
+                    "sentence": sentence,
+                    "definition": se.definition
+                })
             print()
+
+    # Save preview JSON
+    os.makedirs(out_dir, exist_ok=True)
+    preview_out = os.path.join(out_dir, "preview_wsd_samples.json")
+    with open(preview_out, "w", encoding="utf-8") as f:
+        json.dump(preview_data, f, ensure_ascii=False, indent=2)
+    print(f"Preview samples saved to: {preview_out}")
 
     # Ask for confirmation
     print("=== CONFIRMATION ===")
@@ -280,7 +295,6 @@ def main():
     print("\n=== FULL PROCESSING ===")
     
     # Now run full processing
-    os.makedirs(out_dir, exist_ok=True)
     senses_out = os.path.join(out_dir, "senses.json")
     dataset_out = os.path.join(out_dir, "dataset.jsonl")
     meta_out = os.path.join(out_dir, "META.json")
