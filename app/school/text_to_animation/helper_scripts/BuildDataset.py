@@ -101,13 +101,12 @@ def sentence_passes_rules(sentence: str, word: str) -> bool:
 SENSE_PROMPT = """You produce a compact JSON object with keys: sense_id, lemma, definition, examples.
 Create a sense entry for the lemma "{lemma}" with the label "({label})".
 Rules:
-- sense_id = "{lemma}#{label_key}" where label_key is the label in lowercase with spaces replaced by hyphens (no parentheses).
+- sense_id = "{lemma} ({label})" - the lemma followed by the label in parentheses.
 - definition: <= 25 words, neutral and clear.
 - examples: an array with 2-3 short example sentences (6-18 words), natural and grammatical.
 - Do NOT include parentheses or any sense labels in the examples.
 - Avoid unsafe or sensitive content; no PII.
-Return ONLY JSON.
-"""
+Return ONLY JSON."""
 
 SENTENCES_PROMPT = """Return a JSON object with a key "sentences" whose value is an array of strings.
 Generate {n} sentences for the lemma "{word}" that express the sense "{label}".
@@ -117,16 +116,14 @@ HARD RULES (must all be satisfied):
 3) Do NOT include any sense labels or parentheses in the sentence.
 4) Each sentence should be 8–22 words, natural and grammatical.
 5) Use diverse domains and phrasing; avoid near-duplicates.
-Keep language safe and neutral. Return ONLY JSON with {"sentences": [...]}.
-"""
+Keep language safe and neutral. Return ONLY JSON with {{"sentences": [...]}}."""
 
 CONFIRM_SENSE_PROMPT = """You are given a sentence containing the lemma "{word}" and a list of possible sense labels for this lemma.
 Pick the ONE label that best matches the sentence usage.
 Return JSON: {{"label": "..."}} ONLY.
 Lemma: "{word}"
 Sentence: "{sentence}"
-Candidates: {candidates}
-"""
+Candidates: {candidates}"""
 
 # --- OpenAI call wrappers with retries -------------------------------------
 def oai_json_call(client, model, prompt, max_retries=4, sleep_s=1.5):
@@ -167,11 +164,10 @@ def make_label_key(label: str) -> str:
     return lab
 
 def generate_sense_entry(client, model, lemma: str, label: str) -> SenseEntry:
-    label_key = make_label_key(label)
-    prompt = SENSE_PROMPT.format(lemma=lemma, label=label, label_key=label_key)
+    prompt = SENSE_PROMPT.format(lemma=lemma, label=label)
     data = oai_json_call(client, model, prompt)
     # Minimal validation
-    sense_id = data.get("sense_id", f"{lemma}#{label_key}")
+    sense_id = data.get("sense_id", f"{lemma} ({label})")
     definition = data.get("definition", "").strip()
     examples = [s.strip() for s in data.get("examples", []) if isinstance(s, str)]
     # Remove parentheses if any leaked
@@ -194,9 +190,10 @@ def confirm_sentence_sense(client, model, word: str, sentence: str, labels: List
 
 def assemble_sense_text(entry) -> str:
     examples = "; ".join(entry.examples[:2]) if entry.examples else ""
-    label_key = entry.sense_id.split('#', 1)[1]
-    label_readable = label_key.replace('-', ' ')
-    return f"Sense: {entry.lemma} ({label_readable})\nDefinition: {entry.definition}\nExamples: {examples}"
+    # Extract label from sense_id format 'lemma (label)'
+    match = re.search(r'\(([^)]+)\)', entry.sense_id)
+    label_readable = match.group(1) if match else "unknown"
+    return f"Sense: {entry.sense_id}\nDefinition: {entry.definition}\nExamples: {examples}"
 
 def pick_cross_lemma_negatives(senses_by_lemma, lemma: str, k: int = 2, seed=42) -> List[str]:
     rnd = random.Random(seed)
@@ -263,8 +260,9 @@ def main():
     sample_count = 3  # Just a few for preview
     for lemma, senses in list(senses_by_lemma.items())[:2]:  # Only first 2 lemmas
         for se in senses[:1]:  # Only first sense per lemma
-            label_key = se.sense_id.split("#", 1)[1]
-            label_text = label_key.replace("-", " ")
+            # Extract label from sense_id format 'lemma (label)'
+            match = re.search(r'\(([^)]+)\)', se.sense_id)
+            label_text = match.group(1) if match else "unknown"
             print(f"Generating sample sentences for {lemma} ({label_text})...")
             batch = generate_sentences_for_sense(client, model, lemma, label_text, sample_count)
             batch = [s for s in batch if sentence_passes_rules(s, lemma)]
@@ -320,8 +318,9 @@ def main():
                 labels.append(m.group(1).strip() if m else lab_full)
 
             for se in senses:
-                label_key = se.sense_id.split("#", 1)[1]
-                label_text = label_key.replace("-", " ")
+                # Extract label from sense_id format 'lemma (label)'
+                match = re.search(r'\(([^)]+)\)', se.sense_id)
+                label_text = match.group(1) if match else "unknown"
                 batch = generate_sentences_for_sense(client, model, lemma, label_text, per_sense * 2)
                 batch = [s for s in batch if sentence_passes_rules(s, lemma)]
                 batch = dedupe_preserving_order(batch)
