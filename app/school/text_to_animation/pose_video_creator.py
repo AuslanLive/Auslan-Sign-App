@@ -77,7 +77,7 @@ def concatenate_poses_and_upload(blob_names, sentence):
             valid_filenames.append(os.path.splitext(
                 os.path.basename(blob_name))[0])
 
-    if len(all_poses) > 1:
+    if len(all_poses) >= 1:
         concatenated_pose, frame_ranges = concatenate_poses(
             all_poses, valid_filenames)
         visualizer = PoseVisualizer(concatenated_pose)
