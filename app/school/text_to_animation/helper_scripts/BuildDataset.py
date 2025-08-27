@@ -216,6 +216,14 @@ def main():
     confirm_labels = False
     cross_negatives = 2
 
+    print("=== INITIALIZATION ===")
+    print(f"Output directory: {out_dir}")
+    print(f"Model: {model}")
+    print(f"Target sentences per sense: {per_sense}")
+    print(f"Random seed: {seed}")
+    print(f"Confirm labels: {confirm_labels}")
+    print(f"Cross negatives: {cross_negatives}")
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         print("Available environment variables:")
@@ -224,51 +232,78 @@ def main():
                 print(f"  {key} = {os.environ[key][:20]}...")
         raise RuntimeError("OPENAI_API_KEY not set")
     client = OpenAI(api_key=api_key)
+    print("✓ OpenAI client initialized")
 
     # Hardcoded path for lemma→labels
     lemmas_json_path = "app/school/text_to_animation/ambiguous_dict.json"
+    print(f"Loading lemmas from: {lemmas_json_path}")
     with open(lemmas_json_path, "r", encoding="utf-8") as f:
         lemma2labels: Dict[str, List[str]] = json.load(f)
+    print(f"✓ Loaded {len(lemma2labels)} lemmas")
 
     # Preview mode: only first 5 entries
     preview_lemmas = list(lemma2labels.keys())[:5]
     preview_dict = {lemma: lemma2labels[lemma] for lemma in preview_lemmas}
     
-    print("=== PREVIEW MODE ===")
+    print("\n=== PREVIEW MODE ===")
     print(f"Processing first 5 entries: {preview_lemmas}")
     print(f"Model: {model}")
     print(f"Per sense target: {per_sense}")
     print()
 
     # 1) Build sense catalog for preview
+    print("=== BUILDING PREVIEW SENSE CATALOG ===")
     senses_by_lemma = defaultdict(list)
+    total_preview_senses = sum(len(labels) for labels in preview_dict.values())
+    current_sense = 0
+    
     for lemma, labels in preview_dict.items():
-        print(f"Processing lemma: {lemma}")
-        for lab in labels:
+        print(f"Processing lemma: {lemma} ({len(labels)} senses)")
+        for i, lab in enumerate(labels, 1):
+            current_sense += 1
             m = re.search(r"\(([^)]+)\)", lab)
             inner_label = m.group(1).strip() if m else lab
-            print(f"  - Generating sense entry for: {inner_label}")
+            print(f"  [{current_sense}/{total_preview_senses}] Generating sense entry for: {inner_label}")
+            print(f"    Making API call to {model}...")
             entry = generate_sense_entry(client, model, lemma, inner_label)
-            print(f"    → sense_id: {entry.sense_id}")
-            print(f"    → definition: {entry.definition}")
-            print(f"    → examples: {entry.examples}")
+            print(f"    ✓ Generated sense_id: {entry.sense_id}")
+            print(f"    ✓ Definition ({len(entry.definition)} chars): {entry.definition[:50]}...")
+            print(f"    ✓ Examples ({len(entry.examples)}): {[ex[:30] + '...' if len(ex) > 30 else ex for ex in entry.examples]}")
             senses_by_lemma[lemma].append(entry)
+            time.sleep(0.5)  # Brief pause between API calls
+        print(f"  Completed {lemma}: {len(senses_by_lemma[lemma])} senses generated")
         print()
 
     # 2) Generate a few sample sentences for preview
     print("=== SAMPLE SENTENCE GENERATION ===")
     sample_count = 3  # Just a few for preview
     preview_data = []
+    processed_lemmas = 0
+    
     for lemma, senses in list(senses_by_lemma.items())[:2]:  # Only first 2 lemmas
-        for se in senses[:1]:  # Only first sense per lemma
+        processed_lemmas += 1
+        print(f"[{processed_lemmas}/2] Processing lemma: {lemma}")
+        for sense_idx, se in enumerate(senses[:1], 1):  # Only first sense per lemma
             # Extract label from sense_id format 'lemma (label)'
             match = re.search(r'\(([^)]+)\)', se.sense_id)
             label_text = match.group(1) if match else "unknown"
-            print(f"Generating sample sentences for {lemma} ({label_text})...")
+            print(f"  Sense {sense_idx}: {label_text}")
+            print(f"  Requesting {sample_count} sample sentences from {model}...")
             batch = generate_sentences_for_sense(client, model, lemma, label_text, sample_count)
-            batch = [s for s in batch if sentence_passes_rules(s, lemma)]
-            for i, sentence in enumerate(batch[:sample_count], 1):
-                print(f"  {i}. {sentence}")
+            print(f"  ✓ Received {len(batch)} sentences from API")
+            
+            # Validate sentences
+            valid_batch = []
+            for j, s in enumerate(batch, 1):
+                is_valid = sentence_passes_rules(s, lemma)
+                print(f"    Sentence {j}: {'✓' if is_valid else '✗'} {s[:50]}...")
+                if is_valid:
+                    valid_batch.append(s)
+            
+            print(f"  ✓ {len(valid_batch)}/{len(batch)} sentences passed validation")
+            
+            for i, sentence in enumerate(valid_batch[:sample_count], 1):
+                print(f"    Sample {i}: {sentence}")
                 # Add to preview data
                 preview_data.append({
                     "lemma": lemma,
@@ -279,81 +314,134 @@ def main():
             print()
 
     # Save preview JSON
+    print("=== SAVING PREVIEW DATA ===")
     os.makedirs(out_dir, exist_ok=True)
     preview_out = os.path.join(out_dir, "preview_wsd_samples.json")
     with open(preview_out, "w", encoding="utf-8") as f:
         json.dump(preview_data, f, ensure_ascii=False, indent=2)
-    print(f"Preview samples saved to: {preview_out}")
+    print(f"✓ Preview samples saved to: {preview_out}")
+    print(f"✓ Saved {len(preview_data)} sample entries")
 
     # Ask for confirmation
-    print("=== CONFIRMATION ===")
+    print("\n=== CONFIRMATION ===")
     response = input("Continue with full processing? (Y/n): ").strip().lower()
     if response not in ['y', 'yes', '']:
         print("Cancelled.")
         return
 
     print("\n=== FULL PROCESSING ===")
+    print("Starting complete dataset generation...")
     
     # Now run full processing
     senses_out = os.path.join(out_dir, "senses.json")
     dataset_out = os.path.join(out_dir, "dataset.jsonl")
     meta_out = os.path.join(out_dir, "META.json")
 
+    print(f"Output files will be:")
+    print(f"  - {senses_out}")
+    print(f"  - {dataset_out}")
+    print(f"  - {meta_out}")
+
     lemmas = list(lemma2labels.keys())
+    print(f"\nProcessing {len(lemmas)} total lemmas")
     split_map = split_lemmas(lemmas, ratios=(0.8, 0.1, 0.1), seed=seed)
+    split_summary = Counter(split_map.values())
+    print(f"Split distribution: {dict(split_summary)}")
 
     # 1) Build sense catalog for all entries
+    print("\n=== BUILDING COMPLETE SENSE CATALOG ===")
     senses_by_lemma = defaultdict(list)
-    for lemma, labels in lemma2labels.items():
-        print(f"Processing {lemma}...")
-        for lab in labels:
+    total_senses_needed = sum(len(labels) for labels in lemma2labels.values())
+    current_sense = 0
+    
+    for lemma_idx, (lemma, labels) in enumerate(lemma2labels.items(), 1):
+        print(f"[{lemma_idx}/{len(lemma2labels)}] Processing lemma: {lemma} ({len(labels)} senses)")
+        for lab_idx, lab in enumerate(labels, 1):
+            current_sense += 1
             m = re.search(r"\(([^)]+)\)", lab)
             inner_label = m.group(1).strip() if m else lab
+            print(f"  [{current_sense}/{total_senses_needed}] Generating: {inner_label}")
             entry = generate_sense_entry(client, model, lemma, inner_label)
             senses_by_lemma[lemma].append(entry)
+            print(f"    ✓ Created {entry.sense_id}")
+        print(f"  ✓ Completed {lemma}: {len(senses_by_lemma[lemma])} senses")
 
     # Save senses.json
+    print("\n=== SAVING SENSE CATALOG ===")
     senses_catalog = {se.sense_id: {"sense_id": se.sense_id, "lemma": se.lemma, "definition": se.definition, "examples": se.examples}
                       for senses in senses_by_lemma.values() for se in senses}
     with open(senses_out, "w", encoding="utf-8") as f:
         json.dump(senses_catalog, f, ensure_ascii=False, indent=2)
+    print(f"✓ Saved {len(senses_catalog)} sense entries to {senses_out}")
 
     # 2) Generate sentences per sense with validation and optional confirmation
+    print("\n=== GENERATING TRAINING DATASET ===")
     rnd = random.Random(seed)
     total_rows = 0
     split_counts = Counter()
     sense_counts = Counter()
+    
+    total_senses = sum(len(senses) for senses in senses_by_lemma.values())
+    processed_senses = 0
 
     with open(dataset_out, "w", encoding="utf-8") as fout:
-        for lemma, senses in senses_by_lemma.items():
+        for lemma_idx, (lemma, senses) in enumerate(senses_by_lemma.items(), 1):
+            print(f"\n[{lemma_idx}/{len(senses_by_lemma)}] Processing lemma: {lemma}")
+            
             labels = []
             for lab_full in lemma2labels[lemma]:
                 m = re.search(r"\(([^)]+)\)", lab_full)
                 labels.append(m.group(1).strip() if m else lab_full)
+            print(f"  Available labels: {labels}")
 
-            for se in senses:
+            for sense_idx, se in enumerate(senses, 1):
+                processed_senses += 1
                 # Extract label from sense_id format 'lemma (label)'
                 match = re.search(r'\(([^)]+)\)', se.sense_id)
                 label_text = match.group(1) if match else "unknown"
+                
+                print(f"  [{processed_senses}/{total_senses}] Sense {sense_idx}: {label_text}")
+                print(f"    Requesting {per_sense * 2} sentences (target {per_sense})...")
+                
                 batch = generate_sentences_for_sense(client, model, lemma, label_text, per_sense * 2)
+                print(f"    ✓ Received {len(batch)} sentences from API")
+                
+                # Validate sentences
+                valid_before = len(batch)
                 batch = [s for s in batch if sentence_passes_rules(s, lemma)]
+                print(f"    ✓ {len(batch)}/{valid_before} sentences passed validation")
+                
+                # Deduplicate
+                before_dedup = len(batch)
                 batch = dedupe_preserving_order(batch)
+                print(f"    ✓ {len(batch)}/{before_dedup} sentences after deduplication")
+                
                 if confirm_labels:
+                    print(f"    Confirming labels for {len(batch)} sentences...")
                     kept = []
-                    for s in batch:
+                    for s_idx, s in enumerate(batch, 1):
                         chosen = confirm_sentence_sense(client, model, lemma, s, labels)
-                        if isinstance(chosen, str) and chosen.strip().lower() == label_text.lower():
+                        matches = isinstance(chosen, str) and chosen.strip().lower() == label_text.lower()
+                        print(f"      [{s_idx}/{len(batch)}] {'✓' if matches else '✗'} Confirmed: {chosen}")
+                        if matches:
                             kept.append(s)
                     batch = kept
+                    print(f"    ✓ {len(batch)} sentences confirmed correct")
 
+                # Take final batch
+                final_count = min(len(batch), per_sense)
                 batch = batch[:per_sense]
                 sense_counts[se.sense_id] += len(batch)
+                print(f"    ✓ Using {len(batch)} sentences for training")
 
+                # Generate negatives
                 split = split_map[lemma]
                 inlemma_negs = [assemble_sense_text(other) for other in senses if other.sense_id != se.sense_id]
                 cross_negs = pick_cross_lemma_negatives(senses_by_lemma, lemma, k=cross_negatives, seed=seed)
+                print(f"    ✓ Generated {len(inlemma_negs)} in-lemma + {len(cross_negs)} cross-lemma negatives")
 
-                for sentence in batch:
+                # Create training rows
+                for sent_idx, sentence in enumerate(batch, 1):
                     sense_text = assemble_sense_text(se)
                     negatives = inlemma_negs + cross_negs
                     row = {
@@ -367,8 +455,14 @@ def main():
                     fout.write(json.dumps(row, ensure_ascii=False) + "\n")
                     total_rows += 1
                     split_counts[split] += 1
+                
+                print(f"    ✓ Added {len(batch)} training rows (total: {total_rows})")
+
+    print(f"\n✓ Dataset generation complete: {total_rows} total rows")
+    print(f"✓ Split distribution: {dict(split_counts)}")
 
     # 3) META.json
+    print("\n=== SAVING METADATA ===")
     meta = {
         "model": model,
         "seed": seed,
@@ -385,8 +479,17 @@ def main():
     }
     with open(meta_out, "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
+    print(f"✓ Saved metadata to {meta_out}")
 
-    print(f"Done. Wrote:\n- {senses_out}\n- {dataset_out}\n- {meta_out}")
+    print(f"\n=== COMPLETION SUMMARY ===")
+    print(f"✓ Processed {len(lemmas)} lemmas")
+    print(f"✓ Generated {len(senses_catalog)} sense entries")
+    print(f"✓ Created {total_rows} training examples")
+    print(f"✓ Files saved:")
+    print(f"  - {senses_out}")
+    print(f"  - {dataset_out}")
+    print(f"  - {meta_out}")
+    print("Done!")
 
 if __name__ == "__main__":
     main()
