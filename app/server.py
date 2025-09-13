@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from app.school.Connectinator import Connectinator
 import os
+from time import time
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-model_path = os.path.join('app', r'loaded_bananamode_AAAAAAAAAAAAAAAAAAAAAAAAaa.keras')
+model_path = os.path.join('app', r'sign_to_text_model.keras')
 
 if not os.path.exists(model_path):
     print(f"(server.py) Error: Model file not found at {model_path}")
@@ -65,9 +66,13 @@ def get_gem_flag():
 @app.route('/api/t2s', methods=['POST'])
 def t2s_parse():
     try:
+        start = time()
+
         t2s_input = request.get_json()
         connectinator.logger.info('Received request on /t2s: %s', t2s_input)
         processed_t2s_phrase = connectinator.format_sign_text(t2s_input['t2s_input'])
+        print(f"Time taken {time()-start:0.4f}")
+
         return jsonify({"message": processed_t2s_phrase}), 200
     
     except Exception as e:
