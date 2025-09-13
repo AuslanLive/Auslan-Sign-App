@@ -8,6 +8,8 @@ COPY init.js eslint.config.js ./
 COPY public ./public  
 COPY src ./src  
 
+COPY index.html ./
+
 # Install dependencies & build frontend
 RUN npm install
 RUN npm run build
