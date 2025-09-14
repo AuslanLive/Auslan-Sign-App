@@ -1,0 +1,94 @@
+[
+  {
+    "sentence": "He quickly zipped up his fly before stepping onstage.",
+    "positive": "Sense: fly (trousers)\nDefinition: The zipper opening of pants.\nExample: \"He forgot to close his fly.\"",
+    "negatives": [
+      "Sense: fly (aeroplane)\nDefinition: Travel by aircraft.\nExample: \"We fly to Melbourne tomorrow.\"",
+      "Sense: fly (insect)\nDefinition: A small winged insect.\nExample: \"A fly landed on the cake.\"",
+      "Sense: fly (flap wings)\nDefinition: Move through the air by flapping wings.\nExample: \"Birds fly south for winter.\""
+    ]
+  },
+  {
+    "sentence": "The pilot prepared to fly the aircraft to New York.",
+    "positive": "Sense: fly (aeroplane)\nDefinition: Travel by aircraft.\nExample: \"We fly to Melbourne tomorrow.\"",
+    "negatives": [
+      "Sense: fly (trousers)\nDefinition: The zipper opening of pants.\nExample: \"He forgot to close his fly.\"",
+      "Sense: fly (insect)\nDefinition: A small winged insect.\nExample: \"A fly landed on the cake.\"",
+      "Sense: fly (flap wings)\nDefinition: Move through the air by flapping wings.\nExample: \"Birds fly south for winter.\""
+    ]
+  },
+  {
+    "sentence": "The picnic was interrupted by a persistent fly landing on the sandwiches.",
+    "positive": "Sense: fly (insect)\nDefinition: A small winged insect.\nExample: \"A fly landed on the cake.\"",
+    "negatives": [
+      "Sense: fly (trousers)\nDefinition: The zipper opening of pants.\nExample: \"He forgot to close his fly.\"",
+      "Sense: fly (aeroplane)\nDefinition: Travel by aircraft.\nExample: \"We fly to Melbourne tomorrow.\"",
+      "Sense: fly (flap wings)\nDefinition: Move through the air by flapping wings.\nExample: \"Birds fly south for winter.\""
+    ]
+  },
+  {
+    "sentence": "The birds fly south for the winter.",
+    "positive": "Sense: fly (flap wings)\nDefinition: Move through the air by flapping wings.\nExample: \"Birds fly south for winter.\"",
+    "negatives": [
+      "Sense: fly (trousers)\nDefinition: The zipper opening of pants.\nExample: \"He forgot to close his fly.\"",
+      "Sense: fly (aeroplane)\nDefinition: Travel by aircraft.\nExample: \"We fly to Melbourne tomorrow.\"",
+      "Sense: fly (insect)\nDefinition: A small winged insect.\nExample: \"A fly landed on the cake.\""
+    ]
+  },
+  {
+    "sentence": "I don't follow what you're saying about quantum mechanics.",
+    "positive": "Sense: follow (understand)\nDefinition: To grasp the meaning or logic of something said or done.\nExample: \"I follow your explanation about physics.\"",
+    "negatives": [
+      "Sense: follow (Align)\nDefinition: To move or proceed behind someone or something, matching direction or position.\nExample: \"The soldiers follow their leader.\""
+    ]
+  },
+  {
+    "sentence": "The soldiers follow their leader precisely through the obstacle course.",
+    "positive": "Sense: follow (Align)\nDefinition: To move or proceed behind someone or something, matching direction or position.\nExample: \"The soldiers follow their leader.\"",
+    "negatives": [
+      "Sense: follow (understand)\nDefinition: To grasp the meaning or logic of something said or done.\nExample: \"I follow your explanation about physics.\""
+    ]
+  },
+  {
+    "sentence": "I often forget my brother's birthday.",
+    "positive": "Sense: forget (not remember)\nDefinition: To fail to remember something.\nExample: \"I forget to lock the door sometimes.\"",
+    "negatives": [
+        "Sense: forget (go blank)\nDefinition: To lose one's train of thought or be unable to recall information momentarily.\nExample: \"I forget what I am going to say mid-sentence.\""
+    ]
+  },
+  {
+    "sentence": "During the presentation, I suddenly forget what I am going to say.",
+    "positive": "Sense: forget (go blank)\nDefinition: To lose one's train of thought or be unable to recall information momentarily.\nExample: \"I forget what I am going to say mid-sentence.\"",
+    "negatives": [
+        "Sense: forget (not remember)\nDefinition: To fail to remember something.\nExample: \"I forget to lock the door sometimes.\""
+    ]
+  },
+  {
+    "sentence": "He wore a tuxedo for the formal at the wedding.",
+    "positive": "Sense: formal (dress)\nDefinition: Clothing suitable for an official or ceremonial occasion.\nExample: \"He wore formal attire to the event.\"",
+    "negatives": [
+      "Sense: formal (situation)\nDefinition: An event or setting conducted with established rules, procedures, or etiquette.\nExample: \"They met in a formal meeting.\""
+    ]
+  },
+  {
+    "sentence": "The contract was discussed at a formal meeting with the board.",
+    "positive": "Sense: formal (situation)\nDefinition: An event or setting conducted with established rules, procedures, or etiquette.\nExample: \"They met in a formal meeting.\"",
+    "negatives": [
+      "Sense: formal (dress)\nDefinition: Clothing suitable for an official or ceremonial occasion.\nExample: \"He wore formal attire to the event.\""
+    ]
+  },
+  {
+    "sentence": "The car moved forward as the light turned green.",
+    "positive": "Sense: forward (ahead)\nDefinition: Toward the front or a position ahead.\nExample: \"She stepped forward to speak.\"",
+    "negatives": [
+      "Sense: forward (rugby)\nDefinition: A player position in rugby who plays near the front and is involved in physical contests for the ball.\nExample: \"The forward joined the scrum.\""
+    ]
+  },
+  {
+    "sentence": "The coach praised the forward for his strong performance in the scrum.",
+    "positive": "Sense: forward (rugby)\nDefinition: A player position in rugby who plays near the front and is involved in physical contests for the ball.\nExample: \"The forward joined the scrum.\"",
+    "negatives": [
+      "Sense: forward (ahead)\nDefinition: Toward the front or a position ahead.\nExample: \"She stepped forward to speak.\""
+    ]
+  }
+]
