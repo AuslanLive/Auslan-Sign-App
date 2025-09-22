@@ -5,6 +5,7 @@ import re
 import json
 import time
 import random
+import math
 from typing import List, Tuple, Optional
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -40,9 +41,27 @@ CHALLENGES = [
 # e.g., {"bank (financial)": ["account","ATM","interest"], "bank (river)": ["shore","meander"]}
 EXTRA_GIVEAWAYS = {}
 
+# --- New config ---
+K_PER_SENSE = 3            # ← generate 3 sentences per (word, sense)
+MAX_TRIES_PER_VARIANT = 4  # ← attempts per variant before giving up
+SIM_THRESHOLD = 0.6        # ← higher = stricter uniqueness (0..1)
+
 # ----------------------------
 # Utilities
 # ----------------------------
+def jaccard(a: str, b: str) -> float:
+    A = set(toks(a))
+    B = set(toks(b))
+    if not A and not B:
+        return 0.0
+    return len(A & B) / len(A | B)
+
+def is_unique(sentence: str, existing: list[str]) -> bool:
+    for s in existing:
+        if jaccard(sentence.lower(), s.lower()) >= SIM_THRESHOLD:
+            return False
+    return True
+
 def toks(s: str) -> List[str]:
     """Tokenize to alnum-lower tokens."""
     return [t for t in re.split(r"[^A-Za-z0-9]+", s.lower()) if t]
@@ -234,64 +253,90 @@ def main():
     output_data = []
 
     for word, senses in ambiguous_dict.items():
-        # ensure list
         if not isinstance(senses, list) or not senses:
             print(f"[skip] {word}: senses missing or invalid")
             continue
 
         for target_sense in senses:
             banned_words = extract_banned_words(senses, target_sense, word)
-            near_miss = pick_near_miss_token(senses, target_sense, word)
-            challenge = random.choice(CHALLENGES)
 
-            for attempt in range(min(MAX_TRIES, len(TEMPS))):
-                prompt = build_prompt(
-                    word=word,
-                    senses=senses,
-                    target_sense=target_sense,
-                    challenge=challenge,
-                    banned_words=banned_words,
-                    near_miss=near_miss
-                )
+            collected = []  # store accepted examples for this (word, sense)
+            used_challenges = set()
 
-                try:
-                    resp = client.chat.completions.create(
-                        model=MODEL,
-                        temperature=TEMPS[attempt],
-                        messages=[
-                            {
-                                "role": "system",
-                                "content": "You are a linguist generating difficult, unambiguous WSD test sentences that obey strict constraints."
-                            },
-                            {"role": "user", "content": prompt}
-                        ]
+            # keep going until we have K variants or we run out of steam
+            while len(collected) < K_PER_SENSE:
+                # rotate challenges to encourage variety
+                available = [c for c in CHALLENGES if c not in used_challenges] or CHALLENGES[:]
+                challenge = random.choice(available)
+                if challenge not in used_challenges and len(used_challenges) < len(CHALLENGES):
+                    used_challenges.add(challenge)
+
+                near_miss = pick_near_miss_token(senses, target_sense, word)
+
+                success_this_variant = False
+                # retry a few times for this particular variant
+                for attempt in range(min(MAX_TRIES_PER_VARIANT, len(TEMPS))):
+                    prompt = build_prompt(
+                        word=word,
+                        senses=senses,
+                        target_sense=target_sense,
+                        challenge=challenge,
+                        banned_words=banned_words,
+                        near_miss=near_miss
                     )
-                    content = resp.choices[0].message.content or ""
-                    example = parse_json_strict(content)
 
-                    ok, why = passes_validators(example, word, banned_words)
-                    if ok:
+                    try:
+                        resp = client.chat.completions.create(
+                            model=MODEL,
+                            temperature=TEMPS[attempt],
+                            messages=[
+                                {"role": "system", "content": "You are a linguist generating difficult, unambiguous WSD test sentences that obey strict constraints."},
+                                {"role": "user", "content": prompt}
+                            ]
+                        )
+                        content = resp.choices[0].message.content or ""
+                        example = parse_json_strict(content)
+
+                        ok, why = passes_validators(example, word, banned_words)
+                        if not ok:
+                            print(f"[retry] {word} ({target_sense}): {why}")
+                            continue
+
+                        # --- NEW: uniqueness check vs already collected sentences ---
+                        s = example.get("test_sentence", "")
+                        if not is_unique(s, [e["test_sentence"] for e in collected]):
+                            print(f"[retry] {word} ({target_sense}): too similar to existing variant")
+                            continue
+
+                        # tag which variant number this is
+                        example["variant_index"] = len(collected) + 1
+
+                        collected.append(example)
                         output_data.append(example)
-                        print(f"[✓] {word} → {target_sense} ({example.get('challenge','')})")
+                        print(f"[✓] {word} → {target_sense}  variant {example['variant_index']}  ({example.get('challenge','')})")
+                        success_this_variant = True
                         break
-                    else:
-                        print(f"[retry] {word} ({target_sense}): {why}")
-                        if attempt == MAX_TRIES - 1:
-                            print(f"[x] Failed after {MAX_TRIES} tries — skipping.")
-                except Exception as e:
-                    # On JSON/format/API failure, nudge the model next try
-                    print(f"[retry] {word} ({target_sense}): {e}")
-                    if attempt == MAX_TRIES - 1:
-                        print(f"[x] Failed after {MAX_TRIES} tries — skipping.")
 
-                time.sleep(REQ_SLEEP_S)
+                    except Exception as e:
+                        print(f"[retry] {word} ({target_sense}): {e}")
 
-    # Save results
-    os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(output_data, f, indent=2, ensure_ascii=False)
+                    time.sleep(REQ_SLEEP_S)
 
-    print(f"\n[done] Wrote {len(output_data)} examples → {OUT_PATH}")
+                if not success_this_variant:
+                    # couldn't produce a new unique, valid variant; try a different challenge next loop
+                    if len(collected) == 0:
+                        # if we never got even one, consider relaxing SIM_THRESHOLD slightly here if you want
+                        pass
+
+            # Optional: brief pause between senses
+            time.sleep(REQ_SLEEP_S)
+
+        # Save results
+        os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
+        with open(OUT_PATH, "w", encoding="utf-8") as f:
+            json.dump(output_data, f, indent=2, ensure_ascii=False)
+
+        print(f"\n[done] Wrote {len(output_data)} examples → {OUT_PATH}")
 
 
 if __name__ == "__main__":
