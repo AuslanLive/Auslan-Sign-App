@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import { storage, ref, getDownloadURL } from "../firebase";
-import namesData from '../namesdatapose.json';
+import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -148,13 +148,13 @@ const TranslateApp = () => {
 
 
     
-    const checkTextAgainstJson = (text) => {
+    const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
         const words = text.split(/\s+/).map(word => encodeURIComponent(word.toLowerCase()));
-        
-        // Convert namesData entries to lowercase for case-insensitive comparison
-        const existingWords = new Set(namesData.map(item => item.toLowerCase()));
-        
+
+        // Convert wordList entries to lowercase for case-insensitive comparison
+        const existingWords = new Set(wordList.map(item => item.toLowerCase()));
+
         // Filter out words that do not exist in the existing words set
         const missingWords = words.filter(word => !existingWords.has(word));
     
@@ -196,7 +196,7 @@ const TranslateApp = () => {
     const handleTextToVideo = async () => {
         const fixedSourceText = sourceText.trim();
         console.log("Sending Source Text:", fixedSourceText);
-        checkTextAgainstJson(fixedSourceText);
+        checkTextAgainstWordListJson(fixedSourceText);
         setLoading(true); // Set loading to true while fetching video
 
         // Step 1: API call to parse sentence to Auslan grammar
@@ -220,8 +220,22 @@ const TranslateApp = () => {
             // Step 2: Generate the Firebase video path using the translated text
             const firebaseURL = "gs://auslan-194e5.appspot.com/output_videos/";
             const fileType = ".mp4";
-            const parsedVideoName = translatedText || fixedSourceText;
+            // const parsedVideoName = translatedText || fixedSourceText;
+
+            let parsedVideoName;
+            if (Array.isArray(translatedText)) {
+                // Format as ['ITEM1', 'ITEM2', 'ITEM3'] to match what pose_video_creator.py creates in firebase
+                // Ensure each item is wrapped in quotes and joined by commas
+                const formattedItems = translatedText.map(item => `'${item}'`);
+                parsedVideoName = `[${formattedItems.join(', ')}]`;
+            } else {
+                parsedVideoName = translatedText || fixedSourceText;
+            }
+
             const videoPath = firebaseURL + parsedVideoName + fileType;
+
+            console.log("Video Path:", videoPath);
+            console.log("Parsed Video Name:", parsedVideoName);
 
             // Step 3: Fetch the video URL from Firebase
             const videoRef = ref(storage, videoPath);

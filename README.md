@@ -1,24 +1,22 @@
-# React + Vite
+## AuslanLive
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The first publicly available auslan translation app.
 
-Currently, two official plugins are available:
+## Install requirements/dependencies:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+`pip install -r requirements.txt`
 
+## 🚀 Run Locally
 
-## Dependencies
+In the root folder, run the below two commands in two separate terminals:
 
-1. Install pip (python package manager), then from the root folder, run: pip install -r requirements.txt
-2. Install FFMPeg for video conversion. This process is different between Mac and Windows, please consult the documentation online. Go to: https://ffmpeg.org/download.html
+1. Start the client:
 
-## Run Locally
+`npm run dev`
 
-In the root folder, run the below two commands:
+2. Start the server (Flask):
 
-1. npm run dev
-2. python -m app.server (starts the flask server)
+`python -m app.server`
 
-## Currently deployed at:
+## 🌐 Deployed Live At:
 https://auslan-client-23374783959.australia-southeast1.run.app/

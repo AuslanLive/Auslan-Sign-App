@@ -1,8 +1,8 @@
-from app.school.Model_Owner import Model
-from app.school.InputParser import InputParser
+from app.school.video_to_text.Model_Owner import Model
+from app.school.video_to_text.InputParser import InputParser
 import logging
-from app.school.results_parser import ResultsParser
-from app.school.results_parser import textAnimationTranslation
+from app.school.video_to_text.results_parser import ResultsParser
+from app.school.text_to_animation.GrammarParser import GrammarParser
 from time import time
 import json
 from app.school.text_to_animation.pose_video_creator import process_sentence
@@ -53,8 +53,8 @@ class Connectinator:
         # Create result parser
         self.results_parser = ResultsParser(self)
 
-        # Create text ani transltior
-        self.text_animation_translation = textAnimationTranslation()
+        # Create grammar parser
+        self.grammar_parser = GrammarParser()
 
         self.predictionList = []
         self.prevFlag = False
@@ -79,8 +79,8 @@ class Connectinator:
 
     # Return auslan grammer sentence
     def format_sign_text(self, input):
-        processed_t2s_phrase = self.text_animation_translation.parse_text_to_sign(
-            input)
+
+        processed_t2s_phrase = self.grammar_parser.parse_text_to_auslan_grammar(input)
 
         # Create video from the processed sentence
         process_sentence(processed_t2s_phrase)
