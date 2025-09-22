@@ -5,7 +5,6 @@ The first publicly available auslan translation app.
 ## Install requirements/dependencies:
 
 `pip install -r requirements.txt`
-`npm install`
 
 ## 🚀 Run Locally
 
