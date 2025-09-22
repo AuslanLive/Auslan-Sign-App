@@ -59,7 +59,7 @@ class GrammarParser:
         if not t2s_input:
             return {"error": "Invalid input from user"}
 
-        if len(t2s_input.split()) > 2:
+        if len(t2s_input.split()) >= 2:
 
             # 1. Lemmatise words using spaCy
             lemmatized_sentence = self.lemmatize(t2s_input)
