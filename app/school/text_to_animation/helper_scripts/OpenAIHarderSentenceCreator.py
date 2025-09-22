@@ -7,6 +7,7 @@ import time
 import random
 from typing import List, Tuple, Optional
 from openai import OpenAI
+from dotenv import load_dotenv
 
 # ----------------------------
 # Config
@@ -18,6 +19,8 @@ MIN_WORDS = 8               # target sentence length window
 MAX_WORDS = 14
 TEMPS = [0.7, 0.85, 0.95]   # temperature schedule across retries
 SEED = 42                   # set None to disable deterministic sampling
+
+load_dotenv('app/.env')
 
 # Output location
 OUT_PATH = "app/school/text_to_animation/helper_scripts/outputs/wsd_test_cases_harder.json"
@@ -36,7 +39,6 @@ CHALLENGES = [
 # Optional: add extra sense-specific giveaway tokens here to ban (hand-curation)
 # e.g., {"bank (financial)": ["account","ATM","interest"], "bank (river)": ["shore","meander"]}
 EXTRA_GIVEAWAYS = {}
-
 
 # ----------------------------
 # Utilities
