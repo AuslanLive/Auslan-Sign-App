@@ -2,12 +2,15 @@
 
 The first publicly available auslan translation app.
 
-## Run Locally
+## 🚀 Run Locally
 
-In the root folder, run the below two commands:
+In the root folder, run the below two commands in two separate terminals:
 
-1. npm run dev
-2. python -m app.server (starts the flask server)
+1. Start the client:
+npm run dev
 
-## Currently deployed at:
+2. Start the server (Flask):
+python -m app.server (starts the flask server)
+
+## 🌐 Deployed Live At:
 https://auslan-client-23374783959.australia-southeast1.run.app/
