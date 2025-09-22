@@ -24,6 +24,8 @@ Write **one short, natural English sentence** using the ambiguous word **"{word}
 - **Avoid ambiguity** — make it impossible to choose any of the other senses.
 - Keep the sentence clear, simple, and real-world.
 - Output in **valid JSON format** as shown below (use double quotes, no extra commentary).
+- The sentence must include the exact token "{word}" as written (case-insensitive). Do not use inflections (e.g., for forget: forgot, forgetting, forgets are forbidden).
+- The sentence must contain "{word}" as a standalone word boundary (not part of another word).
 
 ## Options:
 {json.dumps(senses)}
