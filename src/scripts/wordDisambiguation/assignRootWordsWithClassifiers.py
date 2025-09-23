@@ -106,39 +106,42 @@ def sanitize_filename(filename):
         filename = filename.replace(char, '')
     return filename.strip()
 
-def save_firebase_filenames_to_txt(bucket, output_dir="output"):
-    """Save all Firebase filenames to a text file."""
+def save_firebase_filenames_to_json(bucket, output_dir="output"):
+    """Save Firebase filenames with .pose extension to a JSON file."""
     try:
         # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
         
-        # Get all files from Firebase
-        print("Fetching all files from Firebase storage...")
-        blobs = bucket.list_blobs()
-        filenames = [blob.name for blob in blobs]
+        # Get .pose files from Firebase
+        print("Fetching .pose files from Firebase storage...")
+        pose_files = get_firebase_files_with_extension(bucket, ".pose")
         
         # Sort filenames for better readability
-        filenames.sort()
+        pose_files.sort()
         
         # Generate timestamp for filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_filename = os.path.join(output_dir, f"firebase_filenames_{timestamp}.txt")
+        output_filename = os.path.join(output_dir, f"firebase_pose_files_{timestamp}.json")
         
-        # Write to file
+        # Prepare data structure
+        data = {
+            "metadata": {
+                "generated_on": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                "total_files": len(pose_files),
+                "file_extension": ".pose"
+            },
+            "files": pose_files
+        }
+        
+        # Write to JSON file
         with open(output_filename, 'w', encoding='utf-8') as file:
-            file.write(f"Firebase Storage Filenames\n")
-            file.write(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            file.write(f"Total files: {len(filenames)}\n")
-            file.write("=" * 50 + "\n\n")
-            
-            for filename in filenames:
-                file.write(f"{filename}\n")
+            json.dump(data, file, indent=2, ensure_ascii=False)
         
-        print(f"Successfully saved {len(filenames)} filenames to: {output_filename}")
+        print(f"Successfully saved {len(pose_files)} .pose filenames to: {output_filename}")
         return output_filename
         
     except Exception as e:
-        print(f"Error saving Firebase filenames to file: {e}")
+        print(f"Error saving Firebase .pose filenames to JSON: {e}")
         return None
 
 def main():
@@ -153,9 +156,9 @@ def main():
     
     # Ask if user wants to save Firebase filenames to file
     while True:
-        response = input("\nDo you want to save all Firebase filenames to a text file? (Y/N): ").strip().upper()
+        response = input("\nDo you want to save all Firebase .pose filenames to a JSON file? (Y/N): ").strip().upper()
         if response in ['Y', 'YES']:
-            save_firebase_filenames_to_txt(bucket)
+            save_firebase_filenames_to_json(bucket)
             break
         elif response in ['N', 'NO']:
             break
