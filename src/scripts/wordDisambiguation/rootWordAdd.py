@@ -17,6 +17,15 @@ def extract_root_word(word):
         return word.split('(')[0].strip()
     return None
 
+def extract_parenthetical_content(word):
+    """Extract content within parentheses"""
+    if '(' in word and ')' in word:
+        start = word.find('(')
+        end = word.find(')')
+        if start < end:
+            return word[start+1:end].strip()
+    return None
+
 def main():
     # Define file paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -34,6 +43,7 @@ def main():
     
     # Find root words to add
     root_words_to_add = []
+    new_ambiguous_entries = {}
     
     print("Processing words with parentheses...")
     for word in full_word_list:
@@ -47,6 +57,12 @@ def main():
                     
                     root_words_to_add.append(root_word)
                     print(f"Found new root word: '{root_word}' from '{word}'")
+                    
+                    # Create ambiguous dictionary entry
+                    parenthetical_content = extract_parenthetical_content(word)
+                    if parenthetical_content:
+                        new_ambiguous_entries[root_word] = [word, parenthetical_content]
+                        print(f"  Will add to ambiguous_dict: '{root_word}' -> {new_ambiguous_entries[root_word]}")
     
     # Add new root words to the full word list
     if root_words_to_add:
@@ -64,8 +80,22 @@ def main():
         print(f"Successfully added {len(root_words_to_add)} root words:")
         for root_word in sorted(root_words_to_add):
             print(f"  - {root_word}")
-    else:
-        print("\nNo new root words found to add.")
+    
+    # Add new entries to ambiguous dictionary
+    if new_ambiguous_entries:
+        print(f"\nAdding {len(new_ambiguous_entries)} new entries to ambiguous dictionary...")
+        ambiguous_dict.update(new_ambiguous_entries)
+        
+        # Save the updated ambiguous dictionary
+        print("Saving updated ambiguous dictionary...")
+        save_json_file(ambiguous_dict_path, ambiguous_dict)
+        
+        print(f"Successfully added {len(new_ambiguous_entries)} ambiguous entries:")
+        for key, value in sorted(new_ambiguous_entries.items()):
+            print(f"  - '{key}' -> {value}")
+    
+    if not root_words_to_add and not new_ambiguous_entries:
+        print("\nNo new root words or ambiguous entries found to add.")
     
     print("\nScript completed successfully!")
 
