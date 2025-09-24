@@ -1,1805 +1,2585 @@
 {
-    "Egypt": [
-        "Egypt (country)",
-        "Egypt (Ancient Egypt)"
-    ],
-    "Indian": [
-        "Indian (Amerindian)",
-        "Indian (India)"
-    ],
-    "accident": [
-        "accident (unfortunate mishap)",
-        "accident (vehicle)"
-    ],
-    "accuracy": [
-        "accuracy (correctness)",
-        "accuracy (precision)"
-    ],
-    "accurate": [
-        "accurate (correct)",
-        "accurate (precise)"
-    ],
-    "admit": [
-        "admit (let in)",
-        "admit (truth declaration)"
-    ],
-    "advantage": [
-        "advantage (tennis)",
-        "advantage (beneficial)"
-    ],
-    "ago": [
-        "ago (long ago)",
-        "ago (past)"
-    ],
-    "aim": [
-        "aim (goal)",
-        "aim (arrow)"
-    ],
-    "alarm": [
-        "alarm (alert signal)",
-        "alarm (siren)",
-        "alarm (flashing)",
-        "alarm (ringing)"
-    ],
-    "alarm clock": [
-        "alarm clock (ringing)",
-        "alarm clock (flashing)",
-        "alarm clock (vibrating)"
-    ],
-    "all": [
-        "all (even)",
-        "all (whole)"
-    ],
-    "alter": [
-        "alter (clothing)",
-        "alter (change)"
-    ],
-    "area": [
-        "area (region)",
-        "area (surface area)"
-    ],
-    "around": [
-        "around (circular motion)",
-        "around (approximately)"
-    ],
-    "attend": [
-        "attend (group gathering)",
-        "attend (pay attention)"
-    ],
-    "attention": [
-        "attention (get attention)",
-        "attention (Focused awareness)"
-    ],
-    "audience": [
-        "audience (excited)",
-        "audience (spectators)"
-    ],
-    "back": [
-        "back (support)",
-        "back (behind)",
-        "back (of body)"
-    ],
-    "bank": [
-        "bank (financial institution)",
-        "bank (shore)"
-    ],
-    "bar": [
-        "bar (rod)",
-        "bar (pub)"
-    ],
-    "base": [
-        "base (foundation)",
-        "base (of triangle)"
-    ],
-    "bat": [
-        "bat (ball-hitting)",
-        "bat (animal)"
-    ],
-    "battery": [
-        "battery (car)",
-        "battery (power source)"
-    ],
-    "beat": [
-        "beat (hit)",
-        "beat (music)",
-        "beat (defeat)",
-        "beat (mix)",
-        "beat (heart)"
-    ],
-    "bed": [
-        "bed (seabed)",
-        "bed (sleep furniture)",
-        "bed (riverbed)"
-    ],
-    "before": [
-        "before (long before)",
-        "before (earlier)"
-    ],
-    "before that": [
-        "before that (not before that)",
-        "before that (previously repeated)"
-    ],
-    "before then": [
-        "before then (since)",
-        "before then (not before then)"
-    ],
-    "behaviour": [
-        "behaviour (good behaviour)",
-        "behaviour (actions)"
-    ],
-    "behind": [
-        "behind (at rear)",
-        "behind (AFL)"
-    ],
-    "believe": [
-        "believe (Credence)",
-        "believe (not believe)"
-    ],
-    "between": [
-        "between (middle)",
-        "between (two clock times)"
-    ],
-    "bid": [
-        "bid (bet)",
-        "bid (auction)"
-    ],
-    "black": [
-        "black (person)",
-        "black (darkest colour)"
-    ],
-    "blind": [
-        "blind (Sightless)",
-        "blind (screen)"
-    ],
-    "block": [
-        "block (shape)",
-        "block (stop)"
-    ],
-    "board": [
-        "board (committee)",
-        "board (get on)",
-        "board (vertical surface)",
-        "board (live at)"
-    ],
-    "boil": [
-        "boil (bubbling)",
-        "boil (blister)"
-    ],
-    "book": [
-        "book (reserve)",
-        "book (bound pages)"
-    ],
-    "boot": [
-        "boot (shoe)",
-        "boot (car)"
-    ],
-    "bother": [
-        "bother (can not be bothered)",
-        "bother (trouble)",
-        "bother (no bother)"
-    ],
-    "bounce": [
-        "bounce (ball)",
-        "bounce (rebound)"
-    ],
-    "bow": [
-        "bow (bend over)",
-        "bow (archery)",
-        "bow (ribbon)"
-    ],
-    "bowl": [
-        "bowl (cricket)",
-        "bowl (dish)",
-        "bowl (ball)"
-    ],
-    "box": [
-        "box (rectangular container)",
-        "box (punch)"
-    ],
-    "break": [
-        "break (pause)",
-        "break (wave)"
-    ],
-    "breasts": [
-        "breasts (large)",
-        "breasts (breasts)"
-    ],
-    "bright": [
-        "bright (Luminous)",
-        "bright (smart)"
-    ],
-    "brown": [
-        "brown (earth-coloured)",
-        "brown (suntanned)"
-    ],
-    "brush": [
-        "brush (hair)",
-        "brush (teeth)"
-    ],
-    "bullshit": [
-        "bullshit (deceptive talk)",
-        "bullshit (nonsense)"
-    ],
-    "business": [
-        "business (none of your business)",
-        "business (commerce)",
-        "business (none of my business)"
-    ],
-    "busy": [
-        "busy (activity)",
-        "busy (road)"
-    ],
-    "call": [
-        "call (yell)",
-        "call (telephone)",
-        "call (name)"
-    ],
-    "called": [
-        "called (entitled)",
-        "called (named)"
-    ],
-    "can": [
-        "can (tin)",
-        "can (ability)"
-    ],
-    "cap": [
-        "cap (cap)",
-        "cap (lid)"
-    ],
-    "care": [
-        "care (not care)",
-        "care (attentive concern)"
-    ],
-    "carry": [
-        "carry (transport)",
-        "carry (bag)"
-    ],
-    "case": [
-        "case (in case)",
-        "case (bag)"
-    ],
-    "catch": [
-        "catch (someone)",
-        "catch (understand)",
-        "catch (seize)"
-    ],
-    "chair": [
-        "chair (preside)",
-        "chair (seat)"
-    ],
-    "check": [
-        "check (pattern)",
-        "check (assess)",
-        "check (verify)"
-    ],
-    "choke": [
-        "choke (car)",
-        "choke (strangle)",
-        "choke (throat)"
-    ],
-    "chop": [
-        "chop (tree)",
-        "chop (axe)"
-    ],
-    "cigarette": [
-        "cigarette (roll",
-        "cigarette (tobacco)"
-    ],
-    "claim": [
-        "claim (stake)",
-        "claim (demand)"
-    ],
-    "clear": [
-        "clear (Unobscured)",
-        "clear (obvious)"
-    ],
-    "clever": [
-        "clever (not clever)",
-        "clever (Intelligence)"
-    ],
-    "close": [
-        "close (book)",
-        "close (near)",
-        "close (sliding",
-        "close (window)",
-        "close (drawer)",
-        "close (door)",
-        "close (automatic doors)",
-        "close (folder)"
-    ],
-    "cloud": [
-        "cloud (dust)",
-        "cloud (steam)",
-        "cloud (sky vapor)",
-        "cloud (smoke)"
-    ],
-    "club": [
-        "club (hit)",
-        "club (community association)",
-        "club (RSL)"
-    ],
-    "coat": [
-        "coat (covering)",
-        "coat (cover surface)",
-        "coat (clothing)"
-    ],
-    "cold": [
-        "cold (illness)",
-        "cold (lacking warmth)"
-    ],
-    "collapse": [
-        "collapse (faint)",
-        "collapse (structural collapse)"
-    ],
-    "colon": [
-        "colon (punctuation mark)",
-        "colon (body part)"
-    ],
-    "come on": [
-        "come on (encourage)",
-        "come on (disbelief)"
-    ],
-    "company": [
-        "company (group)",
-        "company (business)"
-    ],
-    "complete": [
-        "complete (finish)",
-        "complete (full)"
-    ],
-    "concentrate": [
-        "concentrate (intensify)",
-        "concentrate (Focus)",
-        "concentrate (not concentrate)"
-    ],
-    "conduct": [
-        "conduct (behaviour)",
-        "conduct (musical ensemble)"
-    ],
-    "confidence": [
-        "confidence (lose confidence)",
-        "confidence (Self-assurance)"
-    ],
-    "constant": [
-        "constant (mathematics)",
-        "constant (consistent)"
-    ],
-    "container": [
-        "container (maths)",
-        "container (box)",
-        "container (hinged case)",
-        "container (cylinder)"
-    ],
-    "contract": [
-        "contract (signature)",
-        "contract (get smaller)"
-    ],
-    "contraction": [
-        "contraction (uterine tightening)",
-        "contraction (shrinkage)"
-    ],
-    "course": [
-        "course (class)",
-        "course (meal)"
-    ],
-    "court": [
-        "court (law)",
-        "court (romance)",
-        "court (playing area)"
-    ],
-    "crash": [
-        "crash (vehicle)",
-        "crash (plane)"
-    ],
-    "crawl": [
-        "crawl (swimming)",
-        "crawl (crawling)"
-    ],
-    "cross": [
-        "cross (irritable)",
-        "cross (go across)",
-        "cross (angry)"
-    ],
-    "crowd": [
-        "crowd (excited)",
-        "crowd (people gathering)"
-    ],
-    "cube": [
-        "cube (shape)",
-        "cube (mathematics)"
-    ],
-    "cup": [
-        "cup (trophy)",
-        "cup (drinking vessel)"
-    ],
-    "day": [
-        "day (all day long)",
-        "day (the next day)",
-        "day (one day later)",
-        "day (next day)"
-    ],
-    "deaf": [
-        "deaf (profound)",
-        "deaf (hearing-impaired)"
-    ],
-    "deal": [
-        "deal (manage)",
-        "deal (cards)"
-    ],
-    "declare": [
-        "declare (cricket)",
-        "declare (verbal communication)"
-    ],
-    "degree": [
-        "degree (temperature)",
-        "degree (diploma)"
-    ],
-    "deuce": [
-        "deuce (exact sameness)",
-        "deuce (tennis)"
-    ],
-    "dice": [
-        "dice (dice gaming)",
-        "dice (chop up)"
-    ],
-    "did": [
-        "did (did not)",
-        "did (past auxiliary)"
-    ],
-    "disappear": [
-        "disappear (vanish)",
-        "disappear (into distance)"
-    ],
-    "dismiss": [
-        "dismiss (reject)",
-        "dismiss (sport)"
-    ],
-    "divide": [
-        "divide (mathematics)",
-        "divide (Apportion)"
-    ],
-    "division": [
-        "division (mathematics)",
-        "division (section)"
-    ],
-    "do": [
-        "do (do not)",
-        "do (happen)"
-    ],
-    "don't": [
-        "don't (do that)",
-        "don't (negation)"
-    ],
-    "done": [
-        "done (finished)",
-        "done (not done)"
-    ],
-    "door": [
-        "door (hinged barrier)",
-        "door (close)",
-        "door (open)"
-    ],
-    "door lock": [
-        "door lock (door-lock)",
-        "door lock (remote)"
-    ],
-    "doorbell": [
-        "doorbell (flashing light)",
-        "doorbell (doorbell)"
-    ],
-    "doubles": [
-        "doubles (tennis)",
-        "doubles (twofold)"
-    ],
-    "draft": [
-        "draft (conscript)",
-        "draft (draw)"
-    ],
-    "draw": [
-        "draw (lottery)",
-        "draw (tie)",
-        "draw (sketch)"
-    ],
-    "dress": [
-        "dress (one-piece garment)",
-        "dress (skirt)",
-        "dress (bandage)"
-    ],
-    "dribble": [
-        "dribble (ball)",
-        "dribble (saliva)"
-    ],
-    "duck": [
-        "duck (lower head)",
-        "duck (waterfowl)"
-    ],
-    "dump": [
-        "dump (someone)",
-        "dump (waste disposal)"
-    ],
-    "eat": [
-        "eat (consume food)",
-        "eat (round)"
-    ],
-    "engaged": [
-        "engaged (marriage commitment)",
-        "engaged (busy)"
-    ],
-    "enough": [
-        "enough (sufficient)",
-        "enough (not enough)"
-    ],
-    "equal": [
-        "equal (fairness)",
-        "equal (symbol)",
-        "equal (mathematics)"
-    ],
-    "erect": [
-        "erect (build)",
-        "erect (erection)"
-    ],
-    "ever": [
-        "ever (not ever)",
-        "ever (unlimited time)",
-        "ever (for ever)"
-    ],
-    "exercise": [
-        "exercise (physical)",
-        "exercise (education)"
-    ],
-    "exhaust": [
-        "exhaust (use up)",
-        "exhaust (Tailpipe)"
-    ],
-    "expand": [
-        "expand (mathematics)",
-        "expand (enlarge)"
-    ],
-    "express": [
-        "express (very fast)",
-        "express (facially)",
-        "express (emotion)"
-    ],
-    "expression": [
-        "expression (quote)",
-        "expression (facial)"
-    ],
-    "expressive": [
-        "expressive (face)",
-        "expressive (emotional expression)"
-    ],
-    "extract": [
-        "extract (tooth)",
-        "extract (draw out)"
-    ],
-    "fan": [
-        "fan (air cooling)",
-        "fan (supporter)"
-    ],
-    "father": [
-        "father (male parent)",
-        "father (priest)"
-    ],
-    "feed": [
-        "feed (fowl)",
-        "feed (give food)"
-    ],
-    "fifth": [
-        "fifth (list)",
-        "fifth (5th)",
-        "fifth (fraction)"
-    ],
-    "figure": [
-        "figure (number)",
-        "figure (mathematics)",
-        "figure (body shape)"
-    ],
-    "fine": [
-        "fine (clear)",
-        "fine (ok)",
-        "fine (penalty)"
-    ],
-    "finish": [
-        "finish (not finish)",
-        "finish (complete)",
-        "finish (cigarette)",
-        "finish (drink)"
-    ],
-    "fire": [
-        "fire (gun)",
-        "fire (burning)"
-    ],
-    "firm": [
-        "firm (hard)",
-        "firm (business)"
-    ],
-    "first": [
-        "first (list)",
-        "first (of all)",
-        "first (of month)",
-        "first (earliest)",
-        "first (every first)"
-    ],
-    "fit": [
-        "fit (healthy)",
-        "fit (compatibility)"
-    ],
-    "flame": [
-        "flame (fire)",
-        "flame (cooking)"
-    ],
-    "flat": [
-        "flat (apartment)",
-        "flat (level)",
-        "flat (battery)"
-    ],
-    "fly": [
-        "fly (trousers)",
-        "fly (aeroplane)",
-        "fly (insect)",
-        "fly (flap wings)"
-    ],
-    "follow": [
-        "follow (understand)",
-        "follow (Align)"
-    ],
-    "forget": [
-        "forget (not remember)",
-        "forget (go blank)"
-    ],
-    "formal": [
-        "formal (dress)",
-        "formal (situation)"
-    ],
-    "forward": [
-        "forward (ahead)",
-        "forward (rugby)"
-    ],
-    "fourth": [
-        "fourth (4th)",
-        "fourth (every fourth)",
-        "fourth (list)"
-    ],
-    "free": [
-        "free (available)",
-        "free (Unrestricted)",
-        "free (liberate)",
-        "free (without cost)",
-        "free (voluntary)"
-    ],
-    "full": [
-        "full (completely filled)",
-        "full (sated)"
-    ],
-    "function": [
-        "function (mathematics)",
-        "function (role)"
-    ],
-    "give up": [
-        "give up (Quit)",
-        "give up (surrender)"
-    ],
-    "glass": [
-        "glass (material)",
-        "glass (cup)"
-    ],
-    "go": [
-        "go (movement)",
-        "go (in vehicle)"
-    ],
-    "go on": [
-        "go on (continue)",
-        "go on (exclamation)"
-    ],
-    "goal": [
-        "goal (basketball)",
-        "goal (AFL)",
-        "goal (score)",
-        "goal (objective)"
-    ],
-    "good": [
-        "good (no good)",
-        "good (not good)",
-        "good (well)",
-        "good (good on you!)"
-    ],
-    "grass": [
-        "grass (marijuana)",
-        "grass (green vegetation)"
-    ],
-    "grave": [
-        "grave (interment)",
-        "grave (serious)"
-    ],
-    "green": [
-        "green (Verdant)",
-        "green (inexperienced)"
-    ],
-    "grey": [
-        "grey (gray color)",
-        "grey (WA)"
-    ],
-    "grind": [
-        "grind (crushing)",
-        "grind (mortar and pestle)",
-        "grind (valve)",
-        "grind (car mechanics)"
-    ],
-    "habit": [
-        "habit (nun)",
-        "habit (repetitive behavior)"
-    ],
-    "hair": [
-        "hair (long)",
-        "hair (head hair)",
-        "hair (short)"
-    ],
-    "happen": [
-        "happen (Occurrence)",
-        "happen (nothing happen)"
-    ],
-    "harm": [
-        "harm (no harm)",
-        "harm (injury)"
-    ],
-    "hash": [
-        "hash (marijuana)",
-        "hash (cannabis resin)"
-    ],
-    "hassle": [
-        "hassle (interruption)",
-        "hassle (no hassle)"
-    ],
-    "have": [
-        "have (not have)",
-        "have (possess)",
-        "have (have none)",
-        "have (exist)"
-    ],
-    "heart": [
-        "heart (central core)",
-        "heart (at heart)"
-    ],
-    "here": [
-        "here (proximal demonstrative)",
-        "here (plural)"
-    ],
-    "hood": [
-        "hood (head-covering)",
-        "hood (car)"
-    ],
-    "hop": [
-        "hop (one-foot jump)",
-        "hop (kangaroo)"
-    ],
-    "ice": [
-        "ice (frozen water)",
-        "ice (apply icing)"
-    ],
-    "idea": [
-        "idea (suggestion)",
-        "idea (get idea)"
-    ],
-    "idle": [
-        "idle (engine)",
-        "idle (laziness)"
-    ],
-    "ignition": [
-        "ignition (car)",
-        "ignition (starter switch)"
-    ],
-    "inequality": [
-        "inequality (mathematics)",
-        "inequality (disparity)"
-    ],
-    "innocent": [
-        "innocent (not guilty)",
-        "innocent (inexperienced)"
-    ],
-    "insert": [
-        "insert (place inside)",
-        "insert (coin)"
-    ],
-    "integrate": [
-        "integrate (unify)",
-        "integrate (mathematics)"
-    ],
-    "integration": [
-        "integration (mathematics)",
-        "integration (Combining)"
-    ],
-    "interest": [
-        "interest (earnings)",
-        "interest (eager enthusiasm)"
-    ],
-    "isolate": [
-        "isolate (self",
-        "isolate (home isolate)"
-    ],
-    "isolation": [
-        "isolation (home isolation)",
-        "isolation (self",
-        "isolation (separate)"
-    ],
-    "it": [
-        "it (right here)",
-        "it (distal)"
-    ],
-    "join": [
-        "join (enlist)",
-        "join (connect)"
-    ],
-    "keen on": [
-        "keen on (not keen on)",
-        "keen on (Captivated)"
-    ],
-    "kind": [
-        "kind (sort)",
-        "kind (generous)"
-    ],
-    "know": [
-        "know (already)",
-        "know (not know)",
-        "know (understanding)"
-    ],
-    "late": [
-        "late (Overdue)",
-        "late (too late)"
-    ],
-    "laugh": [
-        "laugh (a lot)",
-        "laugh (giggle)"
-    ],
-    "launch": [
-        "launch (start)",
-        "launch (rocket)"
-    ],
-    "lead": [
-        "lead (guide)",
-        "lead (competition)"
-    ],
-    "lean": [
-        "lean (thin)",
-        "lean (tilt)"
-    ],
-    "leave": [
-        "leave (go)",
-        "leave (not take)"
-    ],
-    "left": [
-        "left (leftward)",
-        "left (not right)",
-        "left (leave)"
-    ],
-    "letter": [
-        "letter (written message)",
-        "letter (post)"
-    ],
-    "lift": [
-        "lift (elevator)",
-        "lift (raise)",
-        "lift (in a car)"
-    ],
-    "light": [
-        "light (illumination)",
-        "light (start fire)"
-    ],
-    "like": [
-        "like (not like)",
-        "like (fondness)"
-    ],
-    "line": [
-        "line (linear mark)",
-        "line (queue)"
-    ],
-    "live": [
-        "live (be alive)",
-        "live (reside)"
-    ],
-    "location": [
-        "location (in signing space)",
-        "location (place)"
-    ],
-    "lock": [
-        "lock (rugby)",
-        "lock (locking mechanism)"
-    ],
-    "love": [
-        "love (affection)",
-        "love (tennis score)"
-    ],
-    "lower": [
-        "lower (flag)",
-        "lower (Downward motion)"
-    ],
-    "lucky": [
-        "lucky (unexpected fortune)",
-        "lucky (lucky you!)"
-    ],
-    "mass": [
-        "mass (church service)",
-        "mass (weight)",
-        "mass (heap)"
-    ],
-    "match": [
-        "match (correspond)",
-        "match (matchstick)"
-    ],
-    "material": [
-        "material (stuff)",
-        "material (cloth)"
-    ],
-    "matter": [
-        "matter (not matter)",
-        "matter (problem)"
-    ],
-    "mean": [
-        "mean (signify)",
-        "mean (stingy)",
-        "mean (unkind)",
-        "mean (average)"
-    ],
-    "meaning": [
-        "meaning (Signification)",
-        "meaning (semantics)"
-    ],
-    "merry": [
-        "merry (tipsy)",
-        "merry (happy)"
-    ],
-    "meter": [
-        "meter (gauge)",
-        "meter (length unit)"
-    ],
-    "mince": [
-        "mince (finely chopped)",
-        "mince (garlic)"
-    ],
-    "mind": [
-        "mind (not mind)",
-        "mind (mental)"
-    ],
-    "mine": [
-        "mine (excavate)",
-        "mine (not mine)",
-        "mine (my possession)"
-    ],
-    "minute": [
-        "minute (very small)",
-        "minute (time)"
-    ],
-    "month": [
-        "month (this past month)",
-        "month (this month)",
-        "month (M-abbreviation)"
-    ],
-    "mouse": [
-        "mouse (small rodent)",
-        "mouse (computer)"
-    ],
-    "move": [
-        "move (motion in meeting)",
-        "move (change position)",
-        "move (vehicle)"
-    ],
-    "must": [
-        "must (necessity)",
-        "must (must not)"
-    ],
-    "my": [
-        "my (possessive)",
-        "my (not my)"
-    ],
-    "neck": [
-        "neck (neck)",
-        "neck (pet)"
-    ],
-    "no": [
-        "no (refuse)",
-        "no (Negation)"
-    ],
-    "none": [
-        "none (have none)",
-        "none (nothing)"
-    ],
-    "nose": [
-        "nose (big nose)",
-        "nose (nose)"
-    ],
-    "nurse": [
-        "nurse (baby)",
-        "nurse (cradle)"
-    ],
-    "object": [
-        "object (criticise)",
-        "object (thing)"
-    ],
-    "objective": [
-        "objective (not biased)",
-        "objective (aim)"
-    ],
-    "open": [
-        "open (make available)",
-        "open (book)",
-        "open (window)",
-        "open (automatic doors)",
-        "open (sliding",
-        "open (drawer)",
-        "open (folder)",
-        "open (door)"
-    ],
-    "order": [
-        "order (command)",
-        "order (sequence)",
-        "order (tidy)"
-    ],
-    "origin": [
-        "origin (beginning)",
-        "origin (mathematics)"
-    ],
-    "out": [
-        "out (sport)",
-        "out (Excluded)",
-        "out (extinguished)"
-    ],
-    "oval": [
-        "oval (sport)",
-        "oval (elongated circle)"
-    ],
-    "over": [
-        "over (cricket)",
-        "over (above)"
-    ],
-    "overtake": [
-        "overtake (in vehicle)",
-        "overtake (surpass)"
-    ],
-    "pack": [
-        "pack (small container)",
-        "pack (packet)"
-    ],
-    "page": [
-        "page (paper sheet)",
-        "page (use pager)"
-    ],
-    "park": [
-        "park (playground)",
-        "park (vehicle)",
-        "park (vehicle-parking)"
-    ],
-    "party": [
-        "party (political)",
-        "party (Socializing)"
-    ],
-    "pass": [
-        "pass (go past)",
-        "pass (test)"
-    ],
-    "past": [
-        "past (earlier time)",
-        "past (distant past)"
-    ],
-    "patient": [
-        "patient (healthcare)",
-        "patient (calm)"
-    ],
-    "pay": [
-        "pay (income)",
-        "pay (give money)"
-    ],
-    "peel": [
-        "peel (outer layer)",
-        "peel (banana)"
-    ],
-    "period": [
-        "period (lesson)",
-        "period (menstruation)",
-        "period (full stop)",
-        "period (time)"
-    ],
-    "pick up": [
-        "pick up (lift)",
-        "pick up (someone)"
-    ],
-    "picture": [
-        "picture (visualise)",
-        "picture (rectangular image)",
-        "picture (photo)",
-        "picture (movie)"
-    ],
-    "pipe": [
-        "pipe (cylinder)",
-        "pipe (smoking)"
-    ],
-    "place": [
-        "place (location)",
-        "place (put)"
-    ],
-    "plain": [
-        "plain (obvious)",
-        "plain (undecorated)",
-        "plain (flat area)"
-    ],
-    "plane": [
-        "plane (Aviation)",
-        "plane (shave)"
-    ],
-    "plough": [
-        "plough (mechanical)",
-        "plough (soil tiller)"
-    ],
-    "point": [
-        "point (full stop)",
-        "point (indicate)",
-        "point (geometry)",
-        "point (dot)",
-        "point (purpose)"
-    ],
-    "pointing": [
-        "pointing (to body parts)",
-        "pointing (indicating gesture)"
-    ],
-    "pot": [
-        "pot (marijuana)",
-        "pot (Open container)"
-    ],
-    "power": [
-        "power (electricity)",
-        "power (mathematics)",
-        "power (authority)"
-    ],
-    "present": [
-        "present (now)",
-        "present (gift)",
-        "present (hand over)",
-        "present (award)"
-    ],
-    "pretty": [
-        "pretty (more or less)",
-        "pretty (beauty)"
-    ],
-    "previously": [
-        "previously (earlier)",
-        "previously (nothing previously)"
-    ],
-    "prior to": [
-        "prior to (before)",
-        "prior to (not prior to)"
-    ],
-    "private": [
-        "private (army rank)",
-        "private (nonpublic)"
-    ],
-    "project": [
-        "project (overhead projection)",
-        "project (a film)"
-    ],
-    "prop": [
-        "prop (rugby)",
-        "prop (support)"
-    ],
-    "puppet": [
-        "puppet (string puppet)",
-        "puppet (hand puppet)"
-    ],
-    "queer": [
-        "queer (non-heteronormative)",
-        "queer (strange)"
-    ],
-    "radiator": [
-        "radiator (engine)",
-        "radiator (energy emitter)"
-    ],
-    "raise": [
-        "raise (flag)",
-        "raise (funds)",
-        "raise (lift)"
-    ],
-    "ready": [
-        "ready (not ready)",
-        "ready (completed)"
-    ],
-    "really": [
-        "really (truth)",
-        "really (exclamation)"
-    ],
-    "recall": [
-        "recall (return)",
-        "recall (remember)"
-    ],
-    "record": [
-        "record (copy)",
-        "record (music)"
-    ],
-    "reduce": [
-        "reduce (cooking)",
-        "reduce (shorten)"
-    ],
-    "reflect": [
-        "reflect (light)",
-        "reflect (think)"
-    ],
-    "reflection": [
-        "reflection (thinking)",
-        "reflection (self",
-        "reflection (light)"
-    ],
-    "reserve": [
-        "reserve (book)",
-        "reserve (sport)"
-    ],
-    "responsible": [
-        "responsible (not responsible)",
-        "responsible (obligation)"
-    ],
-    "revolution": [
-        "revolution (revolt)",
-        "revolution (revolving)"
-    ],
-    "ride": [
-        "ride (an animal)",
-        "ride (horse)"
-    ],
-    "ridiculous": [
-        "ridiculous (foolish crudeness)",
-        "ridiculous (exclamation)"
-    ],
-    "right": [
-        "right (correct)",
-        "right (legal)",
-        "right (not left)"
-    ],
-    "ring": [
-        "ring (doorbell)",
-        "ring (diamond)",
-        "ring (telephone)"
-    ],
-    "root": [
-        "root (mathematics)",
-        "root (sexual act)"
-    ],
-    "roundabout": [
-        "roundabout (traffic)",
-        "roundabout (indirect)"
-    ],
-    "rubber": [
-        "rubber (eraser)",
-        "rubber (material)"
-    ],
-    "rubbish": [
-        "rubbish (nonsense)",
-        "rubbish (waste)"
-    ],
-    "run": [
-        "run (running)",
-        "run (flow)",
-        "run (machine)",
-        "run (engine)",
-        "run (nose)"
-    ],
-    "sand": [
-        "sand (granular stone)",
-        "sand (use sandpaper)"
-    ],
-    "satisfied": [
-        "satisfied (contentment)",
-        "satisfied (sated)"
-    ],
-    "saw": [
-        "saw (tool)",
-        "saw (see)",
-        "saw (cut)"
-    ],
-    "say": [
-        "say (communicate)",
-        "say (for instance)"
-    ],
-    "scale": [
-        "scale (graded continuum)",
-        "scale (climb)"
-    ],
-    "scales": [
-        "scales (balance)",
-        "scales (weigh)"
-    ],
-    "score": [
-        "score (tally)",
-        "score (romantically)",
-        "score (scratch)"
-    ],
-    "screen": [
-        "screen (protective barrier)",
-        "screen (computer)"
-    ],
-    "screw": [
-        "screw (sexual act)",
-        "screw (use screwdriver)",
-        "screw (threaded fastener)"
-    ],
-    "seal": [
-        "seal (animal)",
-        "seal (mark)",
-        "seal (stick together)"
-    ],
-    "seat belt": [
-        "seat belt (car)",
-        "seat belt (plane)"
-    ],
-    "seated": [
-        "seated (sitting)",
-        "seated (at)"
-    ],
-    "second": [
-        "second (of month)",
-        "second (every second)",
-        "second (runner-up)",
-        "second (list)",
-        "second (support)",
-        "second (time)"
-    ],
-    "see": [
-        "see (not see)",
-        "see (perceive)"
-    ],
-    "self": [
-        "self (individual)",
-        "self (oneself)",
-        "self (affix)"
-    ],
-    "send off": [
-        "send off (sport)",
-        "send off (send away)"
-    ],
-    "separate": [
-        "separate (move apart)",
-        "separate (partners)"
-    ],
-    "sequence": [
-        "sequence (mathematics)",
-        "sequence (ordered succession)"
-    ],
-    "serve": [
-        "serve (tennis)",
-        "serve (provide assistance)"
-    ],
-    "shave": [
-        "shave (underarm)",
-        "shave (head)",
-        "shave (face)",
-        "shave (leg)"
-    ],
-    "shift": [
-        "shift (work)",
-        "shift (move)"
-    ],
-    "shine": [
-        "shine (reflect)",
-        "shine (Reflective brightness)"
-    ],
-    "should": [
-        "should (advisory obligation)",
-        "should (should not)"
-    ],
-    "show": [
-        "show (fair)",
-        "show (demonstration)",
-        "show (performance)"
-    ],
-    "shut": [
-        "shut (door)",
-        "shut (close)"
-    ],
-    "sign": [
-        "sign (signature)",
-        "sign (sign language)",
-        "sign (symbol)",
-        "sign (signpost)",
-        "sign (notice)"
-    ],
-    "since": [
-        "since (not since)",
-        "since (thereafter)"
-    ],
-    "sit": [
-        "sit (opposite each other)",
-        "sit (seat)",
-        "sit (at)"
-    ],
-    "size": [
-        "size (of container)",
-        "size (in width or clothes)",
-        "size (boundary)"
-    ],
-    "skim": [
-        "skim (read)",
-        "skim (surface removal)"
-    ],
-    "skip": [
-        "skip (with rope)",
-        "skip (hopping)"
-    ],
-    "skipping": [
-        "skipping (light hopping)",
-        "skipping (with rope)"
-    ],
-    "sleep": [
-        "sleep (soundly)",
-        "sleep (sleep)"
-    ],
-    "slip": [
-        "slip (petticoat)",
-        "slip (accidental slide)"
-    ],
-    "slow": [
-        "slow (too slow)",
-        "slow (low speed)"
-    ],
-    "smash": [
-        "smash (vehicle)",
-        "smash (forceful impact)"
-    ],
-    "smoke": [
-        "smoke (cigarette)",
-        "smoke (pipe)",
-        "smoke (rising vapour)",
-        "smoke (marijuana)"
-    ],
-    "speaker": [
-        "speaker (spoken communication)",
-        "speaker (loudspeaker)"
-    ],
-    "spell": [
-        "spell (letter-formation)",
-        "spell (magic)"
-    ],
-    "spoil": [
-        "spoil (indulge)",
-        "spoil (ruin)"
-    ],
-    "spread": [
-        "spread (paste)",
-        "spread (wide distribution)"
-    ],
-    "square": [
-        "square (mathematics)",
-        "square (equal-sided)"
-    ],
-    "squash": [
-        "squash (sport)",
-        "squash (crush)"
-    ],
-    "stamp": [
-        "stamp (postage)",
-        "stamp (mark)"
-    ],
-    "star": [
-        "star (celebrity)",
-        "star (filmstar)"
-    ],
-    "station": [
-        "station (train stop)",
-        "station (railway)",
-        "station (radio)"
-    ],
-    "steam": [
-        "steam (cooking)",
-        "steam (rising vapour)"
-    ],
-    "stick": [
-        "stick (adhere)",
-        "stick (club)"
-    ],
-    "still": [
-        "still (calm)",
-        "still (remain motionless)"
-    ],
-    "stop": [
-        "stop (prohibit)",
-        "stop (doing that)",
-        "stop (cease)"
-    ],
-    "strike": [
-        "strike (bowling)",
-        "strike (stop work)",
-        "strike (match)",
-        "strike (hit)",
-        "strike (lightning)"
-    ],
-    "stroke": [
-        "stroke (slash)",
-        "stroke (pat)",
-        "stroke (illness)"
-    ],
-    "stumps": [
-        "stumps (cricket)",
-        "stumps (pylons)"
-    ],
-    "suit": [
-        "suit (match)",
-        "suit (agree with)",
-        "suit (suit someone)",
-        "suit (double-breasted)"
-    ],
-    "support": [
-        "support (foundation)",
-        "support (barrack)",
-        "support (help)"
-    ],
-    "suspend": [
-        "suspend (remove)",
-        "suspend (sport)",
-        "suspend (hang)"
-    ],
-    "suspension": [
-        "suspension (vehicle)",
-        "suspension (sport)",
-        "suspension (removal)"
-    ],
-    "swear": [
-        "swear (oath)",
-        "swear (profanity)"
-    ],
-    "sweet": [
-        "sweet (very sweet)",
-        "sweet (pleasant)"
-    ],
-    "sweets": [
-        "sweets (dessert)",
-        "sweets (confectionery)"
-    ],
-    "switch": [
-        "switch (switchboard)",
-        "switch (changeover)"
-    ],
-    "take off": [
-        "take off (plane)",
-        "take off (rocket)"
-    ],
-    "tan": [
-        "tan (suntan)",
-        "tan (mathematics)"
-    ],
-    "tap": [
-        "tap (faucet)",
-        "tap (light touch)"
-    ],
-    "tape": [
-        "tape (reel",
-        "tape (adhesive)"
-    ],
-    "taxi": [
-        "taxi (plane)",
-        "taxi (hired car)"
-    ],
-    "them": [
-        "them (here)",
-        "them (distant referents)"
-    ],
-    "there": [
-        "there (near you)",
-        "there (plural)",
-        "there (distal reference)"
-    ],
-    "they": [
-        "they (distant others)",
-        "they (here)"
-    ],
-    "think": [
-        "think (contemplate)",
-        "think (suspect)",
-        "think (feel)",
-        "think (mental activity)",
-        "think (mull over)"
-    ],
-    "third": [
-        "third (third-ranking)",
-        "third (list)",
-        "third (fraction)",
-        "third (every third)"
-    ],
-    "throw": [
-        "throw (Propel)",
-        "throw (upwards)"
-    ],
-    "tie": [
-        "tie (necktie)",
-        "tie (knot)",
-        "tie (draw)"
-    ],
-    "till": [
-        "till (cash register)",
-        "till (until)"
-    ],
-    "time": [
-        "time (between two clock times)",
-        "time (Temporal measure)"
-    ],
-    "tin": [
-        "tin (can)",
-        "tin (metal)"
-    ],
-    "tip": [
-        "tip (dump)",
-        "tip (end point)"
-    ],
-    "top": [
-        "top (toy)",
-        "top (highest)",
-        "top (lid)"
-    ],
-    "toss": [
-        "toss (throw)",
-        "toss (salad)"
-    ],
-    "train": [
-        "train (practise)",
-        "train (of gown)",
-        "train (travel by)",
-        "train (electric)",
-        "train (steam train)",
-        "train (rail transport)",
-        "train (express)"
-    ],
-    "trip": [
-        "trip (fall)",
-        "trip (journey)"
-    ],
-    "triple": [
-        "triple (mathematics)",
-        "triple (threefold)"
-    ],
-    "trunk": [
-        "trunk (elephant)",
-        "trunk (container)",
-        "trunk (body)",
-        "trunk (car)"
-    ],
-    "try": [
-        "try (attempt)",
-        "try (rugby)"
-    ],
-    "turn": [
-        "turn (rotate)",
-        "turn (alloted time)"
-    ],
-    "turn down": [
-        "turn down (decrease)",
-        "turn down (lower)"
-    ],
-    "twins": [
-        "twins (paired siblings)",
-        "twins (identical)"
-    ],
-    "type": [
-        "type (sort)",
-        "type (typing)"
-    ],
-    "unit": [
-        "unit (mathematics)",
-        "unit (group)"
-    ],
-    "vacant": [
-        "vacant (empty)",
-        "vacant (available)"
-    ],
-    "value": [
-        "value (worth)",
-        "value (mathematics)"
-    ],
-    "vanish": [
-        "vanish (disappear)",
-        "vanish (into distance)"
-    ],
-    "volume": [
-        "volume (sound)",
-        "volume (capacity)"
-    ],
-    "wage": [
-        "wage (bet)",
-        "wage (income)"
-    ],
-    "wait": [
-        "wait (idle waiting)",
-        "wait (long time)"
-    ],
-    "walk": [
-        "walk (foot-travel)",
-        "walk (animal)"
-    ],
-    "want": [
-        "want (desire)",
-        "want (not want)"
-    ],
-    "waste": [
-        "waste (rubbish)",
-        "waste (inefficient use)"
-    ],
-    "watch": [
-        "watch (look)",
-        "watch (wristwatch)",
-        "watch (observe)"
-    ],
-    "water": [
-        "water (hose)",
-        "water (water)"
-    ],
-    "way": [
-        "way (method)",
-        "way (either way)"
-    ],
-    "week": [
-        "week (last week)",
-        "week (next week)",
-        "week (week ago)",
-        "week (this past week)",
-        "week (week after)",
-        "week (calendar week)",
-        "week (this week)"
-    ],
-    "well": [
-        "well (healthy)",
-        "well (good)",
-        "well (get well)",
-        "well (palm up gesture)",
-        "well (not badly)"
-    ],
-    "western": [
-        "western (west)",
-        "western (movie)"
-    ],
-    "whip": [
-        "whip (mix)",
-        "whip (hit)"
-    ],
-    "will": [
-        "will (bequeath)",
-        "will (future-intent)"
-    ],
-    "wind up": [
-        "wind up (crank)",
-        "wind up (watch)"
-    ],
-    "wire": [
-        "wire (thin strand)",
-        "wire (telegram)"
-    ],
-    "with": [
-        "with (go with)",
-        "with (accompanied)"
-    ],
-    "x": [
-        "x (value of %22x%22)",
-        "x (letter X)"
-    ],
-    "year": [
-        "year (this past year)",
-        "year (for a year)",
-        "year (this year)",
-        "year (last year)",
-        "year (calendar year)",
-        "year (one year)",
-        "year (next year)"
-    ],
-    "yet": [
-        "yet (not yet)",
-        "yet (pause)"
-    ],
-    "you": [
-        "you (plural)",
-        "you (Addressee)"
-    ],
-    "your": [
-        "your (not your)",
-        "your (addressee’s)",
-        "your (plural)"
-    ],
-    "yours": [
-        "yours (Addressee’s)",
-        "yours (not yours)",
-        "yours (plural)"
-    ],
-    "zipper": [
-        "zipper (trousers)",
-        "zipper (zip fastener)"
-    ]
+  "Egypt": [
+    "Egypt (country)",
+    "Egypt (Ancient Egypt)"
+  ],
+  "Indian": [
+    "Indian (Amerindian)",
+    "Indian (India)"
+  ],
+  "accident": [
+    "accident (unfortunate mishap)",
+    "accident (vehicle)"
+  ],
+  "accuracy": [
+    "accuracy (correctness)",
+    "accuracy (precision)"
+  ],
+  "accurate": [
+    "accurate (correct)",
+    "accurate (precise)"
+  ],
+  "admit": [
+    "admit (let in)",
+    "admit (truth declaration)"
+  ],
+  "advantage": [
+    "advantage (tennis)",
+    "advantage (beneficial)"
+  ],
+  "ago": [
+    "ago (long ago)",
+    "ago (past)"
+  ],
+  "aim": [
+    "aim (goal)",
+    "aim (arrow)"
+  ],
+  "alarm": [
+    "alarm (alert signal)",
+    "alarm (siren)",
+    "alarm (flashing)",
+    "alarm (ringing)"
+  ],
+  "alarm clock": [
+    "alarm clock (ringing)",
+    "alarm clock (flashing)",
+    "alarm clock (vibrating)"
+  ],
+  "all": [
+    "all (even)",
+    "all (whole)"
+  ],
+  "alter": [
+    "alter (clothing)",
+    "alter (change)"
+  ],
+  "area": [
+    "area (region)",
+    "area (surface area)"
+  ],
+  "around": [
+    "around (circular motion)",
+    "around (approximately)"
+  ],
+  "attend": [
+    "attend (group gathering)",
+    "attend (pay attention)"
+  ],
+  "attention": [
+    "attention (get attention)",
+    "attention (Focused awareness)"
+  ],
+  "audience": [
+    "audience (excited)",
+    "audience (spectators)"
+  ],
+  "back": [
+    "back (support)",
+    "back (behind)",
+    "back (of body)"
+  ],
+  "bank": [
+    "bank (financial institution)",
+    "bank (shore)"
+  ],
+  "bar": [
+    "bar (rod)",
+    "bar (pub)"
+  ],
+  "base": [
+    "base (foundation)",
+    "base (of triangle)"
+  ],
+  "bat": [
+    "bat (ball-hitting)",
+    "bat (animal)"
+  ],
+  "battery": [
+    "battery (car)",
+    "battery (power source)"
+  ],
+  "beat": [
+    "beat (hit)",
+    "beat (music)",
+    "beat (defeat)",
+    "beat (mix)",
+    "beat (heart)"
+  ],
+  "bed": [
+    "bed (seabed)",
+    "bed (sleep furniture)",
+    "bed (riverbed)"
+  ],
+  "before": [
+    "before (long before)",
+    "before (earlier)"
+  ],
+  "before that": [
+    "before that (not before that)",
+    "before that (previously repeated)"
+  ],
+  "before then": [
+    "before then (since)",
+    "before then (not before then)"
+  ],
+  "behaviour": [
+    "behaviour (good behaviour)",
+    "behaviour (actions)"
+  ],
+  "behind": [
+    "behind (at rear)",
+    "behind (AFL)"
+  ],
+  "believe": [
+    "believe (Credence)",
+    "believe (not believe)"
+  ],
+  "between": [
+    "between (middle)",
+    "between (two clock times)"
+  ],
+  "bid": [
+    "bid (bet)",
+    "bid (auction)"
+  ],
+  "black": [
+    "black (person)",
+    "black (darkest colour)"
+  ],
+  "blind": [
+    "blind (Sightless)",
+    "blind (screen)"
+  ],
+  "block": [
+    "block (shape)",
+    "block (stop)"
+  ],
+  "board": [
+    "board (committee)",
+    "board (get on)",
+    "board (vertical surface)",
+    "board (live at)"
+  ],
+  "boil": [
+    "boil (bubbling)",
+    "boil (blister)"
+  ],
+  "book": [
+    "book (reserve)",
+    "book (bound pages)"
+  ],
+  "boot": [
+    "boot (shoe)",
+    "boot (car)"
+  ],
+  "bother": [
+    "bother (can not be bothered)",
+    "bother (trouble)",
+    "bother (no bother)"
+  ],
+  "bounce": [
+    "bounce (ball)",
+    "bounce (rebound)"
+  ],
+  "bow": [
+    "bow (bend over)",
+    "bow (archery)",
+    "bow (ribbon)"
+  ],
+  "bowl": [
+    "bowl (cricket)",
+    "bowl (dish)",
+    "bowl (ball)"
+  ],
+  "box": [
+    "box (rectangular container)",
+    "box (punch)"
+  ],
+  "break": [
+    "break (pause)",
+    "break (wave)"
+  ],
+  "breasts": [
+    "breasts (large)",
+    "breasts (breasts)"
+  ],
+  "bright": [
+    "bright (Luminous)",
+    "bright (smart)"
+  ],
+  "brown": [
+    "brown (earth-coloured)",
+    "brown (suntanned)"
+  ],
+  "brush": [
+    "brush (hair)",
+    "brush (teeth)"
+  ],
+  "bullshit": [
+    "bullshit (deceptive talk)",
+    "bullshit (nonsense)"
+  ],
+  "business": [
+    "business (none of your business)",
+    "business (commerce)",
+    "business (none of my business)"
+  ],
+  "busy": [
+    "busy (activity)",
+    "busy (road)"
+  ],
+  "call": [
+    "call (yell)",
+    "call (telephone)",
+    "call (name)"
+  ],
+  "called": [
+    "called (entitled)",
+    "called (named)"
+  ],
+  "can": [
+    "can (tin)",
+    "can (ability)"
+  ],
+  "cap": [
+    "cap (cap)",
+    "cap (lid)"
+  ],
+  "care": [
+    "care (not care)",
+    "care (attentive concern)"
+  ],
+  "carry": [
+    "carry (transport)",
+    "carry (bag)"
+  ],
+  "case": [
+    "case (in case)",
+    "case (bag)"
+  ],
+  "catch": [
+    "catch (someone)",
+    "catch (understand)",
+    "catch (seize)"
+  ],
+  "chair": [
+    "chair (preside)",
+    "chair (seat)"
+  ],
+  "check": [
+    "check (pattern)",
+    "check (assess)",
+    "check (verify)"
+  ],
+  "choke": [
+    "choke (car)",
+    "choke (strangle)",
+    "choke (throat)"
+  ],
+  "chop": [
+    "chop (tree)",
+    "chop (axe)"
+  ],
+  "cigarette": [
+    "cigarette (roll",
+    "cigarette (tobacco)"
+  ],
+  "claim": [
+    "claim (stake)",
+    "claim (demand)"
+  ],
+  "clear": [
+    "clear (Unobscured)",
+    "clear (obvious)"
+  ],
+  "clever": [
+    "clever (not clever)",
+    "clever (Intelligence)"
+  ],
+  "close": [
+    "close (book)",
+    "close (near)",
+    "close (sliding",
+    "close (window)",
+    "close (drawer)",
+    "close (door)",
+    "close (automatic doors)",
+    "close (folder)"
+  ],
+  "cloud": [
+    "cloud (dust)",
+    "cloud (steam)",
+    "cloud (sky vapor)",
+    "cloud (smoke)"
+  ],
+  "club": [
+    "club (hit)",
+    "club (community association)",
+    "club (RSL)"
+  ],
+  "coat": [
+    "coat (covering)",
+    "coat (cover surface)",
+    "coat (clothing)"
+  ],
+  "cold": [
+    "cold (illness)",
+    "cold (lacking warmth)"
+  ],
+  "collapse": [
+    "collapse (faint)",
+    "collapse (structural collapse)"
+  ],
+  "colon": [
+    "colon (punctuation mark)",
+    "colon (body part)"
+  ],
+  "come on": [
+    "come on (encourage)",
+    "come on (disbelief)"
+  ],
+  "company": [
+    "company (group)",
+    "company (business)"
+  ],
+  "complete": [
+    "complete (finish)",
+    "complete (full)"
+  ],
+  "concentrate": [
+    "concentrate (intensify)",
+    "concentrate (Focus)",
+    "concentrate (not concentrate)"
+  ],
+  "conduct": [
+    "conduct (behaviour)",
+    "conduct (musical ensemble)"
+  ],
+  "confidence": [
+    "confidence (lose confidence)",
+    "confidence (Self-assurance)"
+  ],
+  "constant": [
+    "constant (mathematics)",
+    "constant (consistent)"
+  ],
+  "container": [
+    "container (maths)",
+    "container (box)",
+    "container (hinged case)",
+    "container (cylinder)"
+  ],
+  "contract": [
+    "contract (signature)",
+    "contract (get smaller)"
+  ],
+  "contraction": [
+    "contraction (uterine tightening)",
+    "contraction (shrinkage)"
+  ],
+  "course": [
+    "course (class)",
+    "course (meal)"
+  ],
+  "court": [
+    "court (law)",
+    "court (romance)",
+    "court (playing area)"
+  ],
+  "crash": [
+    "crash (vehicle)",
+    "crash (plane)"
+  ],
+  "crawl": [
+    "crawl (swimming)",
+    "crawl (crawling)"
+  ],
+  "cross": [
+    "cross (irritable)",
+    "cross (go across)",
+    "cross (angry)"
+  ],
+  "crowd": [
+    "crowd (excited)",
+    "crowd (people gathering)"
+  ],
+  "cube": [
+    "cube (shape)",
+    "cube (mathematics)"
+  ],
+  "cup": [
+    "cup (trophy)",
+    "cup (drinking vessel)"
+  ],
+  "day": [
+    "day (all day long)",
+    "day (the next day)",
+    "day (one day later)",
+    "day (next day)"
+  ],
+  "deaf": [
+    "deaf (profound)",
+    "deaf (hearing-impaired)"
+  ],
+  "deal": [
+    "deal (manage)",
+    "deal (cards)"
+  ],
+  "declare": [
+    "declare (cricket)",
+    "declare (verbal communication)"
+  ],
+  "degree": [
+    "degree (temperature)",
+    "degree (diploma)"
+  ],
+  "deuce": [
+    "deuce (exact sameness)",
+    "deuce (tennis)"
+  ],
+  "dice": [
+    "dice (dice gaming)",
+    "dice (chop up)"
+  ],
+  "did": [
+    "did (did not)",
+    "did (past auxiliary)"
+  ],
+  "disappear": [
+    "disappear (vanish)",
+    "disappear (into distance)"
+  ],
+  "dismiss": [
+    "dismiss (reject)",
+    "dismiss (sport)"
+  ],
+  "divide": [
+    "divide (mathematics)",
+    "divide (Apportion)"
+  ],
+  "division": [
+    "division (mathematics)",
+    "division (section)"
+  ],
+  "do": [
+    "do (do not)",
+    "do (happen)"
+  ],
+  "don't": [
+    "don't (do that)",
+    "don't (negation)"
+  ],
+  "done": [
+    "done (finished)",
+    "done (not done)"
+  ],
+  "door": [
+    "door (hinged barrier)",
+    "door (close)",
+    "door (open)"
+  ],
+  "door lock": [
+    "door lock (door-lock)",
+    "door lock (remote)"
+  ],
+  "doorbell": [
+    "doorbell (flashing light)",
+    "doorbell (doorbell)"
+  ],
+  "doubles": [
+    "doubles (tennis)",
+    "doubles (twofold)"
+  ],
+  "draft": [
+    "draft (conscript)",
+    "draft (draw)"
+  ],
+  "draw": [
+    "draw (lottery)",
+    "draw (tie)",
+    "draw (sketch)"
+  ],
+  "dress": [
+    "dress (one-piece garment)",
+    "dress (skirt)",
+    "dress (bandage)"
+  ],
+  "dribble": [
+    "dribble (ball)",
+    "dribble (saliva)"
+  ],
+  "duck": [
+    "duck (lower head)",
+    "duck (waterfowl)"
+  ],
+  "dump": [
+    "dump (someone)",
+    "dump (waste disposal)"
+  ],
+  "eat": [
+    "eat (consume food)",
+    "eat (round)"
+  ],
+  "engaged": [
+    "engaged (marriage commitment)",
+    "engaged (busy)"
+  ],
+  "enough": [
+    "enough (sufficient)",
+    "enough (not enough)"
+  ],
+  "equal": [
+    "equal (fairness)",
+    "equal (symbol)",
+    "equal (mathematics)"
+  ],
+  "erect": [
+    "erect (build)",
+    "erect (erection)"
+  ],
+  "ever": [
+    "ever (not ever)",
+    "ever (unlimited time)",
+    "ever (for ever)"
+  ],
+  "exercise": [
+    "exercise (physical)",
+    "exercise (education)"
+  ],
+  "exhaust": [
+    "exhaust (use up)",
+    "exhaust (Tailpipe)"
+  ],
+  "expand": [
+    "expand (mathematics)",
+    "expand (enlarge)"
+  ],
+  "express": [
+    "express (very fast)",
+    "express (facially)",
+    "express (emotion)"
+  ],
+  "expression": [
+    "expression (quote)",
+    "expression (facial)"
+  ],
+  "expressive": [
+    "expressive (face)",
+    "expressive (emotional expression)"
+  ],
+  "extract": [
+    "extract (tooth)",
+    "extract (draw out)"
+  ],
+  "fan": [
+    "fan (air cooling)",
+    "fan (supporter)"
+  ],
+  "father": [
+    "father (male parent)",
+    "father (priest)"
+  ],
+  "feed": [
+    "feed (fowl)",
+    "feed (give food)"
+  ],
+  "fifth": [
+    "fifth (list)",
+    "fifth (5th)",
+    "fifth (fraction)"
+  ],
+  "figure": [
+    "figure (number)",
+    "figure (mathematics)",
+    "figure (body shape)"
+  ],
+  "fine": [
+    "fine (clear)",
+    "fine (ok)",
+    "fine (penalty)"
+  ],
+  "finish": [
+    "finish (not finish)",
+    "finish (complete)",
+    "finish (cigarette)",
+    "finish (drink)"
+  ],
+  "fire": [
+    "fire (gun)",
+    "fire (burning)"
+  ],
+  "firm": [
+    "firm (hard)",
+    "firm (business)"
+  ],
+  "first": [
+    "first (list)",
+    "first (of all)",
+    "first (of month)",
+    "first (earliest)",
+    "first (every first)"
+  ],
+  "fit": [
+    "fit (healthy)",
+    "fit (compatibility)"
+  ],
+  "flame": [
+    "flame (fire)",
+    "flame (cooking)"
+  ],
+  "flat": [
+    "flat (apartment)",
+    "flat (level)",
+    "flat (battery)"
+  ],
+  "fly": [
+    "fly (trousers)",
+    "fly (aeroplane)",
+    "fly (insect)",
+    "fly (flap wings)"
+  ],
+  "follow": [
+    "follow (understand)",
+    "follow (Align)"
+  ],
+  "forget": [
+    "forget (not remember)",
+    "forget (go blank)"
+  ],
+  "formal": [
+    "formal (dress)",
+    "formal (situation)"
+  ],
+  "forward": [
+    "forward (ahead)",
+    "forward (rugby)"
+  ],
+  "fourth": [
+    "fourth (4th)",
+    "fourth (every fourth)",
+    "fourth (list)"
+  ],
+  "free": [
+    "free (available)",
+    "free (Unrestricted)",
+    "free (liberate)",
+    "free (without cost)",
+    "free (voluntary)"
+  ],
+  "full": [
+    "full (completely filled)",
+    "full (sated)"
+  ],
+  "function": [
+    "function (mathematics)",
+    "function (role)"
+  ],
+  "give up": [
+    "give up (Quit)",
+    "give up (surrender)"
+  ],
+  "glass": [
+    "glass (material)",
+    "glass (cup)"
+  ],
+  "go": [
+    "go (movement)",
+    "go (in vehicle)"
+  ],
+  "go on": [
+    "go on (continue)",
+    "go on (exclamation)"
+  ],
+  "goal": [
+    "goal (basketball)",
+    "goal (AFL)",
+    "goal (score)",
+    "goal (objective)"
+  ],
+  "good": [
+    "good (no good)",
+    "good (not good)",
+    "good (well)",
+    "good (good on you!)"
+  ],
+  "grass": [
+    "grass (marijuana)",
+    "grass (green vegetation)"
+  ],
+  "grave": [
+    "grave (interment)",
+    "grave (serious)"
+  ],
+  "green": [
+    "green (Verdant)",
+    "green (inexperienced)"
+  ],
+  "grey": [
+    "grey (gray color)",
+    "grey (WA)"
+  ],
+  "grind": [
+    "grind (crushing)",
+    "grind (mortar and pestle)",
+    "grind (valve)",
+    "grind (car mechanics)"
+  ],
+  "habit": [
+    "habit (nun)",
+    "habit (repetitive behavior)"
+  ],
+  "hair": [
+    "hair (long)",
+    "hair (head hair)",
+    "hair (short)"
+  ],
+  "happen": [
+    "happen (Occurrence)",
+    "happen (nothing happen)"
+  ],
+  "harm": [
+    "harm (no harm)",
+    "harm (injury)"
+  ],
+  "hash": [
+    "hash (marijuana)",
+    "hash (cannabis resin)"
+  ],
+  "hassle": [
+    "hassle (interruption)",
+    "hassle (no hassle)"
+  ],
+  "have": [
+    "have (not have)",
+    "have (possess)",
+    "have (have none)",
+    "have (exist)"
+  ],
+  "heart": [
+    "heart (central core)",
+    "heart (at heart)"
+  ],
+  "here": [
+    "here (proximal demonstrative)",
+    "here (plural)"
+  ],
+  "hood": [
+    "hood (head-covering)",
+    "hood (car)"
+  ],
+  "hop": [
+    "hop (one-foot jump)",
+    "hop (kangaroo)"
+  ],
+  "ice": [
+    "ice (frozen water)",
+    "ice (apply icing)"
+  ],
+  "idea": [
+    "idea (suggestion)",
+    "idea (get idea)"
+  ],
+  "idle": [
+    "idle (engine)",
+    "idle (laziness)"
+  ],
+  "ignition": [
+    "ignition (car)",
+    "ignition (starter switch)"
+  ],
+  "inequality": [
+    "inequality (mathematics)",
+    "inequality (disparity)"
+  ],
+  "innocent": [
+    "innocent (not guilty)",
+    "innocent (inexperienced)"
+  ],
+  "insert": [
+    "insert (place inside)",
+    "insert (coin)"
+  ],
+  "integrate": [
+    "integrate (unify)",
+    "integrate (mathematics)"
+  ],
+  "integration": [
+    "integration (mathematics)",
+    "integration (Combining)"
+  ],
+  "interest": [
+    "interest (earnings)",
+    "interest (eager enthusiasm)"
+  ],
+  "isolate": [
+    "isolate (self",
+    "isolate (home isolate)"
+  ],
+  "isolation": [
+    "isolation (home isolation)",
+    "isolation (self",
+    "isolation (separate)"
+  ],
+  "it": [
+    "it (right here)",
+    "it (distal)"
+  ],
+  "join": [
+    "join (enlist)",
+    "join (connect)"
+  ],
+  "keen on": [
+    "keen on (not keen on)",
+    "keen on (Captivated)"
+  ],
+  "kind": [
+    "kind (sort)",
+    "kind (generous)"
+  ],
+  "know": [
+    "know (already)",
+    "know (not know)",
+    "know (understanding)"
+  ],
+  "late": [
+    "late (Overdue)",
+    "late (too late)"
+  ],
+  "laugh": [
+    "laugh (a lot)",
+    "laugh (giggle)"
+  ],
+  "launch": [
+    "launch (start)",
+    "launch (rocket)"
+  ],
+  "lead": [
+    "lead (guide)",
+    "lead (competition)"
+  ],
+  "lean": [
+    "lean (thin)",
+    "lean (tilt)"
+  ],
+  "leave": [
+    "leave (go)",
+    "leave (not take)"
+  ],
+  "left": [
+    "left (leftward)",
+    "left (not right)",
+    "left (leave)"
+  ],
+  "letter": [
+    "letter (written message)",
+    "letter (post)"
+  ],
+  "lift": [
+    "lift (elevator)",
+    "lift (raise)",
+    "lift (in a car)"
+  ],
+  "light": [
+    "light (illumination)",
+    "light (start fire)"
+  ],
+  "like": [
+    "like (not like)",
+    "like (fondness)"
+  ],
+  "line": [
+    "line (linear mark)",
+    "line (queue)"
+  ],
+  "live": [
+    "live (be alive)",
+    "live (reside)"
+  ],
+  "location": [
+    "location (in signing space)",
+    "location (place)"
+  ],
+  "lock": [
+    "lock (rugby)",
+    "lock (locking mechanism)"
+  ],
+  "love": [
+    "love (affection)",
+    "love (tennis score)"
+  ],
+  "lower": [
+    "lower (flag)",
+    "lower (Downward motion)"
+  ],
+  "lucky": [
+    "lucky (unexpected fortune)",
+    "lucky (lucky you!)"
+  ],
+  "mass": [
+    "mass (church service)",
+    "mass (weight)",
+    "mass (heap)"
+  ],
+  "match": [
+    "match (correspond)",
+    "match (matchstick)"
+  ],
+  "material": [
+    "material (stuff)",
+    "material (cloth)"
+  ],
+  "matter": [
+    "matter (not matter)",
+    "matter (problem)"
+  ],
+  "mean": [
+    "mean (signify)",
+    "mean (stingy)",
+    "mean (unkind)",
+    "mean (average)"
+  ],
+  "meaning": [
+    "meaning (Signification)",
+    "meaning (semantics)"
+  ],
+  "merry": [
+    "merry (tipsy)",
+    "merry (happy)"
+  ],
+  "meter": [
+    "meter (gauge)",
+    "meter (length unit)"
+  ],
+  "mince": [
+    "mince (finely chopped)",
+    "mince (garlic)"
+  ],
+  "mind": [
+    "mind (not mind)",
+    "mind (mental)"
+  ],
+  "mine": [
+    "mine (excavate)",
+    "mine (not mine)",
+    "mine (my possession)"
+  ],
+  "minute": [
+    "minute (very small)",
+    "minute (time)"
+  ],
+  "month": [
+    "month (this past month)",
+    "month (this month)",
+    "month (M-abbreviation)"
+  ],
+  "mouse": [
+    "mouse (small rodent)",
+    "mouse (computer)"
+  ],
+  "move": [
+    "move (motion in meeting)",
+    "move (change position)",
+    "move (vehicle)"
+  ],
+  "must": [
+    "must (necessity)",
+    "must (must not)"
+  ],
+  "my": [
+    "my (possessive)",
+    "my (not my)"
+  ],
+  "neck": [
+    "neck (neck)",
+    "neck (pet)"
+  ],
+  "no": [
+    "no (refuse)",
+    "no (Negation)"
+  ],
+  "none": [
+    "none (have none)",
+    "none (nothing)"
+  ],
+  "nose": [
+    "nose (big nose)",
+    "nose (nose)"
+  ],
+  "nurse": [
+    "nurse (baby)",
+    "nurse (cradle)"
+  ],
+  "object": [
+    "object (criticise)",
+    "object (thing)"
+  ],
+  "objective": [
+    "objective (not biased)",
+    "objective (aim)"
+  ],
+  "open": [
+    "open (make available)",
+    "open (book)",
+    "open (window)",
+    "open (automatic doors)",
+    "open (sliding",
+    "open (drawer)",
+    "open (folder)",
+    "open (door)"
+  ],
+  "order": [
+    "order (command)",
+    "order (sequence)",
+    "order (tidy)"
+  ],
+  "origin": [
+    "origin (beginning)",
+    "origin (mathematics)"
+  ],
+  "out": [
+    "out (sport)",
+    "out (Excluded)",
+    "out (extinguished)"
+  ],
+  "oval": [
+    "oval (sport)",
+    "oval (elongated circle)"
+  ],
+  "over": [
+    "over (cricket)",
+    "over (above)"
+  ],
+  "overtake": [
+    "overtake (in vehicle)",
+    "overtake (surpass)"
+  ],
+  "pack": [
+    "pack (small container)",
+    "pack (packet)"
+  ],
+  "page": [
+    "page (paper sheet)",
+    "page (use pager)"
+  ],
+  "park": [
+    "park (playground)",
+    "park (vehicle)",
+    "park (vehicle-parking)"
+  ],
+  "party": [
+    "party (political)",
+    "party (Socializing)"
+  ],
+  "pass": [
+    "pass (go past)",
+    "pass (test)"
+  ],
+  "past": [
+    "past (earlier time)",
+    "past (distant past)"
+  ],
+  "patient": [
+    "patient (healthcare)",
+    "patient (calm)"
+  ],
+  "pay": [
+    "pay (income)",
+    "pay (give money)"
+  ],
+  "peel": [
+    "peel (outer layer)",
+    "peel (banana)"
+  ],
+  "period": [
+    "period (lesson)",
+    "period (menstruation)",
+    "period (full stop)",
+    "period (time)"
+  ],
+  "pick up": [
+    "pick up (lift)",
+    "pick up (someone)"
+  ],
+  "picture": [
+    "picture (visualise)",
+    "picture (rectangular image)",
+    "picture (photo)",
+    "picture (movie)"
+  ],
+  "pipe": [
+    "pipe (cylinder)",
+    "pipe (smoking)"
+  ],
+  "place": [
+    "place (location)",
+    "place (put)"
+  ],
+  "plain": [
+    "plain (obvious)",
+    "plain (undecorated)",
+    "plain (flat area)"
+  ],
+  "plane": [
+    "plane (Aviation)",
+    "plane (shave)"
+  ],
+  "plough": [
+    "plough (mechanical)",
+    "plough (soil tiller)"
+  ],
+  "point": [
+    "point (full stop)",
+    "point (indicate)",
+    "point (geometry)",
+    "point (dot)",
+    "point (purpose)"
+  ],
+  "pointing": [
+    "pointing (to body parts)",
+    "pointing (indicating gesture)"
+  ],
+  "pot": [
+    "pot (marijuana)",
+    "pot (Open container)"
+  ],
+  "power": [
+    "power (electricity)",
+    "power (mathematics)",
+    "power (authority)"
+  ],
+  "present": [
+    "present (now)",
+    "present (gift)",
+    "present (hand over)",
+    "present (award)"
+  ],
+  "pretty": [
+    "pretty (more or less)",
+    "pretty (beauty)"
+  ],
+  "previously": [
+    "previously (earlier)",
+    "previously (nothing previously)"
+  ],
+  "prior to": [
+    "prior to (before)",
+    "prior to (not prior to)"
+  ],
+  "private": [
+    "private (army rank)",
+    "private (nonpublic)"
+  ],
+  "project": [
+    "project (overhead projection)",
+    "project (a film)"
+  ],
+  "prop": [
+    "prop (rugby)",
+    "prop (support)"
+  ],
+  "puppet": [
+    "puppet (string puppet)",
+    "puppet (hand puppet)"
+  ],
+  "queer": [
+    "queer (non-heteronormative)",
+    "queer (strange)"
+  ],
+  "radiator": [
+    "radiator (engine)",
+    "radiator (energy emitter)"
+  ],
+  "raise": [
+    "raise (flag)",
+    "raise (funds)",
+    "raise (lift)"
+  ],
+  "ready": [
+    "ready (not ready)",
+    "ready (completed)"
+  ],
+  "really": [
+    "really (truth)",
+    "really (exclamation)"
+  ],
+  "recall": [
+    "recall (return)",
+    "recall (remember)"
+  ],
+  "record": [
+    "record (copy)",
+    "record (music)"
+  ],
+  "reduce": [
+    "reduce (cooking)",
+    "reduce (shorten)"
+  ],
+  "reflect": [
+    "reflect (light)",
+    "reflect (think)"
+  ],
+  "reflection": [
+    "reflection (thinking)",
+    "reflection (self",
+    "reflection (light)"
+  ],
+  "reserve": [
+    "reserve (book)",
+    "reserve (sport)"
+  ],
+  "responsible": [
+    "responsible (not responsible)",
+    "responsible (obligation)"
+  ],
+  "revolution": [
+    "revolution (revolt)",
+    "revolution (revolving)"
+  ],
+  "ride": [
+    "ride (an animal)",
+    "ride (horse)"
+  ],
+  "ridiculous": [
+    "ridiculous (foolish crudeness)",
+    "ridiculous (exclamation)"
+  ],
+  "right": [
+    "right (correct)",
+    "right (legal)",
+    "right (not left)"
+  ],
+  "ring": [
+    "ring (doorbell)",
+    "ring (diamond)",
+    "ring (telephone)"
+  ],
+  "root": [
+    "root (mathematics)",
+    "root (sexual act)"
+  ],
+  "roundabout": [
+    "roundabout (traffic)",
+    "roundabout (indirect)"
+  ],
+  "rubber": [
+    "rubber (eraser)",
+    "rubber (material)"
+  ],
+  "rubbish": [
+    "rubbish (nonsense)",
+    "rubbish (waste)"
+  ],
+  "run": [
+    "run (running)",
+    "run (flow)",
+    "run (machine)",
+    "run (engine)",
+    "run (nose)"
+  ],
+  "sand": [
+    "sand (granular stone)",
+    "sand (use sandpaper)"
+  ],
+  "satisfied": [
+    "satisfied (contentment)",
+    "satisfied (sated)"
+  ],
+  "saw": [
+    "saw (tool)",
+    "saw (see)",
+    "saw (cut)"
+  ],
+  "say": [
+    "say (communicate)",
+    "say (for instance)"
+  ],
+  "scale": [
+    "scale (graded continuum)",
+    "scale (climb)"
+  ],
+  "scales": [
+    "scales (balance)",
+    "scales (weigh)"
+  ],
+  "score": [
+    "score (tally)",
+    "score (romantically)",
+    "score (scratch)"
+  ],
+  "screen": [
+    "screen (protective barrier)",
+    "screen (computer)"
+  ],
+  "screw": [
+    "screw (sexual act)",
+    "screw (use screwdriver)",
+    "screw (threaded fastener)"
+  ],
+  "seal": [
+    "seal (animal)",
+    "seal (mark)",
+    "seal (stick together)"
+  ],
+  "seat belt": [
+    "seat belt (car)",
+    "seat belt (plane)"
+  ],
+  "seated": [
+    "seated (sitting)",
+    "seated (at)"
+  ],
+  "second": [
+    "second (of month)",
+    "second (every second)",
+    "second (runner-up)",
+    "second (list)",
+    "second (support)",
+    "second (time)"
+  ],
+  "see": [
+    "see (not see)",
+    "see (perceive)"
+  ],
+  "self": [
+    "self (individual)",
+    "self (oneself)",
+    "self (affix)"
+  ],
+  "send off": [
+    "send off (sport)",
+    "send off (send away)"
+  ],
+  "separate": [
+    "separate (move apart)",
+    "separate (partners)"
+  ],
+  "sequence": [
+    "sequence (mathematics)",
+    "sequence (ordered succession)"
+  ],
+  "serve": [
+    "serve (tennis)",
+    "serve (provide assistance)"
+  ],
+  "shave": [
+    "shave (underarm)",
+    "shave (head)",
+    "shave (face)",
+    "shave (leg)"
+  ],
+  "shift": [
+    "shift (work)",
+    "shift (move)"
+  ],
+  "shine": [
+    "shine (reflect)",
+    "shine (Reflective brightness)"
+  ],
+  "should": [
+    "should (advisory obligation)",
+    "should (should not)"
+  ],
+  "show": [
+    "show (fair)",
+    "show (demonstration)",
+    "show (performance)"
+  ],
+  "shut": [
+    "shut (door)",
+    "shut (close)"
+  ],
+  "sign": [
+    "sign (signature)",
+    "sign (sign language)",
+    "sign (symbol)",
+    "sign (signpost)",
+    "sign (notice)"
+  ],
+  "since": [
+    "since (not since)",
+    "since (thereafter)"
+  ],
+  "sit": [
+    "sit (opposite each other)",
+    "sit (seat)",
+    "sit (at)"
+  ],
+  "size": [
+    "size (of container)",
+    "size (in width or clothes)",
+    "size (boundary)"
+  ],
+  "skim": [
+    "skim (read)",
+    "skim (surface removal)"
+  ],
+  "skip": [
+    "skip (with rope)",
+    "skip (hopping)"
+  ],
+  "skipping": [
+    "skipping (light hopping)",
+    "skipping (with rope)"
+  ],
+  "sleep": [
+    "sleep (soundly)",
+    "sleep (sleep)"
+  ],
+  "slip": [
+    "slip (petticoat)",
+    "slip (accidental slide)"
+  ],
+  "slow": [
+    "slow (too slow)",
+    "slow (low speed)"
+  ],
+  "smash": [
+    "smash (vehicle)",
+    "smash (forceful impact)"
+  ],
+  "smoke": [
+    "smoke (cigarette)",
+    "smoke (pipe)",
+    "smoke (rising vapour)",
+    "smoke (marijuana)"
+  ],
+  "speaker": [
+    "speaker (spoken communication)",
+    "speaker (loudspeaker)"
+  ],
+  "spell": [
+    "spell (letter-formation)",
+    "spell (magic)"
+  ],
+  "spoil": [
+    "spoil (indulge)",
+    "spoil (ruin)"
+  ],
+  "spread": [
+    "spread (paste)",
+    "spread (wide distribution)"
+  ],
+  "square": [
+    "square (mathematics)",
+    "square (equal-sided)"
+  ],
+  "squash": [
+    "squash (sport)",
+    "squash (crush)"
+  ],
+  "stamp": [
+    "stamp (postage)",
+    "stamp (mark)"
+  ],
+  "star": [
+    "star (celebrity)",
+    "star (filmstar)"
+  ],
+  "station": [
+    "station (train stop)",
+    "station (railway)",
+    "station (radio)"
+  ],
+  "steam": [
+    "steam (cooking)",
+    "steam (rising vapour)"
+  ],
+  "stick": [
+    "stick (adhere)",
+    "stick (club)"
+  ],
+  "still": [
+    "still (calm)",
+    "still (remain motionless)"
+  ],
+  "stop": [
+    "stop (prohibit)",
+    "stop (doing that)",
+    "stop (cease)"
+  ],
+  "strike": [
+    "strike (bowling)",
+    "strike (stop work)",
+    "strike (match)",
+    "strike (hit)",
+    "strike (lightning)"
+  ],
+  "stroke": [
+    "stroke (slash)",
+    "stroke (pat)",
+    "stroke (illness)"
+  ],
+  "stumps": [
+    "stumps (cricket)",
+    "stumps (pylons)"
+  ],
+  "suit": [
+    "suit (match)",
+    "suit (agree with)",
+    "suit (suit someone)",
+    "suit (double-breasted)"
+  ],
+  "support": [
+    "support (foundation)",
+    "support (barrack)",
+    "support (help)"
+  ],
+  "suspend": [
+    "suspend (remove)",
+    "suspend (sport)",
+    "suspend (hang)"
+  ],
+  "suspension": [
+    "suspension (vehicle)",
+    "suspension (sport)",
+    "suspension (removal)"
+  ],
+  "swear": [
+    "swear (oath)",
+    "swear (profanity)"
+  ],
+  "sweet": [
+    "sweet (very sweet)",
+    "sweet (pleasant)"
+  ],
+  "sweets": [
+    "sweets (dessert)",
+    "sweets (confectionery)"
+  ],
+  "switch": [
+    "switch (switchboard)",
+    "switch (changeover)"
+  ],
+  "take off": [
+    "take off (plane)",
+    "take off (rocket)"
+  ],
+  "tan": [
+    "tan (suntan)",
+    "tan (mathematics)"
+  ],
+  "tap": [
+    "tap (faucet)",
+    "tap (light touch)"
+  ],
+  "tape": [
+    "tape (reel",
+    "tape (adhesive)"
+  ],
+  "taxi": [
+    "taxi (plane)",
+    "taxi (hired car)"
+  ],
+  "them": [
+    "them (here)",
+    "them (distant referents)"
+  ],
+  "there": [
+    "there (near you)",
+    "there (plural)",
+    "there (distal reference)"
+  ],
+  "they": [
+    "they (distant others)",
+    "they (here)"
+  ],
+  "think": [
+    "think (contemplate)",
+    "think (suspect)",
+    "think (feel)",
+    "think (mental activity)",
+    "think (mull over)"
+  ],
+  "third": [
+    "third (third-ranking)",
+    "third (list)",
+    "third (fraction)",
+    "third (every third)"
+  ],
+  "throw": [
+    "throw (Propel)",
+    "throw (upwards)"
+  ],
+  "tie": [
+    "tie (necktie)",
+    "tie (knot)",
+    "tie (draw)"
+  ],
+  "till": [
+    "till (cash register)",
+    "till (until)"
+  ],
+  "time": [
+    "time (between two clock times)",
+    "time (Temporal measure)"
+  ],
+  "tin": [
+    "tin (can)",
+    "tin (metal)"
+  ],
+  "tip": [
+    "tip (dump)",
+    "tip (end point)"
+  ],
+  "top": [
+    "top (toy)",
+    "top (highest)",
+    "top (lid)"
+  ],
+  "toss": [
+    "toss (throw)",
+    "toss (salad)"
+  ],
+  "train": [
+    "train (practise)",
+    "train (of gown)",
+    "train (travel by)",
+    "train (electric)",
+    "train (steam train)",
+    "train (rail transport)",
+    "train (express)"
+  ],
+  "trip": [
+    "trip (fall)",
+    "trip (journey)"
+  ],
+  "triple": [
+    "triple (mathematics)",
+    "triple (threefold)"
+  ],
+  "trunk": [
+    "trunk (elephant)",
+    "trunk (container)",
+    "trunk (body)",
+    "trunk (car)"
+  ],
+  "try": [
+    "try (attempt)",
+    "try (rugby)"
+  ],
+  "turn": [
+    "turn (rotate)",
+    "turn (alloted time)"
+  ],
+  "turn down": [
+    "turn down (decrease)",
+    "turn down (lower)"
+  ],
+  "twins": [
+    "twins (paired siblings)",
+    "twins (identical)"
+  ],
+  "type": [
+    "type (sort)",
+    "type (typing)"
+  ],
+  "unit": [
+    "unit (mathematics)",
+    "unit (group)"
+  ],
+  "vacant": [
+    "vacant (empty)",
+    "vacant (available)"
+  ],
+  "value": [
+    "value (worth)",
+    "value (mathematics)"
+  ],
+  "vanish": [
+    "vanish (disappear)",
+    "vanish (into distance)"
+  ],
+  "volume": [
+    "volume (sound)",
+    "volume (capacity)"
+  ],
+  "wage": [
+    "wage (bet)",
+    "wage (income)"
+  ],
+  "wait": [
+    "wait (idle waiting)",
+    "wait (long time)"
+  ],
+  "walk": [
+    "walk (foot-travel)",
+    "walk (animal)"
+  ],
+  "want": [
+    "want (desire)",
+    "want (not want)"
+  ],
+  "waste": [
+    "waste (rubbish)",
+    "waste (inefficient use)"
+  ],
+  "watch": [
+    "watch (look)",
+    "watch (wristwatch)",
+    "watch (observe)"
+  ],
+  "water": [
+    "water (hose)",
+    "water (water)"
+  ],
+  "way": [
+    "way (method)",
+    "way (either way)"
+  ],
+  "week": [
+    "week (last week)",
+    "week (next week)",
+    "week (week ago)",
+    "week (this past week)",
+    "week (week after)",
+    "week (calendar week)",
+    "week (this week)"
+  ],
+  "well": [
+    "well (healthy)",
+    "well (good)",
+    "well (get well)",
+    "well (palm up gesture)",
+    "well (not badly)"
+  ],
+  "western": [
+    "western (west)",
+    "western (movie)"
+  ],
+  "whip": [
+    "whip (mix)",
+    "whip (hit)"
+  ],
+  "will": [
+    "will (bequeath)",
+    "will (future-intent)"
+  ],
+  "wind up": [
+    "wind up (crank)",
+    "wind up (watch)"
+  ],
+  "wire": [
+    "wire (thin strand)",
+    "wire (telegram)"
+  ],
+  "with": [
+    "with (go with)",
+    "with (accompanied)"
+  ],
+  "x": [
+    "x (value of %22x%22)",
+    "x (letter X)"
+  ],
+  "year": [
+    "year (this past year)",
+    "year (for a year)",
+    "year (this year)",
+    "year (last year)",
+    "year (calendar year)",
+    "year (one year)",
+    "year (next year)"
+  ],
+  "yet": [
+    "yet (not yet)",
+    "yet (pause)"
+  ],
+  "you": [
+    "you (plural)",
+    "you (Addressee)"
+  ],
+  "your": [
+    "your (not your)",
+    "your (addressee’s)",
+    "your (plural)"
+  ],
+  "yours": [
+    "yours (Addressee’s)",
+    "yours (not yours)",
+    "yours (plural)"
+  ],
+  "zipper": [
+    "zipper (trousers)",
+    "zipper (zip fastener)"
+  ],
+  "AFL": [
+    "AFL (Australian Football League)",
+    "Australian Football League"
+  ],
+  "ATM": [
+    "ATM (automatic teller machine)",
+    "automatic teller machine"
+  ],
+  "Alsatian": [
+    "Alsatian (dog)",
+    "dog"
+  ],
+  "America": [
+    "America (USA)",
+    "USA"
+  ],
+  "American": [
+    "American (USA)",
+    "USA"
+  ],
+  "Americas": [
+    "Americas (North and South America)",
+    "North and South America"
+  ],
+  "CEO": [
+    "CEO (Chief Executive Officer)",
+    "Chief Executive Officer"
+  ],
+  "ECG": [
+    "ECG (electrocardiogram)",
+    "electrocardiogram"
+  ],
+  "GP": [
+    "GP (General Practitioner)",
+    "General Practitioner"
+  ],
+  "IVF": [
+    "IVF (in vitro fertilisation)",
+    "in vitro fertilisation"
+  ],
+  "LAC": [
+    "LAC (local area coordination)",
+    "local area coordination"
+  ],
+  "LBW": [
+    "LBW (cricket)",
+    "cricket"
+  ],
+  "MSDS": [
+    "MSDS (Material Safety Data Sheet)",
+    "Material Safety Data Sheet"
+  ],
+  "Material Safety Data Sheet": [
+    "Material Safety Data Sheet (MSDS)",
+    "MSDS"
+  ],
+  "PPE": [
+    "PPE (Personal Protective Equipment)",
+    "Personal Protective Equipment"
+  ],
+  "Personal  Protective Equipment": [
+    "Personal  Protective Equipment (PPE)",
+    "PPE"
+  ],
+  "TB": [
+    "TB (tuberculosis)",
+    "tuberculosis"
+  ],
+  "United States of America": [
+    "United States of America (USA)",
+    "USA"
+  ],
+  "VET": [
+    "VET (Vocational Education and Training)",
+    "Vocational Education and Training"
+  ],
+  "WHS": [
+    "WHS (Workplace Health and Safety)",
+    "Workplace Health and Safety"
+  ],
+  "Workplace Health and Safety": [
+    "Workplace Health and Safety (WHS)",
+    "WHS"
+  ],
+  "access request form": [
+    "access request form (ARF)",
+    "ARF"
+  ],
+  "alterations": [
+    "alterations (clothing)",
+    "clothing"
+  ],
+  "amazing": [
+    "amazing (exclamation)",
+    "exclamation"
+  ],
+  "amble": [
+    "amble (animal)",
+    "animal"
+  ],
+  "apartment": [
+    "apartment (building)",
+    "building"
+  ],
+  "back up": [
+    "back up (reverse)",
+    "reverse"
+  ],
+  "backing": [
+    "backing (support)",
+    "support"
+  ],
+  "balls": [
+    "balls (testicles)",
+    "testicles"
+  ],
+  "bark": [
+    "bark (dog)",
+    "dog"
+  ],
+  "be": [
+    "be (not be)",
+    "not be"
+  ],
+  "blast": [
+    "blast (tell off)",
+    "tell off"
+  ],
+  "blaze": [
+    "blaze (sun)",
+    "sun"
+  ],
+  "body parts": [
+    "body parts (pointing to)",
+    "pointing to"
+  ],
+  "bonnet": [
+    "bonnet (car)",
+    "car"
+  ],
+  "bowled out": [
+    "bowled out (cricket)",
+    "cricket"
+  ],
+  "bowler": [
+    "bowler (cricket)",
+    "cricket"
+  ],
+  "break away": [
+    "break away (rugby)",
+    "rugby"
+  ],
+  "break up": [
+    "break up (relationship)",
+    "relationship"
+  ],
+  "breakaway": [
+    "breakaway (rugby)",
+    "rugby"
+  ],
+  "bugger": [
+    "bugger (bastard)",
+    "bastard"
+  ],
+  "bun": [
+    "bun (hair)",
+    "hair"
+  ],
+  "buns": [
+    "buns (buttocks)",
+    "buttocks"
+  ],
+  "button": [
+    "button (clothing)",
+    "clothing"
+  ],
+  "buttons": [
+    "buttons (clothing)",
+    "clothing"
+  ],
+  "can you": [
+    "can you (exclamation)",
+    "exclamation"
+  ],
+  "cast": [
+    "cast (spell)",
+    "spell"
+  ],
+  "channel": [
+    "channel (TV)",
+    "TV"
+  ],
+  "checked": [
+    "checked (pattern)",
+    "pattern"
+  ],
+  "chops": [
+    "chops (cut of meat)",
+    "cut of meat"
+  ],
+  "chronic fatigue syndrome": [
+    "chronic fatigue syndrome (CFS)",
+    "CFS"
+  ],
+  "collision": [
+    "collision (vehicle)",
+    "vehicle"
+  ],
+  "come in": [
+    "come in (welcome)",
+    "welcome"
+  ],
+  "conjugate": [
+    "conjugate (mathematics)",
+    "mathematics"
+  ],
+  "cube root": [
+    "cube root (mathematics)",
+    "mathematics"
+  ],
+  "cubed": [
+    "cubed (mathematics)",
+    "mathematics"
+  ],
+  "damn": [
+    "damn (exclamation)",
+    "exclamation"
+  ],
+  "dash off": [
+    "dash off (speed)",
+    "speed"
+  ],
+  "dear": [
+    "dear (costly)",
+    "costly"
+  ],
+  "dear me": [
+    "dear me (exclamation)",
+    "exclamation"
+  ],
+  "decline": [
+    "decline (refuse)",
+    "refuse"
+  ],
+  "denomination": [
+    "denomination (religion)",
+    "religion"
+  ],
+  "detail": [
+    "detail (in detail)",
+    "in detail"
+  ],
+  "differentiate": [
+    "differentiate (mathematics)",
+    "mathematics"
+  ],
+  "differentiation": [
+    "differentiation (mathematics)",
+    "mathematics"
+  ],
+  "ditch": [
+    "ditch (someone)",
+    "someone"
+  ],
+  "dope": [
+    "dope (marijuana)",
+    "marijuana"
+  ],
+  "drafting": [
+    "drafting (draw)",
+    "draw"
+  ],
+  "drag": [
+    "drag (female impersonation)",
+    "female impersonation"
+  ],
+  "drag artist": [
+    "drag artist (female impersonator)",
+    "female impersonator"
+  ],
+  "draught": [
+    "draught (draw)",
+    "draw"
+  ],
+  "draughting": [
+    "draughting (draw)",
+    "draw"
+  ],
+  "dumb": [
+    "dumb (mute)",
+    "mute"
+  ],
+  "ears": [
+    "ears (animal)",
+    "animal"
+  ],
+  "exponent": [
+    "exponent (mathematics)",
+    "mathematics"
+  ],
+  "exponential": [
+    "exponential (mathematics)",
+    "mathematics"
+  ],
+  "extraction": [
+    "extraction (tooth)",
+    "tooth"
+  ],
+  "factor": [
+    "factor (mathematics)",
+    "mathematics"
+  ],
+  "factorization": [
+    "factorization (mathematics)",
+    "mathematics"
+  ],
+  "factorize": [
+    "factorize (mathematics)",
+    "mathematics"
+  ],
+  "fag": [
+    "fag (cigarette)",
+    "cigarette"
+  ],
+  "fall": [
+    "fall (topple)",
+    "topple"
+  ],
+  "fell": [
+    "fell (tree)",
+    "tree"
+  ],
+  "felling": [
+    "felling (trees)",
+    "trees"
+  ],
+  "figures": [
+    "figures (numbers)",
+    "numbers"
+  ],
+  "filling": [
+    "filling (tooth)",
+    "tooth"
+  ],
+  "fin": [
+    "fin (dorsal fin)",
+    "dorsal fin"
+  ],
+  "flat surface": [
+    "flat surface (high)",
+    "high"
+  ],
+  "flats": [
+    "flats (building)",
+    "building"
+  ],
+  "flicks": [
+    "flicks (movie)",
+    "movie"
+  ],
+  "found": [
+    "found (establish)",
+    "establish"
+  ],
+  "fuck": [
+    "fuck (sexual act)",
+    "sexual act"
+  ],
+  "fuckup": [
+    "fuckup (stupid mistake)",
+    "stupid mistake"
+  ],
+  "gag": [
+    "gag (joke)",
+    "joke"
+  ],
+  "go back": [
+    "go back (return)",
+    "return"
+  ],
+  "go blank": [
+    "go blank (forget)",
+    "forget"
+  ],
+  "go flat": [
+    "go flat (battery)",
+    "battery"
+  ],
+  "grasp": [
+    "grasp (understand)",
+    "understand"
+  ],
+  "grill": [
+    "grill (cook)",
+    "cook"
+  ],
+  "grille": [
+    "grille (guard)",
+    "guard"
+  ],
+  "gross": [
+    "gross (crude)",
+    "crude"
+  ],
+  "hold on": [
+    "hold on (wait)",
+    "wait"
+  ],
+  "horn": [
+    "horn (car)",
+    "car"
+  ],
+  "hundred": [
+    "hundred (one hundred)",
+    "one hundred"
+  ],
+  "incredible": [
+    "incredible (exclamation)",
+    "exclamation"
+  ],
+  "independent variable": [
+    "independent variable (mathematics).",
+    "mathematics"
+  ],
+  "integral": [
+    "integral (symbol)",
+    "symbol"
+  ],
+  "intercept": [
+    "intercept (netball)",
+    "netball"
+  ],
+  "interception": [
+    "interception (netball)",
+    "netball"
+  ],
+  "inverse": [
+    "inverse (mathematics)",
+    "mathematics"
+  ],
+  "joint": [
+    "joint (marijuana)",
+    "marijuana"
+  ],
+  "know finish": [
+    "know finish (been there, done that)",
+    "been there, done that"
+  ],
+  "learned": [
+    "learned (knowledgeable)",
+    "knowledgeable"
+  ],
+  "leg before wicket": [
+    "leg before wicket (cricket)",
+    "cricket"
+  ],
+  "living": [
+    "living (not dead)",
+    "not dead"
+  ],
+  "lobby": [
+    "lobby (advocate)",
+    "advocate"
+  ],
+  "log": [
+    "log (trees)",
+    "trees"
+  ],
+  "logging": [
+    "logging (trees)",
+    "trees"
+  ],
+  "magnitude": [
+    "magnitude (mathematics)",
+    "mathematics"
+  ],
+  "maiden": [
+    "maiden (cricket)",
+    "cricket"
+  ],
+  "make up": [
+    "make up (invent)",
+    "invent"
+  ],
+  "manual": [
+    "manual (instructions)",
+    "instructions"
+  ],
+  "marble": [
+    "marble (toy)",
+    "toy"
+  ],
+  "milli": [
+    "milli (prefix)",
+    "prefix"
+  ],
+  "monitor": [
+    "monitor (computer)",
+    "computer"
+  ],
+  "native": [
+    "native (language)",
+    "language"
+  ],
+  "no way": [
+    "no way (reject)",
+    "reject"
+  ],
+  "nuts": [
+    "nuts (crazy)",
+    "crazy"
+  ],
+  "oh my god": [
+    "oh my god (exclamation)",
+    "exclamation"
+  ],
+  "ouch": [
+    "ouch (exclamation)",
+    "exclamation"
+  ],
+  "ought": [
+    "ought (ought not)",
+    "ought not"
+  ],
+  "overarm": [
+    "overarm (swimming)",
+    "swimming"
+  ],
+  "overtaking": [
+    "overtaking (in vehicle)",
+    "in vehicle"
+  ],
+  "packed": [
+    "packed (crowded)",
+    "crowded"
+  ],
+  "pictures": [
+    "pictures (cinema)",
+    "cinema"
+  ],
+  "pissed": [
+    "pissed (drunk)",
+    "drunk"
+  ],
+  "points": [
+    "points (spark plugs)",
+    "spark plugs"
+  ],
+  "post": [
+    "post (letter)",
+    "letter"
+  ],
+  "probability": [
+    "probability (mathematics)",
+    "mathematics"
+  ],
+  "pull down": [
+    "pull down (demolish)",
+    "demolish"
+  ],
+  "pull out": [
+    "pull out (quit)",
+    "quit"
+  ],
+  "purl": [
+    "purl (stitch)",
+    "stitch"
+  ],
+  "put out": [
+    "put out (extinguish)",
+    "extinguish"
+  ],
+  "range": [
+    "range (mountain)",
+    "mountain"
+  ],
+  "reciprocal": [
+    "reciprocal (mathematics)",
+    "mathematics"
+  ],
+  "reserved": [
+    "reserved (booked)",
+    "booked"
+  ],
+  "rights": [
+    "rights (legal)",
+    "legal"
+  ],
+  "rip": [
+    "rip (tear)",
+    "tear"
+  ],
+  "rollie": [
+    "rollie (cigarette)",
+    "cigarette"
+  ],
+  "rule": [
+    "rule (draw line)",
+    "draw line"
+  ],
+  "run over": [
+    "run over (in vehicle)",
+    "in vehicle"
+  ],
+  "sack": [
+    "sack (dismiss)",
+    "dismiss"
+  ],
+  "scraps": [
+    "scraps (food)",
+    "food"
+  ],
+  "sealed": [
+    "sealed (closed with seal)",
+    "closed with seal"
+  ],
+  "service provider": [
+    "service provider (NDIS)",
+    "NDIS"
+  ],
+  "set": [
+    "set (sun)",
+    "sun"
+  ],
+  "shuffle": [
+    "shuffle (cards)",
+    "cards"
+  ],
+  "silly mid on": [
+    "silly mid on (cricket)",
+    "cricket"
+  ],
+  "sloshed": [
+    "sloshed (drunk)",
+    "drunk"
+  ],
+  "sow": [
+    "sow (seeds)",
+    "seeds"
+  ],
+  "split up": [
+    "split up (relationship)",
+    "relationship"
+  ],
+  "squared": [
+    "squared (mathematics)",
+    "mathematics"
+  ],
+  "state": [
+    "state (say)",
+    "say"
+  ],
+  "store": [
+    "store (shop)",
+    "shop"
+  ],
+  "stress": [
+    "stress (emphasis)",
+    "emphasis"
+  ],
+  "stump": [
+    "stump (cricket)",
+    "cricket"
+  ],
+  "submission": [
+    "submission (application)",
+    "application"
+  ],
+  "swish": [
+    "swish (basketball)",
+    "basketball"
+  ],
+  "tablet": [
+    "tablet (pill)",
+    "pill"
+  ],
+  "tanned": [
+    "tanned (suntanned)",
+    "suntanned"
+  ],
+  "tear": [
+    "tear (rip)",
+    "rip"
+  ],
+  "therefore": [
+    "therefore (symbol)",
+    "symbol"
+  ],
+  "throw up": [
+    "throw up (vomit)",
+    "vomit"
+  ],
+  "turkey": [
+    "turkey (animal)",
+    "animal"
+  ],
+  "turn off": [
+    "turn off (stop)",
+    "stop"
+  ],
+  "turn on": [
+    "turn on (start)",
+    "start"
+  ],
+  "turn up": [
+    "turn up (increase)",
+    "increase"
+  ],
+  "ultimate": [
+    "ultimate (final)",
+    "final"
+  ],
+  "visual display unit": [
+    "visual display unit (VDU)",
+    "VDU"
+  ],
+  "vital": [
+    "vital (important)",
+    "important"
+  ],
+  "wail": [
+    "wail (siren)",
+    "siren"
+  ],
+  "watering": [
+    "watering (garden)",
+    "garden"
+  ],
+  "wave": [
+    "wave (water)",
+    "water"
+  ],
+  "way out": [
+    "way out (exit)",
+    "exit"
+  ],
+  "weed": [
+    "weed (marijuana)",
+    "marijuana"
+  ],
+  "wide ball": [
+    "wide ball (cricket)",
+    "cricket"
+  ],
+  "wind": [
+    "wind (air)",
+    "air"
+  ],
+  "wind forward": [
+    "wind forward (tape)",
+    "tape"
+  ],
+  "winger": [
+    "winger (sport)",
+    "sport"
+  ],
+  "wiper": [
+    "wiper (windscreen wiper)",
+    "windscreen wiper"
+  ],
+  "wound": [
+    "wound (injury)",
+    "injury"
+  ],
+  "yarn": [
+    "yarn (story)",
+    "story"
+  ],
+  "yield": [
+    "yield (surrender)",
+    "surrender"
+  ],
+  "yonder": [
+    "yonder (very far)",
+    "very far"
+  ],
+  "zoom off": [
+    "zoom off (speed)",
+    "speed"
+  ]
 }
