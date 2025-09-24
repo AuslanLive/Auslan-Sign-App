@@ -21,7 +21,7 @@ class WordSenseDisambiguation:
     def _load_ambiguous_dict(self):
         """Load the ambiguous words dictionary from JSON file."""
         dict_path = os.path.join(os.path.dirname(__file__), 
-                                "ambiguous_dict.json")
+                                "ambiguous_dict_lowercase.json")
         try:
             with open(dict_path, 'r') as file:
                 return json.load(file)
@@ -45,14 +45,10 @@ class WordSenseDisambiguation:
         # Check if sentence contains any words that need disambiguation
         # split sentence into list of individual words
         words = sentence.lower().split()
-        
+
+        print("(WordSenseDisambig) Starting word sense disambiguation with words..." + str(words))
+
         for word in words:
-            
-            ## Also check if lemmatized word is in the ambiguous dictionary
-            # lemmatize the word using spaCy
-            # load spaCy with only lemmatisation capabilities
-            doc = self.nlp(word)
-            lemmatized_word = doc[0].lemma_
 
             # check json file dictionary for words and their senses
             if word in self.ambiguous_dict:

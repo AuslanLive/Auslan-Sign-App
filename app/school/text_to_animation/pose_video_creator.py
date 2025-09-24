@@ -142,15 +142,21 @@ def get_valid_blobs_from_sentence(sentence):
     bucket = storage.bucket()
 
     for word in sentence:
-        # Check both lowercase and capitalized versions of the word
+        # Check lowercase, capitalized, and title case versions of the word
         lowercase_blob = bucket.blob(f"{word.lower()}.pose")
         capitalized_blob = bucket.blob(f"{word.capitalize()}.pose")
+        regular_case_blob = bucket.blob(f"{word}.pose")
+        
+        print(f"(pose_video_creator) Checking blobs for word '{word}': TITLE | "
+              f"{regular_case_blob.name}")
 
         if lowercase_blob.exists():
             valid_blob_names.append(word.lower())  # Add lowercase if exists
         elif capitalized_blob.exists():
             # Add capitalized if exists
             valid_blob_names.append(word.capitalize())
+        elif regular_case_blob.exists():
+            valid_blob_names.append(word)
         else:
             print(f"(pose_video_creator) Skipping word '{word}', no corresponding .pose file found.")
 

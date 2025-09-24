@@ -139,7 +139,7 @@ class GrammarParser:
                 if word_lower in disambiguated_words:
                     # If the word is ambiguous, replace it with its disambiguated form
                     print(f"(GrammarParser.py): Clarifying word '{word}' to '{disambiguated_words[word_lower]}'")
-                    sentence[i] = disambiguated_words[word_lower].upper()
+                    sentence[i] = disambiguated_words[word_lower]
 
         else:
             sentence = t2s_input.split()
