@@ -4,6 +4,8 @@ from app.school.Connectinator import Connectinator
 import os
 from time import time
 import asyncio
+import numpy as np
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -66,21 +68,75 @@ def process_recording():
         if not isinstance(frames, list) or len(frames) == 0:
             return jsonify({"error": "No frames provided"}), 400
 
-        # Process each frame through the existing pipeline
-        for frame in frames:
-            asyncio.run(connectinator.process_frame(frame))
+        # Build tensors per spec: stride=2, hand-only, wrist-center + MCP scale, pad/trim to 48
+        kept = frames[::2]
+        x_list = []  # (84,)
+        m_list = []  # (42,)
 
-        # Flush any buffered words and format output
-        connectinator.full_phrase.parse_results()
+        def norm_hand(hand):
+            if not hand:
+                return np.zeros((21, 2), dtype=np.float32), np.zeros(21, dtype=np.float32)
+            pts = np.array([[max(0.0, min(1.0, p.get('x', 0.0))),
+                             max(0.0, min(1.0, p.get('y', 0.0)))] for p in hand[:21]], dtype=np.float32)
+            wrist = pts[0]
+            mcps = pts[[5, 9, 13, 17]]
+            scale = float(np.mean(np.linalg.norm(mcps - wrist, axis=1)))
+            if scale < 1e-6:
+                scale = 1.0
+            norm = (pts - wrist) / scale
+            mask = np.ones(21, dtype=np.float32)
+            return norm, mask
 
-        top_1 = connectinator.get_top_1_prediction()
-        top_5 = connectinator.get_top_predictions()
+        for fr in kept:
+            kp = fr.get('keypoints', [None, None, None])
+            L, mL = norm_hand(kp[1]) if len(kp) > 1 else (np.zeros((21,2), np.float32), np.zeros(21, np.float32))
+            R, mR = norm_hand(kp[2]) if len(kp) > 2 else (np.zeros((21,2), np.float32), np.zeros(21, np.float32))
+            feat = np.concatenate([L, R], axis=0).reshape(-1)
+            mask = np.concatenate([mL, mR], axis=0)
+            x_list.append(feat)
+            m_list.append(mask)
+
+        T = 48
+        if len(x_list) >= T:
+            x = np.stack(x_list[:T], axis=0)
+            m = np.stack(m_list[:T], axis=0)
+        else:
+            pad_f = T - len(x_list)
+            x = np.vstack([np.stack(x_list, 0) if x_list else np.zeros((0,84), np.float32), np.zeros((pad_f, 84), np.float32)])
+            m = np.vstack([np.stack(m_list, 0) if m_list else np.zeros((0,42), np.float32), np.zeros((pad_f, 42), np.float32)])
+
+        # zero-out missing (repeat mask to features)
+        m_feat = np.repeat(m, 2, axis=1)
+        x_masked = x * m_feat
+
+        # z-score using training stats
+        with open(os.path.join('app', 'stats.json'), 'r') as f:
+            stats = json.load(f)
+        mu = np.array(stats['mean'], dtype=np.float32)
+        sd = np.array(stats['std'], dtype=np.float32)
+        sd[sd < 1e-6] = 1.0
+        x_norm = (x_masked - mu) / sd
+
+        # predict (batch=1)
+        x_batch = np.expand_dims(x_norm.astype(np.float32), axis=0)
+        probs = asyncio.run(connectinator.model.predict_from_normalized(x_batch))
+
+        # map to labels
+        with open(os.path.join('app', 'label_map.json'), 'r') as f:
+            lm = json.load(f)
+        inv = {v: k for k, v in lm.items()}
+        top5_idx = np.argsort(probs)[-5:][::-1]
+        top5 = [[inv[int(i)], float(probs[i])] for i in top5_idx]
+        top1 = {"label": inv[int(top5_idx[0])], "probability": float(probs[top5_idx[0]])}
+
+        connectinator.front_end_translation_variable = top1['label']
 
         return jsonify({
             "message": "Recording processed",
-            "top_1": top_1,
-            "top_5": top_5,
-            "translation": connectinator.get_transltion()
+            "top_1": top1,
+            "top_5": top5,
+            "translation": connectinator.get_transltion(),
+            "shapes": {"x": list(x.shape), "mask": list(m.shape)}
         }), 200
     except Exception as e:
         connectinator.logger.error(f'Error processing recording: {e}')

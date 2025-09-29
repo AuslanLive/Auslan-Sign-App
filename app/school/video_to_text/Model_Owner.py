@@ -83,6 +83,17 @@ class Model:
         
         return result[0]  # Remove batch dimension
 
+    async def predict_from_normalized(self, x_normalized_batch):
+        """
+        Predict assuming x_normalized_batch is already z-scored and batched.
+        Args:
+            x_normalized_batch: numpy array (1, 48, 84)
+        Returns:
+            numpy array (num_classes,) softmax
+        """
+        result = await asyncio.to_thread(self.model.predict, x_normalized_batch, verbose=0)
+        return result[0]
+
     def __format_model_results(self, result):
         """
         Format model results to get top-5 predictions and top-1
