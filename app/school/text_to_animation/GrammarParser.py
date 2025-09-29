@@ -75,7 +75,7 @@ class GrammarParser:
             print(f"(GrammarParser.py): Disambiguated words: {disambiguated_words}")
 
             # 3. Use model for grammar parsing here
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
             response = model.generate_content(
                 """You are a professional Auslan linguist and translator. Your task is to convert written English sentences into their Auslan equivalent using correct Auslan grammar, not word-for-word translation.
