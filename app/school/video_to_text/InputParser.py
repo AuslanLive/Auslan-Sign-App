@@ -170,13 +170,26 @@ class InputParser:
         Returns:
             tuple: (processed_chunk, end_of_phrase_flag)
         """
-        # Extract hands from frame
+        # Extract hands from frame - ONLY use hand keypoints (21 per hand)
         keypoints_data = frame['keypoints']
+        
+        # Debug: Log what we're receiving
+        print(f"DEBUG: Received keypoints data with {len(keypoints_data)} components")
+        if len(keypoints_data) > 0:
+            print(f"DEBUG: Component 0 (pose) has {len(keypoints_data[0]) if keypoints_data[0] else 0} points")
+        if len(keypoints_data) > 1:
+            print(f"DEBUG: Component 1 (left_hand) has {len(keypoints_data[1]) if keypoints_data[1] else 0} points")
+        if len(keypoints_data) > 2:
+            print(f"DEBUG: Component 2 (right_hand) has {len(keypoints_data[2]) if keypoints_data[2] else 0} points")
+        
+        # Only extract hand keypoints (indices 1 and 2)
         left_hand = keypoints_data[1] if len(keypoints_data) > 1 else None  # Index 1 is left hand
         right_hand = keypoints_data[2] if len(keypoints_data) > 2 else None  # Index 2 is right hand
         
-        # Combine hands into required format
+        # Combine hands into required format (84 features: 21 left + 21 right hand keypoints)
         current_keypoints, current_mask = self.combine_hands(left_hand, right_hand)
+        
+        print(f"DEBUG: Combined keypoints shape: {current_keypoints.shape}, mask shape: {current_mask.shape}")
         
         chunk_result = None
         locEOP = False

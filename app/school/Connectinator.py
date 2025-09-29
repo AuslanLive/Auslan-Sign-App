@@ -116,27 +116,21 @@ class Connectinator:
 
     # Process frame
     async def process_frame(self, keypoints):
-        # print(keypoints)
-        full_chunk, self.end_phrase_flag = self.inputProc.process_frame(
-            keypoints)
-        # print(keypoints)
-        # full_chunk, self.end_phrase_flag = self.inputProc.process_frame(
-        #     keypoints)
+        print(f"CONSOLE: Received keypoints input with {len(keypoints.get('keypoints', []))} components")
+        
+        full_chunk, self.end_phrase_flag = self.inputProc.process_frame(keypoints)
+        
         if self.end_phrase_flag == True and self.prevFlag == False:
-            # print("meow meow meow meow")
             self.prevFlag = True
-            # print(self.end_phrase_flag, self.prevFlag)
+            print("CONSOLE: End of phrase detected, parsing results...")
             self.full_phrase.parse_results()
             self.prevFlag = False
 
-            # print(f"End Phrase: {self.end_phrase_flag}")
-
         if full_chunk is not None:
-            # print("AAAAAAAAa SENT TO THE MODEL")
+            print(f"CONSOLE: Model input received - chunk shape: {full_chunk.shape}")
             self.prevFlag = False
 
             # async predict the work and then add it to the self.full_phrase
-
             predicted_result = await self.predict_model(full_chunk)
 
             # Store the full model output for top-5 predictions
@@ -147,8 +141,15 @@ class Connectinator:
                 f.write(json.dumps(str(predicted_result)))
                 f.write("\n\n")
                 
-            print(f"Top-1: {predicted_result['top_1']}")
-            print(f"Top-5: {predicted_result['top_5']}")
+            # Console logging for predictions
+            top_1 = predicted_result['top_1']
+            top_5 = predicted_result['top_5']
+            
+            print(f"CONSOLE: WORD DETECTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
+            print("CONSOLE: Top-5 predictions:")
+            for i, (label, prob) in enumerate(top_5):
+                print(f"  {i+1}. {label}: {prob:.4f}")
+            
             self.full_phrase.append(predicted_result['model_output'])
 
     # TODO: LISTENER FOR RECEIVE FROM SAVE CHUNK, SEND TO MODEL
@@ -156,8 +157,10 @@ class Connectinator:
     # Get model prediction
 
     async def predict_model(self, keypoints):
-        # print("SENT TO PREDICT")
-        return await self.model.query_model(keypoints)
+        self.logger.info(f"TERMINAL: Sending keypoints to model - shape: {keypoints.shape}")
+        result = await self.model.query_model(keypoints)
+        self.logger.info(f"TERMINAL: Model prediction completed - top-1: {result['top_1']['label']} ({result['top_1']['probability']:.4f})")
+        return result
 
     # TODO: LISTENER FOR RECEIVE OUTPUT FROM MODEL, ADD TO LIST, SEND TO RESULTS PARSER
 
@@ -184,7 +187,8 @@ class AsyncResultsList(list):
         self.clear()
 
         # Reset the flag
-        self.connectinator.logger.info("Parsing results asynchronously...")
+        self.connectinator.logger.info("TERMINAL: Parsing results asynchronously...")
+        self.connectinator.logger.info(f"TERMINAL: Processing {len(self.saved_results)} word predictions")
    
         # change to pass saves results
         self.connectinator.format_model_output(self.saved_results)
