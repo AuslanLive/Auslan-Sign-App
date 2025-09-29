@@ -188,7 +188,7 @@ class InputParser:
 
     def should_commit_word(self, prediction):
         """
-        Check if a word should be committed based on stability and confidence
+        Check if a word should be committed (simplified - no confidence gating)
         Args:
             prediction: dict with 'top_1' and 'top_5' keys
         Returns:
@@ -197,23 +197,10 @@ class InputParser:
         if not prediction:
             return False
         
+        # Simple commitment: just check if we have a valid prediction
         top_1 = prediction['top_1']
-        confidence = top_1['probability']
-        label = top_1['label']
-        
-        # Check confidence threshold
-        if confidence < MIN_CONFIDENCE:
-            return False
-        
-        # Check if same label has been stable
-        self.prediction_history.append(label)
-        if len(self.prediction_history) > STABILITY_CHECKS:
-            self.prediction_history.pop(0)
-        
-        # Check stability
-        if len(self.prediction_history) >= STABILITY_CHECKS:
-            if all(p == label for p in self.prediction_history):
-                return True
+        if top_1 and top_1['label']:
+            return True
         
         return False
 
@@ -228,8 +215,8 @@ class InputParser:
         # Extract ONLY hand keypoints (indices 1 and 2)
         keypoints_data = frame['keypoints']
         
-        # Debug logging (reduced verbosity)
-        if len(self.activity_history) % 10 == 0:  # Log every 10th frame
+        # Debug logging for keypoints (reduced verbosity)
+        if len(self.activity_history) % 20 == 0:  # Log every 20th frame
             print(f"DEBUG: Frame {len(self.activity_history)} - keypoints with {len(keypoints_data)} components")
         
         # Only extract hand keypoints (ignore pose/face)
@@ -239,6 +226,10 @@ class InputParser:
         # Combine hands into required format
         current_keypoints, current_mask = self.combine_hands(left_hand, right_hand)
         
+        # Debug combined keypoints (reduced verbosity)
+        if len(self.activity_history) % 20 == 0:
+            print(f"DEBUG: Combined keypoints shape: {current_keypoints.shape}, non-zero: {np.count_nonzero(current_keypoints)}/{current_keypoints.size}")
+        
         # Calculate activity score
         activity = self.calculate_activity_score(current_keypoints, current_mask)
         self.activity_history.append(activity)
@@ -246,21 +237,21 @@ class InputParser:
         # Update ring buffer
         self.update_ring_buffer(current_keypoints, current_mask)
         
-        # Check for word commitment
+        # Check for word commitment (simplified)
         chunk_result = None
         end_of_phrase = False
         
-        # Check if we should commit a word
-        if (len(self.activity_history) >= MIN_ACTIVE_LENGTH and 
-            activity < ACT_LOW and 
-            self.is_active and
-            self.active_frame_count >= MIN_ACTIVE_LENGTH):
-            
+        # Generate word segments more frequently (every 48 frames when buffer is full)
+        if self.buffer_filled and len(self.activity_history) % 48 == 0:
             # Get current buffer for prediction
             buffer_keypoints, buffer_mask = self.get_current_buffer()
-            if self.buffer_filled:
-                chunk_result = buffer_keypoints
-                print(f"CONSOLE: Word segment ready for prediction - activity: {activity:.3f}")
+            chunk_result = buffer_keypoints
+            print(f"CONSOLE: Word segment ready for prediction - frame: {len(self.activity_history)}")
+            print(f"DEBUG: Buffer keypoints shape: {buffer_keypoints.shape}")
+            print(f"DEBUG: Buffer non-zero: {np.count_nonzero(buffer_keypoints)}/{buffer_keypoints.size}")
+        else:
+            if len(self.activity_history) % 20 == 0:
+                print(f"DEBUG: No segment - buffer_filled: {self.buffer_filled}, frame: {len(self.activity_history)}")
         
         # Update activity state
         if activity > ACT_HIGH and not self.is_active:

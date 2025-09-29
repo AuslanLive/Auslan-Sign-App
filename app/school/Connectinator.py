@@ -136,6 +136,7 @@ class Connectinator:
         # Check if we have a word segment ready for prediction
         if word_chunk is not None:
             print(f"CONSOLE: Word segment ready - chunk shape: {word_chunk.shape}")
+            print(f"DEBUG: Word chunk non-zero: {np.count_nonzero(word_chunk)}/{word_chunk.size}")
             self.prevFlag = False
 
             # Get model prediction
@@ -144,31 +145,28 @@ class Connectinator:
             # Store the full model output for top-5 predictions
             self.last_model_output = predicted_result
 
-            # Check if word should be committed
-            if self.inputProc.should_commit_word(predicted_result):
-                print("CONSOLE: Word committed based on stability and confidence")
+            # Always commit words now (no confidence gating)
+            print("CONSOLE: Word committed (no confidence gating)")
+            
+            with open('ball.txt', 'a+') as f:
+                f.write(f"time: {str(time())}, predict:")
+                f.write(json.dumps(str(predicted_result)))
+                f.write("\n\n")
                 
-                with open('ball.txt', 'a+') as f:
-                    f.write(f"time: {str(time())}, predict:")
-                    f.write(json.dumps(str(predicted_result)))
-                    f.write("\n\n")
-                    
-                # Console logging for committed predictions
-                top_1 = predicted_result['top_1']
-                top_5 = predicted_result['top_5']
-                
-                print(f"CONSOLE: WORD COMMITTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
-                print("CONSOLE: Top-5 predictions:")
-                for i, (label, prob) in enumerate(top_5):
-                    print(f"  {i+1}. {label}: {prob:.4f}")
-                
-                # Add to phrase for final translation
-                self.full_phrase.append(predicted_result['model_output'])
-                
-                # Reset prediction history after commit
-                self.inputProc.prediction_history.clear()
-            else:
-                print(f"CONSOLE: Word not committed - confidence: {predicted_result['top_1']['probability']:.4f}, stability: {len(self.inputProc.prediction_history)}/{STABILITY_CHECKS}")
+            # Console logging for committed predictions
+            top_1 = predicted_result['top_1']
+            top_5 = predicted_result['top_5']
+            
+            print(f"CONSOLE: WORD COMMITTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
+            print("CONSOLE: Top-5 predictions:")
+            for i, (label, prob) in enumerate(top_5):
+                print(f"  {i+1}. {label}: {prob:.4f}")
+            
+            # Add to phrase for final translation
+            self.full_phrase.append(predicted_result['model_output'])
+        else:
+            if self.frame_count % 30 == 0:  # Log every 30th frame
+                print(f"DEBUG: No word chunk received - frame: {self.frame_count}")
 
     # TODO: LISTENER FOR RECEIVE FROM SAVE CHUNK, SEND TO MODEL
 
