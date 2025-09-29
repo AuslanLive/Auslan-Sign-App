@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from transformers import AutoTokenizer, T5ForConditionalGeneration
 import torch
 from dotenv import load_dotenv
@@ -10,7 +11,7 @@ import spacy # Import spaCy for lemmatization mock
 load_dotenv(override=True)
 
 class GrammarParser:
-    
+    def time() -> float: ...
     def __init__(self):
         """Initialize the GrammarParser with WordSenseDisambiguation instance and text-to-text model."""
         self.wsd = WordSenseDisambiguation()
@@ -59,7 +60,7 @@ class GrammarParser:
 
     def parse_text_to_auslan_grammar(self, t2s_input):
         # takes a regular sentence and converts it to Auslan grammar
-
+        start = time.time()
         if not t2s_input:
             return {"error": "Invalid input from user"}
 
@@ -111,6 +112,7 @@ class GrammarParser:
 
 
         print(f"(GrammarParser.py): Final parsed result: {sentence}")
+        print(f"Time taken {time.time()-start:0.4f}")
         return sentence
 
     def save_as_json(self, parsed_result, output_filename="parsed_input.json"):
