@@ -11,6 +11,7 @@ from app.school.text_to_animation.spoken_to_signed.gloss_to_pose import concaten
 from dotenv import load_dotenv
 import numpy as np
 import subprocess
+import time
 
 
 # Load environment variables from the .env file
@@ -42,6 +43,7 @@ if not firebase_admin._apps:
 
 # Process pose file from Firebase Storage
 def process_pose_file(blob_name):
+    file_start_time = time.time()
     try:
         bucket = storage.bucket()
         # Assuming each word corresponds to a .pose file
@@ -50,48 +52,104 @@ def process_pose_file(blob_name):
             print(f"Blob {blob_name} does not exist.")
             return None
 
+        # Time the download phase
+        download_start_time = time.time()
         data_buffer = io.BytesIO()
         blob.download_to_file(data_buffer)
         data_buffer.seek(0)
+        download_end_time = time.time()
+        
+        # Time the parsing phase
+        parse_start_time = time.time()
         pose = Pose.read(data_buffer.read())
+        parse_end_time = time.time()
+        
+        file_end_time = time.time()
+        print(f"(pose_video_creator) {blob_name}: download={download_end_time - download_start_time:.2f}s, parse={parse_end_time - parse_start_time:.2f}s, total={file_end_time - file_start_time:.2f}s")
+        
         return pose
     except Exception as e:
-        print(f"Error processing {blob_name}: {e}")
+        file_end_time = time.time()
+        print(f"Error processing {blob_name} (took {file_end_time - file_start_time:.2f}s): {e}")
         return None
 
 # Concatenate poses and upload the video back to Firebase
 def concatenate_poses_and_upload(blob_names:list, sentence:list):
+    start_time = time.time()
+    print(f"(pose_video_creator) Starting pose processing for {len(blob_names)} files...")
+    
     all_poses = []
     valid_filenames = []
 
+    # Process pose files phase
+    pose_start_time = time.time()
+    
+    # Test both approaches and compare timing
+    print(f"(pose_video_creator) Testing sequential processing first...")
+    sequential_start_time = time.time()
+    sequential_poses = []
+    for blob_name in blob_names:
+        pose = process_pose_file(blob_name)
+        if pose:
+            sequential_poses.append(pose)
+    sequential_end_time = time.time()
+    print(f"(pose_video_creator) Sequential processing took {sequential_end_time - sequential_start_time:.2f} seconds")
+    
+    print(f"(pose_video_creator) Now testing parallel processing...")
+    executor_start_time = time.time()
     with ProcessPoolExecutor() as executor:
         results = executor.map(process_pose_file, blob_names)
+    executor_end_time = time.time()
+    print(f"(pose_video_creator) ProcessPoolExecutor completed in {executor_end_time - executor_start_time:.2f} seconds")
+    print(f"(pose_video_creator) Parallel vs Sequential: {executor_end_time - executor_start_time:.2f}s vs {sequential_end_time - sequential_start_time:.2f}s")
 
+    collection_start_time = time.time()
     for pose, blob_name in zip(results, blob_names):
         if pose:
             all_poses.append(pose)
             valid_filenames.append(os.path.splitext(
                 os.path.basename(blob_name))[0])
+    collection_end_time = time.time()
+    print(f"(pose_video_creator) Result collection completed in {collection_end_time - collection_start_time:.2f} seconds")
+    
+    pose_end_time = time.time()
+    print(f"(pose_video_creator) Total pose processing completed in {pose_end_time - pose_start_time:.2f} seconds")
+    print(f"(pose_video_creator) Successfully processed {len(all_poses)} out of {len(blob_names)} pose files")
 
     if len(all_poses) >= 1:
+        # Concatenation phase
+        concat_start_time = time.time()
         concatenated_pose, frame_ranges = concatenate_poses(
             all_poses, valid_filenames)
         visualizer = PoseVisualizer(concatenated_pose)
+        concat_end_time = time.time()
+        print(f"(pose_video_creator) Pose concatenation completed in {concat_end_time - concat_start_time:.2f} seconds")
 
         temp_video_path = os.path.join(tempfile.gettempdir(), f"{sentence}.gif")
         width  = visualizer.pose.header.dimensions.width
         height = visualizer.pose.header.dimensions.height
         fps    = visualizer.pose_fps
 
-        print("Generation video ...")
+        # Video generation phase
+        video_start_time = time.time()
+        print("(pose_video_creator) Starting video generation...")
         def frames_from_pose(visualizer: PoseVisualizer, frame_ranges):
             for frame in visualizer.draw_frame_with_filename(frame_ranges):
                 yield frame  # raw BGR
 
-        print("Uploading to firebase ... ")
+        # Upload phase
+        upload_start_time = time.time()
+        print("(pose_video_creator) Starting Firebase upload...")
         url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence}.mp4")
-      
+        upload_end_time = time.time()
+        
+        video_end_time = time.time()
+        print(f"(pose_video_creator) Video generation completed in {video_end_time - video_start_time:.2f} seconds")
+        print(f"(pose_video_creator) Firebase upload completed in {upload_end_time - upload_start_time:.2f} seconds")
         print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {url}")
+
+        total_time = time.time() - start_time
+        print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
 
         return temp_video_path
     else:
@@ -233,7 +291,8 @@ def get_valid_blobs_from_sentence(sentence):
         print("(pose_video_creator) Input sentence is a string, expected a list of words.")
         return
     
-    print("(pose_video_creator) Checking for valid pose files in Firebase Storage...")
+    start_time = time.time()
+    print("(pose_video_creator) Starting blob validation phase...")
     
     valid_blob_names = []
 
@@ -258,11 +317,16 @@ def get_valid_blobs_from_sentence(sentence):
         else:
             print(f"(pose_video_creator) Skipping word '{word}', no corresponding .pose file found.")
 
+    end_time = time.time()
+    print(f"(pose_video_creator) Blob validation completed in {end_time - start_time:.2f} seconds")
     print(f"(pose_video_creator) Valid blob names found: {valid_blob_names}")
     return valid_blob_names
 
 
 def process_sentence(sentence):
+    overall_start_time = time.time()
+    print(f"(pose_video_creator) Starting sentence processing: '{sentence}'")
+    
     # Get valid blob names (i.e., words that have a corresponding .pose file)
     valid_blob_names = get_valid_blobs_from_sentence(sentence)
 
@@ -274,6 +338,8 @@ def process_sentence(sentence):
     temp_video_path = concatenate_poses_and_upload(valid_blob_names, sentence)
 
     if temp_video_path:
+        overall_end_time = time.time()
+        print(f"(pose_video_creator) Complete pipeline finished in {overall_end_time - overall_start_time:.2f} seconds")
         print(f"Video saved at {temp_video_path}")
         return temp_video_path
     else:
