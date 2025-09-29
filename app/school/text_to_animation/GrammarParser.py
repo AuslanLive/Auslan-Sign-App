@@ -1,6 +1,7 @@
 import os
 import json
-import google.generativeai as genai
+from transformers import AutoTokenizer, T5ForConditionalGeneration
+import torch
 from dotenv import load_dotenv
 from app.school.text_to_animation.WordSenseDisambig import WordSenseDisambiguation
 
@@ -8,14 +9,17 @@ import spacy # Import spaCy for lemmatization mock
 
 load_dotenv(override=True)
 
-genai_api_key = os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=genai_api_key)
-
 class GrammarParser:
     
     def __init__(self):
-        """Initialize the GrammarParser with WordSenseDisambiguation instance."""
+        """Initialize the GrammarParser with WordSenseDisambiguation instance and text-to-text model."""
         self.wsd = WordSenseDisambiguation()
+        
+        # Load the text-to-text model and tokenizer
+        model_path = os.path.join(os.path.dirname(__file__), "final_auslan_t5_model")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.model = T5ForConditionalGeneration.from_pretrained(model_path)
+        self.prefix = "translate English to Auslan gloss: "
 
     def lemmatize(self, sentence):
         """
@@ -74,61 +78,22 @@ class GrammarParser:
 
             print(f"(GrammarParser.py): Disambiguated words: {disambiguated_words}")
 
-            # 3. Use model for grammar parsing here
-            model = genai.GenerativeModel("gemini-1.5-flash")
-
-            response = model.generate_content(
-                """You are a professional Auslan linguist and translator. Your task is to convert written English sentences into their Auslan equivalent using correct Auslan grammar, not word-for-word translation.
-
-                Rules to follow:
-                Use Topic-Comment or Time-Topic-Comment structure, as appropriate for Auslan.
-                E.g., place time or topic elements at the beginning.
-                Simplify function words (like "is," "are," "the")—these are often omitted in Auslan.
-                Use all capital letters to represent Auslan signs (gloss format).
-                Maintain the meaning, not the exact English structure.
-                If relevant, use facial expressions or body shifts to indicate questions or contrast (annotate this in brackets).
-                
-                Examples:
-                
-                -- START OF EXAMPLES --
-                
-                English: "I am going to the shop."
-                Auslan gloss: SHOP I GO
-                
-                English: “She is studying at university today.”
-                Auslan gloss: TODAY UNIVERSITY SHE STUDY
-
-                English: “Do you want coffee?”
-                Auslan gloss: COFFEE YOU WANT (q)
-                (q = yes/no question facial expression)
-
-                English: “He didn't go home yesterday.”
-                Auslan gloss: YESTERDAY HOME HE GO NOT
-
-                English: “After lunch, we will walk to the park.”
-                Auslan gloss: LUNCH FINISH PARK WE WALK
-                
-                -- END OF EXAMPLES --
-                
-                If there is no other explanation, simply return the original input sentence.
-                
-                If it can be translated, please make sure to return only the Auslan gloss without any additional text or explanation.
-                
-                Now, convert the following sentence into Auslan grammar using gloss:
-
-                """ + t2s_input
+            # 3. Use text-to-text model for grammar parsing
+            input_text = self.prefix + lemmatized_sentence
+            inputs = self.tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
+            
+            # Generate the translation
+            outputs = self.model.generate(
+                **inputs,
+                max_length=512,
+                num_beams=4,
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.9
             )
-
-            response_dict = response.to_dict()
-
-            result = (
-                response_dict["candidates"][0]["content"]["parts"][0]["text"].strip().replace(
-                    "\n", "").replace("\"", "")
-                
-                # if no response, set result to a default value
-                if response_dict["candidates"]
-                else "No valid response"
-            )
+            
+            # Decode the output
+            result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
             
             # from the result string, create a list of words
             sentence = result.split()
