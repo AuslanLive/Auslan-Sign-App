@@ -17,7 +17,7 @@ def create_logger():
     file_handler = logging.FileHandler('app.log')
     file_handler.setLevel(logging.INFO)  # Set the file logging level
 
-    # Create a console handler to log messages to the terminal
+    # Create a console handler to log messages to the terminalj
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)  # Set the console logging level
 
