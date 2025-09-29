@@ -1,6 +1,5 @@
 import os
 import tempfile
-import json
 import firebase_admin
 from firebase_admin import credentials, storage
 from app.school.text_to_animation.pose_format.pose import Pose
@@ -10,10 +9,9 @@ import cv2
 from concurrent.futures import ProcessPoolExecutor
 from app.school.text_to_animation.spoken_to_signed.gloss_to_pose import concatenate_poses
 from dotenv import load_dotenv
-import ffmpeg
-
-# Required for subprocess.run
+import numpy as np
 import subprocess
+
 
 # Load environment variables from the .env file
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', 'app', '.env'))
@@ -61,9 +59,8 @@ def process_pose_file(blob_name):
         print(f"Error processing {blob_name}: {e}")
         return None
 
-
 # Concatenate poses and upload the video back to Firebase
-def concatenate_poses_and_upload(blob_names, sentence):
+def concatenate_poses_and_upload(blob_names:list, sentence:list):
     all_poses = []
     valid_filenames = []
 
@@ -76,48 +73,149 @@ def concatenate_poses_and_upload(blob_names, sentence):
             valid_filenames.append(os.path.splitext(
                 os.path.basename(blob_name))[0])
 
-    if len(all_poses) > 1:
+    if len(all_poses) >= 1:
         concatenated_pose, frame_ranges = concatenate_poses(
             all_poses, valid_filenames)
         visualizer = PoseVisualizer(concatenated_pose)
 
-        # Create a temporary directory to store the video frames
-        temp_video_dir = tempfile.mkdtemp()
-        frame_files = []
+        temp_video_path = os.path.join(tempfile.gettempdir(), f"{sentence}.gif")
+        width  = visualizer.pose.header.dimensions.width
+        height = visualizer.pose.header.dimensions.height
+        fps    = visualizer.pose_fps
 
-        for i, frame in enumerate(visualizer.draw_frame_with_filename(frame_ranges)):
-            frame_file = os.path.join(temp_video_dir, f"frame_{i:04d}.png")
-            cv2.imwrite(frame_file, frame)
-            frame_files.append(frame_file)
+        print("Generation video ...")
+        def frames_from_pose(visualizer: PoseVisualizer, frame_ranges):
+            for frame in visualizer.draw_frame_with_filename(frame_ranges):
+                yield frame  # raw BGR
 
-        # Create a temporary file to store the video
-        temp_video_path = os.path.join(temp_video_dir, 'output.mp4')
+        print("Uploading to firebase ... ")
+        url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence}.mp4")
+      
+        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {url}")
 
-        # Use FFmpeg to create the video
-        (
-            ffmpeg
-            .input(os.path.join(temp_video_dir, 'frame_%04d.png'), framerate=concatenated_pose.body.fps)
-            .output(temp_video_path, vcodec='libx264', pix_fmt='yuv420p')
-            .run(capture_stdout=True, capture_stderr=True)
-        )
-
-        # Upload the video to Firebase Storage in the 'output_videos/' folder with the sentence as the filename
-        bucket = storage.bucket()
-        blob = bucket.blob(f"output_videos/{sentence}.mp4")
-        blob.upload_from_filename(temp_video_path, content_type="video/mp4")
-
-        # Optionally make the file publicly accessible (if needed)
-        blob.make_public()
-        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {blob.public_url}")
-
-        # Remove the temporary files after uploading
-        for frame_file in frame_files:
-            os.remove(frame_file)
-        os.remove(temp_video_path)
-        os.rmdir(temp_video_dir)
+        return temp_video_path
     else:
         print("Not enough .pose files to concatenate")
 
+def _first_available_encoder(encoders):
+    """Return the first encoder name present in this ffmpeg build."""
+    try:
+        out = subprocess.check_output(["ffmpeg", "-hide_banner", "-encoders"], stderr=subprocess.STDOUT).decode("utf-8", errors="ignore")
+    except Exception:
+        return None
+    for enc in encoders:
+        if enc in out:
+            return enc
+    return None
+
+def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
+                           resize_factor=0.5, target_fps=None):
+    """
+    Faster: write a seekable MP4 to a temp file using the fastest available encoder,
+    then upload to Firebase Storage. Returns public URL. Filenames unchanged.
+
+    - Tries GPU encoders (NVENC/QSV/AMF) first, falls back to libx264.
+    - Uses speed-first settings; adjust CRF if you want more quality.
+    """
+    # Base dimensions (even for yuv420p/NVENC)
+    w0, h0 = int(width), int(height)
+    if resize_factor != 1.0:
+        w0 = max(2, int(round(w0 * resize_factor)))
+        h0 = max(2, int(round(h0 * resize_factor)))
+    w = w0 + (w0 % 2)
+    h = h0 + (h0 % 2)
+    src_fps = float(fps)
+    out_fps = float(target_fps or src_fps)
+
+    # Pick encoder (fastest first)
+    encoder = _first_available_encoder([
+        "h264_nvenc",  # NVIDIA
+        "h264_qsv",    # Intel QuickSync
+        "h264_amf",    # AMD
+        "libx264"      # CPU fallback
+    ]) or "libx264"
+
+    # Encoder-specific speed/quality knobs
+    if encoder == "h264_nvenc":
+        enc_args = [
+            "-c:v", "h264_nvenc",
+            "-preset", "p1",              # fastest
+            "-tune", "ull",               # ultra low latency
+            "-rc", "vbr", "-cq", "28",    # quality/size tradeoff; lower = better quality
+            "-b:v", "0",
+            "-pix_fmt", "yuv420p"
+        ]
+    elif encoder == "h264_qsv":
+        enc_args = [
+            "-c:v", "h264_qsv",
+            "-preset", "veryfast",
+            "-global_quality", "28",      # ~CRF; lower is higher quality
+            "-look_ahead", "0",
+            "-pix_fmt", "nv12"            # QSV friendly
+        ]
+    elif encoder == "h264_amf":
+        enc_args = [
+            "-c:v", "h264_amf",
+            "-quality", "speed",
+            "-usage", "ultralowlatency",
+            "-rc", "vbr",
+            "-qscale", "28",
+            "-pix_fmt", "yuv420p"
+        ]
+    else:
+        # libx264 (CPU) - speed first
+        enc_args = [
+            "-c:v", "libx264",
+            "-preset", "ultrafast",
+            "-tune", "zerolatency",
+            "-crf", "32",                 # raise to 34–36 for smaller/faster previews
+            "-x264-params", "keyint=2*{k}:min-keyint={k}:scenecut=0:rc-lookahead=0:bframes=0".format(k=int(out_fps)),
+            "-pix_fmt", "yuv420p"
+        ]
+
+    # Temp file for MP4
+    tmp_fd, tmp_path = tempfile.mkstemp(suffix=".mp4")
+    os.close(tmp_fd)
+
+    # Input & output chain
+    # - If you want to decimate FPS, we’ll push frames at src_fps but tell ffmpeg to output constant out_fps.
+    # - Resize is done on the CPU before feeding (keeps ffmpeg simpler and avoids extra filters).
+    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-f", "rawvideo", "-vcodec", "rawvideo", "-pix_fmt", "bgr24", 
+           "-s", f"{w}x{h}", "-r", f"{out_fps}", "-i", "-", "-an", *enc_args, "-movflags", "+faststart", tmp_path]
+
+    try:
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=10_000_000)
+
+        # Feed frames
+        try:
+            frame_idx = 0
+            for frame in frame_iter:
+                if frame.shape[1] != w or frame.shape[0] != h:
+                    frame = cv2.resize(frame, (w, h), interpolation=cv2.INTER_AREA)
+                proc.stdin.write(frame.astype(np.uint8).tobytes())
+            proc.stdin.close()
+        except BrokenPipeError:
+            pass
+
+        ret = proc.wait()
+        if ret != 0:
+            stderr_data = proc.stderr.read().decode("utf-8", errors="ignore")
+            raise RuntimeError(f"ffmpeg failed (code {ret}). stderr:\n{stderr_data}")
+
+        # Upload seekable MP4
+        bucket = storage.bucket()
+        blob = bucket.blob(gcs_path)
+        blob.cache_control = "public, max-age=31536000"
+        blob.upload_from_filename(tmp_path, content_type="video/mp4")
+        blob.make_public()
+        return blob.public_url
+
+    finally:
+        try:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+        except Exception:
+            pass
 
 # Check if a word has a corresponding pose file in Firebase
 def get_valid_blobs_from_sentence(sentence):
@@ -181,8 +279,7 @@ def process_sentence(sentence):
     else:
         print("Not enough .pose files to concatenate")
         return None
-
-
+   
 if __name__ == "__main__":
     # Example usage: replace with actual API response
     api_response_sentence = "I do himself make first new greatest little hers last day their"
