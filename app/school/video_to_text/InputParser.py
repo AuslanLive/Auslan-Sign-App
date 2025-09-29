@@ -246,9 +246,7 @@ class InputParser:
             # Get current buffer for prediction
             buffer_keypoints, buffer_mask = self.get_current_buffer()
             chunk_result = buffer_keypoints
-            print(f"CONSOLE: Word segment ready for prediction - frame: {len(self.activity_history)}")
-            print(f"DEBUG: Buffer keypoints shape: {buffer_keypoints.shape}")
-            print(f"DEBUG: Buffer non-zero: {np.count_nonzero(buffer_keypoints)}/{buffer_keypoints.size}")
+            print(f"Word segment ready - frame: {len(self.activity_history)}")
         else:
             if len(self.activity_history) % 20 == 0:
                 print(f"DEBUG: No segment - buffer_filled: {self.buffer_filled}, frame: {len(self.activity_history)}")

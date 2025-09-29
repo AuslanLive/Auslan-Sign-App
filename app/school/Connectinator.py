@@ -135,8 +135,7 @@ class Connectinator:
 
         # Check if we have a word segment ready for prediction
         if word_chunk is not None:
-            print(f"CONSOLE: Word segment ready - chunk shape: {word_chunk.shape}")
-            print(f"DEBUG: Word chunk non-zero: {np.count_nonzero(word_chunk)}/{word_chunk.size}")
+            print(f"Processing word segment...")
             self.prevFlag = False
 
             # Get model prediction
@@ -144,9 +143,6 @@ class Connectinator:
 
             # Store the full model output for top-5 predictions
             self.last_model_output = predicted_result
-
-            # Always commit words now (no confidence gating)
-            print("CONSOLE: Word committed (no confidence gating)")
             
             with open('ball.txt', 'a+') as f:
                 f.write(f"time: {str(time())}, predict:")
@@ -157,10 +153,12 @@ class Connectinator:
             top_1 = predicted_result['top_1']
             top_5 = predicted_result['top_5']
             
-            print(f"CONSOLE: WORD COMMITTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
-            print("CONSOLE: Top-5 predictions:")
-            for i, (label, prob) in enumerate(top_5):
-                print(f"  {i+1}. {label}: {prob:.4f}")
+            # Simple console output - just show the word
+            print(f"WORD: {top_1['label']}")
+            print(f"Top-5: {[f'{label}({prob:.2f})' for label, prob in top_5]}")
+            
+            # Update frontend translation immediately
+            self.front_end_translation_variable = top_1['label']
             
             # Add to phrase for final translation
             self.full_phrase.append(predicted_result['model_output'])
