@@ -1,5 +1,5 @@
 from app.school.video_to_text.Model_Owner import Model
-from app.school.video_to_text.InputParser import InputParser
+from app.school.video_to_text.InputParser import InputParser, STABILITY_CHECKS
 import logging
 from app.school.video_to_text.results_parser import ResultsParser
 from app.school.text_to_animation.GrammarParser import GrammarParser
@@ -116,9 +116,16 @@ class Connectinator:
 
     # Process frame
     async def process_frame(self, keypoints):
-        print(f"CONSOLE: Received keypoints input with {len(keypoints.get('keypoints', []))} components")
+        # Reduced logging - only log occasionally
+        if not hasattr(self, 'frame_count'):
+            self.frame_count = 0
+        self.frame_count += 1
         
-        full_chunk, self.end_phrase_flag = self.inputProc.process_frame(keypoints)
+        if self.frame_count % 30 == 0:  # Log every 30th frame
+            print(f"CONSOLE: Processed {self.frame_count} frames - keypoints with {len(keypoints.get('keypoints', []))} components")
+        
+        # Process frame through sliding window
+        word_chunk, self.end_phrase_flag = self.inputProc.process_frame(keypoints)
         
         if self.end_phrase_flag == True and self.prevFlag == False:
             self.prevFlag = True
@@ -126,31 +133,42 @@ class Connectinator:
             self.full_phrase.parse_results()
             self.prevFlag = False
 
-        if full_chunk is not None:
-            print(f"CONSOLE: Model input received - chunk shape: {full_chunk.shape}")
+        # Check if we have a word segment ready for prediction
+        if word_chunk is not None:
+            print(f"CONSOLE: Word segment ready - chunk shape: {word_chunk.shape}")
             self.prevFlag = False
 
-            # async predict the work and then add it to the self.full_phrase
-            predicted_result = await self.predict_model(full_chunk)
+            # Get model prediction
+            predicted_result = await self.predict_model(word_chunk)
 
             # Store the full model output for top-5 predictions
             self.last_model_output = predicted_result
 
-            with open('ball.txt', 'a+') as f:
-                f.write(f"time: {str(time())}, predict:")
-                f.write(json.dumps(str(predicted_result)))
-                f.write("\n\n")
+            # Check if word should be committed
+            if self.inputProc.should_commit_word(predicted_result):
+                print("CONSOLE: Word committed based on stability and confidence")
                 
-            # Console logging for predictions
-            top_1 = predicted_result['top_1']
-            top_5 = predicted_result['top_5']
-            
-            print(f"CONSOLE: WORD DETECTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
-            print("CONSOLE: Top-5 predictions:")
-            for i, (label, prob) in enumerate(top_5):
-                print(f"  {i+1}. {label}: {prob:.4f}")
-            
-            self.full_phrase.append(predicted_result['model_output'])
+                with open('ball.txt', 'a+') as f:
+                    f.write(f"time: {str(time())}, predict:")
+                    f.write(json.dumps(str(predicted_result)))
+                    f.write("\n\n")
+                    
+                # Console logging for committed predictions
+                top_1 = predicted_result['top_1']
+                top_5 = predicted_result['top_5']
+                
+                print(f"CONSOLE: WORD COMMITTED - Top-1: {top_1['label']} ({top_1['probability']:.4f})")
+                print("CONSOLE: Top-5 predictions:")
+                for i, (label, prob) in enumerate(top_5):
+                    print(f"  {i+1}. {label}: {prob:.4f}")
+                
+                # Add to phrase for final translation
+                self.full_phrase.append(predicted_result['model_output'])
+                
+                # Reset prediction history after commit
+                self.inputProc.prediction_history.clear()
+            else:
+                print(f"CONSOLE: Word not committed - confidence: {predicted_result['top_1']['probability']:.4f}, stability: {len(self.inputProc.prediction_history)}/{STABILITY_CHECKS}")
 
     # TODO: LISTENER FOR RECEIVE FROM SAVE CHUNK, SEND TO MODEL
 
