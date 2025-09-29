@@ -6,7 +6,6 @@ from app.school.text_to_animation.pose_format.pose import Pose
 from app.school.text_to_animation.pose_format.pose_visualizer import PoseVisualizer
 import io
 import cv2
-from concurrent.futures import ProcessPoolExecutor
 from app.school.text_to_animation.spoken_to_signed.gloss_to_pose import concatenate_poses
 from dotenv import load_dotenv
 import numpy as np
@@ -81,39 +80,19 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
     all_poses = []
     valid_filenames = []
 
-    # Process pose files phase
+    # Process pose files sequentially
     pose_start_time = time.time()
+    print(f"(pose_video_creator) Processing pose files sequentially...")
     
-    # Test both approaches and compare timing
-    print(f"(pose_video_creator) Testing sequential processing first...")
-    sequential_start_time = time.time()
-    sequential_poses = []
     for blob_name in blob_names:
         pose = process_pose_file(blob_name)
-        if pose:
-            sequential_poses.append(pose)
-    sequential_end_time = time.time()
-    print(f"(pose_video_creator) Sequential processing took {sequential_end_time - sequential_start_time:.2f} seconds")
-    
-    print(f"(pose_video_creator) Now testing parallel processing...")
-    executor_start_time = time.time()
-    with ProcessPoolExecutor() as executor:
-        results = executor.map(process_pose_file, blob_names)
-    executor_end_time = time.time()
-    print(f"(pose_video_creator) ProcessPoolExecutor completed in {executor_end_time - executor_start_time:.2f} seconds")
-    print(f"(pose_video_creator) Parallel vs Sequential: {executor_end_time - executor_start_time:.2f}s vs {sequential_end_time - sequential_start_time:.2f}s")
-
-    collection_start_time = time.time()
-    for pose, blob_name in zip(results, blob_names):
         if pose:
             all_poses.append(pose)
             valid_filenames.append(os.path.splitext(
                 os.path.basename(blob_name))[0])
-    collection_end_time = time.time()
-    print(f"(pose_video_creator) Result collection completed in {collection_end_time - collection_start_time:.2f} seconds")
     
     pose_end_time = time.time()
-    print(f"(pose_video_creator) Total pose processing completed in {pose_end_time - pose_start_time:.2f} seconds")
+    print(f"(pose_video_creator) Pose file processing completed in {pose_end_time - pose_start_time:.2f} seconds")
     print(f"(pose_video_creator) Successfully processed {len(all_poses)} out of {len(blob_names)} pose files")
 
     if len(all_poses) >= 1:
