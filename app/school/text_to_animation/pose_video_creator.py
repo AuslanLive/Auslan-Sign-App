@@ -51,20 +51,12 @@ def process_pose_file(blob_name):
             print(f"Blob {blob_name} does not exist.")
             return None
 
-        # Time the download phase
-        download_start_time = time.time()
         data_buffer = io.BytesIO()
         blob.download_to_file(data_buffer)
         data_buffer.seek(0)
-        download_end_time = time.time()
-        
-        # Time the parsing phase
-        parse_start_time = time.time()
         pose = Pose.read(data_buffer.read())
-        parse_end_time = time.time()
         
         file_end_time = time.time()
-        print(f"(pose_video_creator) {blob_name}: download={download_end_time - download_start_time:.2f}s, parse={parse_end_time - parse_start_time:.2f}s, total={file_end_time - file_start_time:.2f}s")
         
         return pose
     except Exception as e:
@@ -75,7 +67,7 @@ def process_pose_file(blob_name):
 # Concatenate poses and upload the video back to Firebase
 def concatenate_poses_and_upload(blob_names:list, sentence:list):
     start_time = time.time()
-    print(f"(pose_video_creator) Starting pose processing for {len(blob_names)} files...")
+    # print(f"(pose_video_creator) Starting pose processing for {len(blob_names)} files...")
     
     all_poses = []
     valid_filenames = []
@@ -128,7 +120,7 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
         print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {url}")
 
         total_time = time.time() - start_time
-        print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
+        # print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
 
         return temp_video_path
     else:
@@ -271,7 +263,7 @@ def get_valid_blobs_from_sentence(sentence):
         return
     
     start_time = time.time()
-    print("(pose_video_creator) Starting blob validation phase...")
+    # print("(pose_video_creator) Starting blob validation phase...")
     
     valid_blob_names = []
 
@@ -282,9 +274,6 @@ def get_valid_blobs_from_sentence(sentence):
         lowercase_blob = bucket.blob(f"{word.lower()}.pose")
         capitalized_blob = bucket.blob(f"{word.capitalize()}.pose")
         regular_case_blob = bucket.blob(f"{word}.pose")
-        
-        print(f"(pose_video_creator) Checking blobs for word '{word}': TITLE | "
-              f"{regular_case_blob.name}")
 
         if lowercase_blob.exists():
             valid_blob_names.append(word.lower())  # Add lowercase if exists
@@ -297,14 +286,14 @@ def get_valid_blobs_from_sentence(sentence):
             print(f"(pose_video_creator) Skipping word '{word}', no corresponding .pose file found.")
 
     end_time = time.time()
-    print(f"(pose_video_creator) Blob validation completed in {end_time - start_time:.2f} seconds")
-    print(f"(pose_video_creator) Valid blob names found: {valid_blob_names}")
+    # print(f"(pose_video_creator) Blob validation completed in {end_time - start_time:.2f} seconds")
+    # print(f"(pose_video_creator) Valid blob names found: {valid_blob_names}")
     return valid_blob_names
 
 
 def process_sentence(sentence):
     overall_start_time = time.time()
-    print(f"(pose_video_creator) Starting sentence processing: '{sentence}'")
+    # print(f"(pose_video_creator) Starting sentence processing: '{sentence}'")
     
     # Get valid blob names (i.e., words that have a corresponding .pose file)
     valid_blob_names = get_valid_blobs_from_sentence(sentence)

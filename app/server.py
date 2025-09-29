@@ -71,7 +71,7 @@ def t2s_parse():
         t2s_input = request.get_json()
         connectinator.logger.info('Received request on /t2s: %s', t2s_input)
         processed_t2s_phrase = connectinator.format_sign_text(t2s_input['t2s_input'])
-        print(f"Time taken {time()-start:0.4f}")
+        print(f"POSE VIDEO CREATED - Time taken: {time()-start:0.4f}")
 
         return jsonify({"message": processed_t2s_phrase}), 200
     
