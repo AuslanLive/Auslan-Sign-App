@@ -3,6 +3,7 @@ from flask_cors import CORS
 from app.school.Connectinator import Connectinator
 import os
 from time import time
+import asyncio
 
 app = Flask(__name__)
 CORS(app)
@@ -54,6 +55,36 @@ def get_sign_to_text():
     translated_message = connectinator.get_transltion()
 
     return jsonify({"translation": translated_message}), 200
+
+
+# Batch recording endpoint: accept an array of frames and process sequentially
+@app.route('/api/recording', methods=['POST'])
+def process_recording():
+    try:
+        payload = request.get_json()
+        frames = payload.get('frames', [])
+        if not isinstance(frames, list) or len(frames) == 0:
+            return jsonify({"error": "No frames provided"}), 400
+
+        # Process each frame through the existing pipeline
+        for frame in frames:
+            asyncio.run(connectinator.process_frame(frame))
+
+        # Flush any buffered words and format output
+        connectinator.full_phrase.parse_results()
+
+        top_1 = connectinator.get_top_1_prediction()
+        top_5 = connectinator.get_top_predictions()
+
+        return jsonify({
+            "message": "Recording processed",
+            "top_1": top_1,
+            "top_5": top_5,
+            "translation": connectinator.get_transltion()
+        }), 200
+    except Exception as e:
+        connectinator.logger.error(f'Error processing recording: {e}')
+        return jsonify({"error": "Failed to process recording"}), 500
 
 
 @app.route('/api/getGemFlag', methods=["GET", "POST"])
