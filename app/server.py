@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-model_path = os.path.join('app', r'sign_to_text_model.keras')
+model_path = os.path.join('app', r'bilstm_best.keras')
 
 if not os.path.exists(model_path):
     print(f"(server.py) Error: Model file not found at {model_path}")
@@ -83,6 +83,20 @@ def t2s_parse():
 @app.route('/api/get_phrase')
 def get_phrase():
     return connectinator.front_end_translation_variable  # the end
+
+
+@app.route('/api/get_top_predictions', methods=["GET"])
+def get_top_predictions():
+    """Get the top-5 predictions from the last model output"""
+    top_5 = connectinator.get_top_predictions()
+    return jsonify({"top_5": top_5}), 200
+
+
+@app.route('/api/get_top_1', methods=["GET"])
+def get_top_1():
+    """Get the top-1 prediction from the last model output"""
+    top_1 = connectinator.get_top_1_prediction()
+    return jsonify({"top_1": top_1}), 200
 
 
 if __name__ == "__main__":

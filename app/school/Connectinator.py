@@ -61,21 +61,26 @@ class Connectinator:
 
     # Process the model output
     def format_model_output(self, output):
-        processed_output = self.results_parser.parse_model_output(output)
+        # For the new BiLSTM model, output is already formatted
+        # Extract the top-1 prediction for the main translation
+        if output and len(output) > 0:
+            # Get the top prediction (highest probability)
+            top_prediction = max(output, key=lambda x: x[1])
+            processed_output = top_prediction[0]  # Get the label
+            
+            # Update log file
+            self.logger.info(
+                'Model Output Processed Successfully! Message: %s', processed_output)
 
-        # Update log file
-        self.logger.info(
-            'Model Output Processed Successfully! Message: %s', processed_output)
+            # Pass this then to a variable being used for the react front end.
+            if processed_output is not None:
+                self.front_end_translation_variable = processed_output
 
-        # Pass this then to a varable being used for the react front end.
-        if processed_output is not None:
-            self.front_end_translation_variable = processed_output
-
-        # print("DONEEE")
-
-        with open('model_output.txt', 'a+') as f:
-            f.write(
-                f"\nTime: {str(time())}, Phrase: {self.front_end_translation_variable}")
+            with open('model_output.txt', 'a+') as f:
+                f.write(
+                    f"\nTime: {str(time())}, Phrase: {self.front_end_translation_variable}")
+        else:
+            self.logger.info('No model output received')
 
     # Return auslan grammer sentence
     def format_sign_text(self, input):
@@ -96,6 +101,18 @@ class Connectinator:
 
     def get_gem_flag(self):
         return self.geminiFlag
+    
+    def get_top_predictions(self):
+        """Get the top-5 predictions from the last model output"""
+        if hasattr(self, 'last_model_output') and self.last_model_output:
+            return self.last_model_output.get('top_5', [])
+        return []
+    
+    def get_top_1_prediction(self):
+        """Get the top-1 prediction from the last model output"""
+        if hasattr(self, 'last_model_output') and self.last_model_output:
+            return self.last_model_output.get('top_1', {})
+        return {}
 
     # Process frame
     async def process_frame(self, keypoints):
@@ -122,12 +139,16 @@ class Connectinator:
 
             predicted_result = await self.predict_model(full_chunk)
 
+            # Store the full model output for top-5 predictions
+            self.last_model_output = predicted_result
+
             with open('ball.txt', 'a+') as f:
                 f.write(f"time: {str(time())}, predict:")
                 f.write(json.dumps(str(predicted_result)))
                 f.write("\n\n")
                 
-            print(predicted_result['model_output'])
+            print(f"Top-1: {predicted_result['top_1']}")
+            print(f"Top-5: {predicted_result['top_5']}")
             self.full_phrase.append(predicted_result['model_output'])
 
     # TODO: LISTENER FOR RECEIVE FROM SAVE CHUNK, SEND TO MODEL

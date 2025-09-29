@@ -1,83 +1,118 @@
-# Import torch for model
-import pandas as pd
-from tensorflow.keras.models import *
 import json
 import numpy as np
 import tensorflow as tf
 import asyncio
 import os
 
-# Define a custom layer so that the model can load
-CLASS_LABEL_PATH = os.path.join('app', r"class_label_index.json")
-
-@tf.keras.utils.register_keras_serializable()
-class ExpandAxisLayer(tf.keras.layers.Layer):
-    def __init__(self, axis=1, **kwargs):
-        super(ExpandAxisLayer, self).__init__(**kwargs)
-        self.axis = axis
-
-    def call(self, inputs):
-        return tf.expand_dims(inputs, axis=self.axis)
-
-    def get_config(self):
-        config = super(ExpandAxisLayer, self).get_config()
-        config.update({"axis": self.axis})
-        return config
-
-
 class Model:
     def __init__(self, model_path):
         # Setting base variables
         self.model_path = model_path
-
-        # Just remember that indexed are strings
-        # Opening the classes
-        with open(CLASS_LABEL_PATH) as f:
-            self.outputs = json.load(f)
-
-        # Create model here
-        self.model = load_model(filepath=model_path)
+        
+        # Load label map (gloss -> class index)
+        label_map_path = os.path.join('app', 'label_map.json')
+        with open(label_map_path) as f:
+            self.label_map = json.load(f)
+        
+        # Create reverse mapping (class index -> gloss)
+        self.index_to_gloss = {v: k for k, v in self.label_map.items()}
+        
+        # Load stats for z-scoring
+        stats_path = os.path.join('app', 'stats.json')
+        with open(stats_path) as f:
+            stats = json.load(f)
+            self.mean = np.array(stats['mean'], dtype=np.float32)
+            self.std = np.array(stats['std'], dtype=np.float32)
+            # Avoid division by zero for very small std values
+            self.std = np.where(self.std < 1e-8, 1.0, self.std)
+        
+        # Load the BiLSTM model
+        self.model = tf.keras.models.load_model(model_path)
+        
+        print(f"Model loaded successfully. Number of classes: {len(self.index_to_gloss)}")
 
     async def query_model(self, keypoints):
-        # print("IN QUERY")
-        # Format keypoints so it fits the model
+        """
+        Query the model with formatted keypoints
+        Args:
+            keypoints: numpy array of shape (48, 84) - 48 frames, 84 features (42 joints * 2 coords)
+        Returns:
+            dict with top-5 predictions and top-1 prediction
+        """
+        # Format keypoints for model input
         formatted_keypoints = self.__format_input_keypoints(keypoints)
-
+        
         # Query the model
         result = await self.__get_model_result(formatted_keypoints)
-
-        # Parse results so it fits the formate needed
+        
+        # Parse results to get top-5 and top-1
         final_result = self.__format_model_results(result)
-        # print("FORMATTE RESSULTS")
+        
         return final_result
 
-    ############################# Private helper functions needed for query model #############################
     def __format_input_keypoints(self, keypoints):
-        #! PLEASE GIVE SHAPE WITH (number_of_frames, number_of_keypoints, 1, features)
-
-        # probs just padd the dataframe so it fits the inputs
-        keypoints = np.expand_dims(keypoints, axis=0)  # Add a batch dimension
-
-        return keypoints
+        """
+        Format keypoints for model input
+        Args:
+            keypoints: numpy array of shape (48, 84)
+        Returns:
+            numpy array of shape (1, 48, 84) with z-scoring applied
+        """
+        # Ensure we have the right shape
+        if keypoints.shape != (48, 84):
+            raise ValueError(f"Expected keypoints shape (48, 84), got {keypoints.shape}")
+        
+        # Apply z-scoring using training statistics
+        x_normalized = (keypoints - self.mean) / self.std
+        
+        # Add batch dimension
+        x_batch = np.expand_dims(x_normalized, axis=0)
+        
+        return x_batch
 
     async def __get_model_result(self, keypoints):
-        # print("CALLINGTHE MODEEL")
-        # just query the model
-        result = await asyncio.to_thread(self.model.predict, keypoints, verbose=2)
-        return result[0]
+        """
+        Get model prediction
+        Args:
+            keypoints: numpy array of shape (1, 48, 84)
+        Returns:
+            numpy array of shape (num_classes,) - softmax probabilities
+        """
+        # Query the model with just the keypoints (no mask needed)
+        result = await asyncio.to_thread(self.model.predict, keypoints, verbose=0)
+        
+        return result[0]  # Remove batch dimension
 
     def __format_model_results(self, result):
-        # Loop through resuklts and append the correct class to the probability
-
-        fomated_results = {"model_output": []}
-        for i in range(len(result)):
-            # Adding the results
-            str_index = str(i)
-            fomated_results['model_output'].append(
-                [self.outputs[str_index], result[i]])
-
-        fomated_results['model_output'] = sorted(
-            fomated_results['model_output'], key=lambda x: float(x[1]), reverse=True)[:10]
-
-        return fomated_results
-    ############################# Private helper functions needed for query model #############################
+        """
+        Format model results to get top-5 predictions and top-1
+        Args:
+            result: numpy array of shape (num_classes,) - softmax probabilities
+        Returns:
+            dict with top-5 predictions and top-1 prediction
+        """
+        # Get top-5 predictions
+        top_5_indices = np.argsort(result)[-5:][::-1]  # Sort descending, take top 5
+        
+        top_5_predictions = []
+        for idx in top_5_indices:
+            gloss = self.index_to_gloss[idx]
+            probability = float(result[idx])
+            top_5_predictions.append([gloss, probability])
+        
+        # Get top-1 prediction
+        top_1_idx = np.argmax(result)
+        top_1_gloss = self.index_to_gloss[top_1_idx]
+        top_1_probability = float(result[top_1_idx])
+        
+        # Format for compatibility with existing code
+        formatted_results = {
+            "model_output": top_5_predictions,
+            "top_1": {
+                "label": top_1_gloss,
+                "probability": top_1_probability
+            },
+            "top_5": top_5_predictions
+        }
+        
+        return formatted_results
