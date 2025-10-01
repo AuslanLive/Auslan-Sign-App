@@ -55,8 +55,14 @@ def model_output_parse():
 @app.route('/api/get_sign_to_text', methods=["GET", "POST"])
 def get_sign_to_text():
     translated_message = connectinator.get_transltion()
+    top_5_predictions = connectinator.get_top_predictions()
+    top_1_prediction = connectinator.get_top_1_prediction()
 
-    return jsonify({"translation": translated_message}), 200
+    return jsonify({
+        "translation": translated_message,
+        "top_5": top_5_predictions,
+        "top_1": top_1_prediction
+    }), 200
 
 
 # Batch recording endpoint: accept an array of frames and process sequentially
