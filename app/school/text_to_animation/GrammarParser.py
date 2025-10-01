@@ -61,29 +61,37 @@ class GrammarParser:
     def parse_text_to_auslan_grammar(self, t2s_input):
         # takes a regular sentence and converts it to Auslan grammar
         start = time.time()
+        
+        print(f"(GrammarParser.py): Starting parse with input: '{t2s_input}'")
+        
         if not t2s_input:
+            print("(GrammarParser.py): ERROR - Empty or invalid input received")
             return {"error": "Invalid input from user"}
 
         if len(t2s_input.split()) > 2:
+            print(f"(GrammarParser.py): Processing multi-word sentence ({len(t2s_input.split())} words)")
 
             # 1. Lemmatise words using spaCy
+            print("(GrammarParser.py): STAGE 1 - Starting lemmatization...")
             lemmatized_sentence = self.lemmatize(t2s_input)
-            
-            print(f"(GrammarParser.py): Lemmatized sentence: {lemmatized_sentence}")
+            print(f"(GrammarParser.py): Original: '{t2s_input}' → Lemmatized: '{lemmatized_sentence}'")
 
             # 2. Use WSD to disambiguate words if necessary
-            
+            print("(GrammarParser.py): STAGE 2 - Starting word sense disambiguation...")
             disambiguated_words = {}
-            
             disambiguated_words = self.wsd.disambiguate_words(lemmatized_sentence)
-
-            print(f"(GrammarParser.py): Disambiguated words: {disambiguated_words}")
+            print(f"(GrammarParser.py): Found {len(disambiguated_words)} disambiguated words: {disambiguated_words}")
 
             # 3. Use text-to-text model for grammar parsing
+            print("(GrammarParser.py): STAGE 3 - Starting T5 model translation...")
             input_text = self.prefix + lemmatized_sentence
+            print(f"(GrammarParser.py): Model input: '{input_text}'")
+            
             inputs = self.tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
+            print(f"(GrammarParser.py): Tokenized input shape: {inputs['input_ids'].shape}")
             
             # Generate the translation
+            print("(GrammarParser.py): Generating translation with T5 model...")
             outputs = self.model.generate(
                 **inputs,
                 max_length=512,
@@ -95,24 +103,36 @@ class GrammarParser:
             
             # Decode the output
             result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            print(f"(GrammarParser.py): Raw model output: '{result}'")
             
             # from the result string, create a list of words
             sentence = result.split()
+            print(f"(GrammarParser.py): Split into words: {sentence}")
             
             # loop over the sentence and clarify ambiguous words
+            print("(GrammarParser.py): STAGE 4 - Applying word sense disambiguation...")
+            original_sentence = sentence.copy()  # Keep a copy for comparison
             for i, word in enumerate(sentence):
                 word_lower = word.lower()
                 if word_lower in disambiguated_words:
                     # If the word is ambiguous, replace it with its disambiguated form
-                    print(f"(GrammarParser.py): Clarifying word '{word}' to '{disambiguated_words[word_lower]}'")
+                    old_word = sentence[i]
                     sentence[i] = disambiguated_words[word_lower].upper()
+                    print(f"(GrammarParser.py): Position {i}: '{old_word}' → '{sentence[i]}'")
+            
+            if original_sentence != sentence:
+                print(f"(GrammarParser.py): Before disambiguation: {original_sentence}")
+                print(f"(GrammarParser.py): After disambiguation: {sentence}")
+            else:
+                print("(GrammarParser.py): No words were disambiguated in final sentence")
 
         else:
+            print(f"(GrammarParser.py): Short sentence ({len(t2s_input.split())} words) - skipping processing")
             sentence = t2s_input.split()
+            print(f"(GrammarParser.py): Direct word split: {sentence}")
 
-
-        print(f"(GrammarParser.py): Final parsed result: {sentence}")
-        print(f"Time taken {time.time()-start:0.4f}")
+        print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
+        print(f"(GrammarParser.py): Processing completed in {time.time()-start:.4f} seconds")
         return sentence
 
     def save_as_json(self, parsed_result, output_filename="parsed_input.json"):
