@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
+import WordSelectionModal from "../components/WordSelectionModal";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +16,7 @@ const TranslateApp = () => {
     const [mode, setMode] = useState("videoToText");
     const [sourceText, setSourceText] = useState("");
     const [translatedText, setTranslatedText] = useState("");
+    const [sentence, setSentence] = useState(""); // New state for building sentences
     const [animatedSignVideo, setAnimatedSignVideo] = useState(null);
     const videoInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -25,6 +27,8 @@ const TranslateApp = () => {
     const [swapButtonRepositioning, setSwapButtonRepositioning] = useState(false);
     const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
     const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
+    const [top5Predictions, setTop5Predictions] = useState([]); // top 5 predictions here
+    const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection 
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -41,6 +45,9 @@ const TranslateApp = () => {
         setIsAnimating(true);
         setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
+        setSentence(""); // Clear the sentence on swap
+        setShowWordSelectionModal(false); // Hide word selection modal on swap
+        setTop5Predictions([]); // Clear predictions on swap
 
         // Handle translate button exit animation if switching from textToVideo
         if (mode === "textToVideo") {
@@ -91,9 +98,15 @@ const TranslateApp = () => {
             // Output parsed sentence to console
             console.log("Full response:", data);
 
-            // Set translated text or handle fallback
-            const translatedText = data.translation;
-            setTranslatedText(translatedText);
+            // Check if we have new predictions to show
+            if (data.top_5 && data.top_5.length > 0) {
+                setTop5Predictions(data.top_5);
+                setShowWordSelectionModal(true);
+                // Don't automatically set translated text - wait for user selection
+            } else if (data.translation) {
+                // Fallback to old behavior if no top_5 data
+                setTranslatedText(data.translation);
+            }
         } catch (error) {
             console.error("Error:", error);
             setTranslatedText(
@@ -178,11 +191,42 @@ const TranslateApp = () => {
         }
     }, [translatedText, showClearButton]);
 
+    // Function to handle word selection from top 5 predictions
+    const handleWordSelection = (selectedWord) => {
+        // Add the selected word to the sentence
+        setSentence(prevSentence => {
+            const newSentence = prevSentence ? `${prevSentence} ${selectedWord}` : selectedWord;
+            // Update the displayed text with the new sentence
+            setTranslatedText(newSentence);
+            return newSentence;
+        });
+        
+        // Hide the modal
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+    };
+
+    // Function to handle "Redo" option
+    const handleRedo = () => {
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+        // Continue polling for new predictions
+    };
+
+    // Function to close modal
+    const handleCloseModal = () => {
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+    };
+
     // Function to clear translated text
     const handleClearText = () => {
         setClearButtonAnimation('clear-button-exit');
         setTimeout(() => {
             setTranslatedText("");
+            setSentence(""); // Also clear the sentence
+            setShowWordSelectionModal(false);
+            setTop5Predictions([]);
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -429,6 +473,15 @@ const TranslateApp = () => {
                     </>
                 )}
             </div>
+            
+            {/* Word Selection Modal */}
+            <WordSelectionModal
+                isOpen={showWordSelectionModal}
+                top5Predictions={top5Predictions}
+                onWordSelect={handleWordSelection}
+                onRedo={handleRedo}
+                onClose={handleCloseModal}
+            />
         </div>
     );
 };
