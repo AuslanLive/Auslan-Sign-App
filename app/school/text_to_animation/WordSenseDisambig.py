@@ -18,9 +18,9 @@ class WordSenseDisambiguation:
                                  "wsd_models", "model")
         try:
             self.model = SentenceTransformer(model_path)
-            print(f"Loaded custom MPNet model from: {model_path}")
+            print(f"SUCCESS - Loaded custom MPNet model from: {model_path}")
         except Exception as e:
-            print(f"Failed to load custom model: {e}")
+            print(f"FAILURE - Failed to load custom model: {e}")
             print("Falling back to base model...")
             self.model = SentenceTransformer('all-mpnet-base-v2')
         
