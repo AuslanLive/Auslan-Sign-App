@@ -136,6 +136,16 @@ def process_recording():
         top1 = {"label": inv[int(top5_idx[0])], "probability": float(probs[top5_idx[0]])}
 
         connectinator.front_end_translation_variable = top1['label']
+        # Store last model output so polling endpoints can surface top-5
+        try:
+            connectinator.last_model_output = {
+                "top_1": top1,
+                "top_5": top5,
+                "model_output": top5,
+            }
+        except Exception:
+            # Be resilient if attribute missing
+            pass
 
         return jsonify({
             "message": "Recording processed",

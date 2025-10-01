@@ -229,10 +229,28 @@ const VideoInput = React.forwardRef((props, ref) => {
             const data = await res.json();
             console.log("WORD:", data?.top_1?.label || "-");
             console.log("Top-5:", data?.top_5 || []);
+            // Clear buffer after successful upload to start fresh window
+            frameBuffer.current = [];
         } catch (e) {
             console.error("Recording upload failed", e);
         }
     };
+
+    // Auto-send recordings periodically while transmitting
+    useEffect(() => {
+        let intervalId;
+        if (isCameraOn && isTransmitting) {
+            intervalId = setInterval(() => {
+                // Send only if we have a reasonable number of frames
+                if (frameBuffer.current.length >= 24) {
+                    uploadRecording();
+                }
+            }, 2000); // every 2s
+        }
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [isCameraOn, isTransmitting]);
 
     React.useImperativeHandle(ref, () => ({
         stopCamera,
