@@ -22,6 +22,7 @@ export const styles = {
         justifyContent: "flex-start",
         width: "100%",
         maxWidth: "600px",
+        minHeight: 0,
         height: "80vh",
         maxHeight: "750px",
         boxSizing: "border-box",
@@ -38,10 +39,16 @@ export const styles = {
             boxShadow: "0 12px 40px rgba(0, 0, 0, 0.6)",
         },
     },
+    panelMobile: {
+        height: "auto",       
+        maxHeight: "none",
+        padding: "18px",
+    },
     panelTitle: {
         fontSize: "28px",
         fontWeight: "600",
         color: "#ffffff",
+        marginTop: "0px",
         marginBottom: "20px",
         textShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
         letterSpacing: "0.5px",
@@ -50,15 +57,21 @@ export const styles = {
     videoInputContainer: {
         width: "100%",
         height: "100%",
+        flex: 1,
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
         borderRadius: "16px",
-        overflow: "hidden",
         background: "rgba(10, 10, 20, 0.6)",
         backdropFilter: "blur(10px)",
         border: "1px solid rgba(255, 255, 255, 0.05)",
+        borderRadius: "16px"
     },
     textarea: {
+        flex: 1,
         width: "100%",
-        height: "100%",
+        minHeight: 0,
+        height: "auto",
         padding: "20px",
         fontSize: "18px",
         resize: "none",
@@ -87,6 +100,10 @@ export const styles = {
         alignItems: "center",
         gap: "20px",
         zIndex: 10,
+    },
+    buttonsMobileTag: {
+        flexDirection: "row",
+        // order: "-1",
     },
     swapButton: {
         padding: "16px 32px",
@@ -158,7 +175,7 @@ export const styles = {
         alignItems: "center",
         overflow: "hidden",
         borderRadius: "16px",
-        background: "rgba(10, 10, 20, 0.6)",
+        background: "#0D0E1A",
         backdropFilter: "blur(10px)",
         border: "1px solid rgba(255, 255, 255, 0.05)",
         position: "relative",
@@ -170,6 +187,7 @@ export const styles = {
         borderRadius: "16px",
     },
     videoPlaceholder: {
+        flex: 1,
         width: "100%",
         height: "100%",
         display: "flex",
@@ -197,6 +215,8 @@ export const styles = {
         maxWidth: "280px",
     },
     loadingPlaceholder: {
+        flex: 1,
+        minWidth: 0,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -208,6 +228,10 @@ export const styles = {
         borderRadius: "16px",
         border: "1px solid rgba(255, 255, 255, 0.05)",
         padding: "20px",
+    },
+    loadingPlaceholderMobile: {
+        width: "85%",
+
     },
     spinner: {
         width: "40px",
