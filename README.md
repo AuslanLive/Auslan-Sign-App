@@ -62,21 +62,27 @@ Follow: https://cloud.google.com/sdk/docs/install
 **Server**
 
 Build the image:
+
 `docker build -t gcr.io/auslan-app-461803/auslan-api -f Dockerfile.api .`
 
 Push the image to Google Cloud:
+
 `docker push gcr.io/auslan-app-461803/auslan-api`
 
 Deploy image to Google Cloud container:
+
 `gcloud run deploy auslan-api --image gcr.io/auslan-app-461803/auslan-api --platform managed --region australia-southeast1 --allow-unauthenticated --port 5173 --memory 4Gi --cpu 2`
 
 **Client**
 
 Build the image:
+
 `docker build -t gcr.io/auslan-app-461803/auslan-client -f Dockerfile.client .`
 
 Push the image to Google Cloud:
+
 `docker push gcr.io/auslan-app-461803/auslan-client`
 
 Deploy image to Google Cloud container:
+
 `gcloud run deploy auslan-client --image gcr.io/auslan-app-461803/auslan-client --platform managed --region australia-southeast1 --allow-unauthenticated --port 80`
