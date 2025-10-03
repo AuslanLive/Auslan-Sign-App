@@ -134,7 +134,7 @@ def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
 
     - Uses libx264 CPU encoder with speed-first settings.
     """
-    # Base dimensions (even for yuv420p/NVENC)
+    # Base dimensions (even for yuv420p)
     w0, h0 = int(width), int(height)
     if resize_factor != 1.0:
         w0 = max(2, int(round(w0 * resize_factor)))

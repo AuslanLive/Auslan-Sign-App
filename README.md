@@ -38,3 +38,45 @@ https://github.blog/open-source/git/git-lfs-2-2-0-released/
 Sign video animation uses the pose library from Sign MT. Used under the MIT licence outlined on the repository:
 
 https://github.com/sign-language-processing/pose
+
+Auslan signs currently sourced from Auslan Signbank:
+
+https://auslan.org.au/
+
+## Build and Deploy Using Docker and Google Cloud:
+
+Currently using Docker and Google Cloud to build the project. Please follow the below in your CLI to build and deploy the application:
+
+> [!NOTE]
+> Please build this using a Windows machine for now. Mac/Linux have different defaults for the docker image build. Workaround still to be found.
+> FFMPEG video creation - can only use the libx264 encoder for now, as it uses the CPU. GPU support is not ensured on the gcloud container.
+
+**Install Docker:**
+
+Follow: https://docs.docker.com/desktop/
+
+**Install Google Cloud SDK/CLI:**
+
+Follow: https://cloud.google.com/sdk/docs/install
+
+**Server**
+
+Build the image:
+`docker build -t gcr.io/auslan-app-461803/auslan-api -f Dockerfile.api .`
+
+Push the image to Google Cloud:
+`docker push gcr.io/auslan-app-461803/auslan-api`
+
+Deploy image to Google Cloud container:
+`gcloud run deploy auslan-api --image gcr.io/auslan-app-461803/auslan-api --platform managed --region australia-southeast1 --allow-unauthenticated --port 5173 --memory 4Gi --cpu 2`
+
+**Client**
+
+Build the image:
+`docker build -t gcr.io/auslan-app-461803/auslan-client -f Dockerfile.client .`
+
+Push the image to Google Cloud:
+`docker push gcr.io/auslan-app-461803/auslan-client`
+
+Deploy image to Google Cloud container:
+`gcloud run deploy auslan-client --image gcr.io/auslan-app-461803/auslan-client --platform managed --region australia-southeast1 --allow-unauthenticated --port 80`
