@@ -126,25 +126,13 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
     else:
         print("Not enough .pose files to concatenate")
 
-def _first_available_encoder(encoders):
-    """Return the first encoder name present in this ffmpeg build."""
-    try:
-        out = subprocess.check_output(["ffmpeg", "-hide_banner", "-encoders"], stderr=subprocess.STDOUT).decode("utf-8", errors="ignore")
-    except Exception:
-        return None
-    for enc in encoders:
-        if enc in out:
-            return enc
-    return None
-
 def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
                            resize_factor=0.5, target_fps=None):
     """
-    Faster: write a seekable MP4 to a temp file using the fastest available encoder,
+    Faster: write a seekable MP4 to a temp file using CPU encoder,
     then upload to Firebase Storage. Returns public URL. Filenames unchanged.
 
-    - Tries GPU encoders (NVENC/QSV/AMF) first, falls back to libx264.
-    - Uses speed-first settings; adjust CRF if you want more quality.
+    - Uses libx264 CPU encoder with speed-first settings.
     """
     # Base dimensions (even for yuv420p/NVENC)
     w0, h0 = int(width), int(height)
@@ -156,51 +144,20 @@ def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
     src_fps = float(fps)
     out_fps = float(target_fps or src_fps)
 
-    # Pick encoder (fastest first)
-    encoder = _first_available_encoder([
-        "h264_nvenc",  # NVIDIA
-        "h264_qsv",    # Intel QuickSync
-        "h264_amf",    # AMD
-        "libx264"      # CPU fallback
-    ]) or "libx264"
+    # Use CPU encoder only
+    encoder = "libx264"
+    
+    print(f"(pose_video_creator) Selected encoder: {encoder}")
 
-    # Encoder-specific speed/quality knobs
-    if encoder == "h264_nvenc":
-        enc_args = [
-            "-c:v", "h264_nvenc",
-            "-preset", "p1",              # fastest
-            "-tune", "ull",               # ultra low latency
-            "-rc", "vbr", "-cq", "28",    # quality/size tradeoff; lower = better quality
-            "-b:v", "0",
-            "-pix_fmt", "yuv420p"
-        ]
-    elif encoder == "h264_qsv":
-        enc_args = [
-            "-c:v", "h264_qsv",
-            "-preset", "veryfast",
-            "-global_quality", "28",      # ~CRF; lower is higher quality
-            "-look_ahead", "0",
-            "-pix_fmt", "nv12"            # QSV friendly
-        ]
-    elif encoder == "h264_amf":
-        enc_args = [
-            "-c:v", "h264_amf",
-            "-quality", "speed",
-            "-usage", "ultralowlatency",
-            "-rc", "vbr",
-            "-qscale", "28",
-            "-pix_fmt", "yuv420p"
-        ]
-    else:
-        # libx264 (CPU) - speed first
-        enc_args = [
-            "-c:v", "libx264",
-            "-preset", "ultrafast",
-            "-tune", "zerolatency",
-            "-crf", "32",                 # raise to 34–36 for smaller/faster previews
-            "-x264-params", "keyint=2*{k}:min-keyint={k}:scenecut=0:rc-lookahead=0:bframes=0".format(k=int(out_fps)),
-            "-pix_fmt", "yuv420p"
-        ]
+    # libx264 (CPU) - speed first
+    enc_args = [
+        "-c:v", "libx264",
+        "-preset", "ultrafast",
+        "-tune", "zerolatency",
+        "-crf", "32",                 # raise to 34–36 for smaller/faster previews
+        "-x264-params", "keyint=2*{k}:min-keyint={k}:scenecut=0:rc-lookahead=0:bframes=0".format(k=int(out_fps)),
+        "-pix_fmt", "yuv420p"
+    ]
 
     # Temp file for MP4
     tmp_fd, tmp_path = tempfile.mkstemp(suffix=".mp4")
