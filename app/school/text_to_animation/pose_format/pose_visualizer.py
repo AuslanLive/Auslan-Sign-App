@@ -165,15 +165,15 @@ class PoseVisualizer:
                               lineType=op['lineType'])
         # (This part of the code handles drawing the pose points and limbs)
 
-        # Adding the title to the bottom of the image
+        # Adding the title to the top of the image
         if title:
             font = self.cv2.FONT_HERSHEY_SIMPLEX
-            font_scale = 4  # Adjust as necessary
-            color = (255, 255, 0)  # Red text
+            font_scale = 3  # Adjust as necessary
+            color = (255, 255, 0)  # blue text
             thickness = 8  # Thickness of the text
             text_size = self.cv2.getTextSize(title, font, font_scale, thickness)[0]
             text_x = (img.shape[1] - text_size[0]) // 2  # Center the text horizontally
-            text_y = img.shape[0] - 100  # Position the text slightly above the bottom edge
+            text_y = 30 + text_size[1]  # Position the text closer to the top edge
             self.cv2.putText(img, title, (text_x, text_y), font, font_scale, color, thickness, lineType=self.cv2.LINE_AA)
 
         return img
