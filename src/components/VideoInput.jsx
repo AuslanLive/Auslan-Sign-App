@@ -33,6 +33,7 @@ const VideoInput = React.forwardRef((props, ref) => {
     const [isCameraOn, setIsCameraOn] = useState(false); // State to track if the camera is on
     const [error, setError] = useState(null); // State to handle errors
     const [isTransmitting, setIsTransmitting] = useState(true); // State to control keypoint transmission
+    const [isPaused, setIsPaused] = useState(false); // State to control pause/resume
 
     useEffect(() => {
         const loadMediaPipe = async () => {
@@ -134,8 +135,8 @@ const VideoInput = React.forwardRef((props, ref) => {
                 }
                 canvasCtx.restore();
 
-                // Buffer frames when transmitting (for batch send)
-                if (isTransmitting) {
+                // Buffer frames when transmitting and not paused (for batch send)
+                if (isTransmitting && !isPaused) {
                     // Prepare keypoints (pose ignored, only hands)
                     const keypoints = [
                         null,
@@ -215,6 +216,15 @@ const VideoInput = React.forwardRef((props, ref) => {
     const startTransmission = () => {
         frameBuffer.current = [];
         setIsTransmitting(true);
+        setIsPaused(false);
+    };
+
+    const pauseTransmission = () => {
+        setIsPaused(true);
+    };
+
+    const resumeTransmission = () => {
+        setIsPaused(false);
     };
 
     const uploadRecording = async () => {
@@ -236,10 +246,10 @@ const VideoInput = React.forwardRef((props, ref) => {
         }
     };
 
-    // Auto-send recordings periodically while transmitting
+    // Auto-send recordings periodically while transmitting and not paused
     useEffect(() => {
         let intervalId;
-        if (isCameraOn && isTransmitting) {
+        if (isCameraOn && isTransmitting && !isPaused) {
             intervalId = setInterval(() => {
                 // Send only if we have a reasonable number of frames
                 if (frameBuffer.current.length >= 24) {
@@ -250,12 +260,14 @@ const VideoInput = React.forwardRef((props, ref) => {
         return () => {
             if (intervalId) clearInterval(intervalId);
         };
-    }, [isCameraOn, isTransmitting]);
+    }, [isCameraOn, isTransmitting, isPaused]);
 
     React.useImperativeHandle(ref, () => ({
         stopCamera,
         stopTransmission,
         startTransmission,
+        pauseTransmission,
+        resumeTransmission,
     }));
 
     const toggleCamera = () => {

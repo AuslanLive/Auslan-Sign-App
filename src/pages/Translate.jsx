@@ -38,6 +38,20 @@ const TranslateApp = () => {
         }
     };
 
+    const pauseVideoProcessing = () => {
+        setIsPolling(false);
+        if (videoInputRef.current) {
+            videoInputRef.current.pauseTransmission();
+        }
+    };
+
+    const resumeVideoProcessing = () => {
+        setIsPolling(true);
+        if (videoInputRef.current) {
+            videoInputRef.current.resumeTransmission();
+        }
+    };
+
     // Function to swap between modes
     const handleSwap = () => {
         if (isAnimating) return; // Prevent multiple swaps during animation
@@ -102,6 +116,7 @@ const TranslateApp = () => {
             if (data.top_5 && data.top_5.length > 0) {
                 setTop5Predictions(data.top_5);
                 setShowWordSelectionModal(true);
+                pauseVideoProcessing();
                 // Don't automatically set translated text - wait for user selection
             } else if (data.translation) {
                 // Fallback to old behavior if no top_5 data
@@ -204,19 +219,25 @@ const TranslateApp = () => {
         // Hide the modal
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
+        
+        // Resume video processing after selection
+        resumeVideoProcessing();
     };
 
     // Function to handle "Redo" option
     const handleRedo = () => {
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
-        // Continue polling for new predictions
+        // Resume video processing after redo
+        resumeVideoProcessing();
     };
 
     // Function to close modal
     const handleCloseModal = () => {
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
+        // Resume video processing after closing modal
+        resumeVideoProcessing();
     };
 
     // Function to clear translated text
