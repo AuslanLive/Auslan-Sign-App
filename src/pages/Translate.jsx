@@ -47,7 +47,8 @@ const TranslateApp = () => {
     const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection
     const [modelStatus, setModelStatus] = useState("Ready to detect signs"); // Current model status
     const [currentSign, setCurrentSign] = useState(""); // Current sign being recorded
-    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection 
+    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection
+    const [redoCooldown, setRedoCooldown] = useState(false); // Prevent immediate modals after redo 
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -136,7 +137,14 @@ const TranslateApp = () => {
             console.log("Full response:", data);
 
             // Check if we have new predictions to show
-            if (data.top_5 && data.top_5.length > 0) {
+            if (data.top_5 && data.top_5.length > 0 && !redoCooldown && !showWordSelectionModal) {
+                // Print top 5 to terminal
+                console.log("=== TOP 5 PREDICTIONS ===");
+                data.top_5.forEach((prediction, index) => {
+                    console.log(`${index + 1}. ${prediction[0]} (${(prediction[1] * 100).toFixed(1)}%)`);
+                });
+                console.log("========================");
+                
                 setTop5Predictions(data.top_5);
                 setShowWordSelectionModal(true);
                 setModelStatus("Sign detected! Please select from options below");
@@ -252,11 +260,23 @@ const TranslateApp = () => {
 
     // Clear any stale state on component mount (handles page refresh)
     useEffect(() => {
+        // Force clear all modal-related state
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
         setModelStatus("Ready to detect signs");
         setCurrentSign("");
         setHasHandsDetected(false);
+        setTranslatedText("");
+        setSentence("");
+        setRedoCooldown(false);
+        setIsPolling(false);
+        
+        // Stop any ongoing transmission
+        if (videoInputRef.current) {
+            videoInputRef.current.stopTransmission();
+        }
+        
+        console.log("Page refreshed - all state cleared");
     }, []);
 
     // Function to handle word selection from top 5 predictions
@@ -281,6 +301,16 @@ const TranslateApp = () => {
     const handleRedo = () => {
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
+        setRedoCooldown(true);
+        setModelStatus("Cooldown period - sign a new word to continue");
+        setCurrentSign("");
+        
+        // Set cooldown for 3 seconds
+        setTimeout(() => {
+            setRedoCooldown(false);
+            setModelStatus("Ready to detect signs");
+        }, 3000);
+        
         // Resume video processing after redo
         resumeVideoProcessing();
     };
@@ -303,6 +333,7 @@ const TranslateApp = () => {
             setTop5Predictions([]);
             setModelStatus("Ready to detect signs");
             setCurrentSign("");
+            setRedoCooldown(false); // Reset redo cooldown
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -370,7 +401,7 @@ const TranslateApp = () => {
             setLoading(false); // Set loading to false after fetching video
         }
     };
-    // React code for UI rendering
+    
     return (
         <div style={{
             display: "flex",
@@ -455,8 +486,8 @@ const TranslateApp = () => {
                         width: '8px',
                         height: '8px',
                         borderRadius: '50%',
-                        backgroundColor: showWordSelectionModal ? '#ffc107' : isPolling ? '#00ff00' : '#ff4444',
-                        animation: isPolling && !showWordSelectionModal ? 'pulse 2s infinite' : 'none'
+                        backgroundColor: showWordSelectionModal ? '#ffc107' : redoCooldown ? '#ff6b35' : isPolling ? '#00ff00' : '#ff4444',
+                        animation: isPolling && !showWordSelectionModal && !redoCooldown ? 'pulse 2s infinite' : 'none'
                     }}></div>
                     <span>{modelStatus}</span>
                     {currentSign && (
