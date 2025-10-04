@@ -35,7 +35,7 @@ class Model:
         """
         Query the model with formatted keypoints
         Args:
-            keypoints: numpy array of shape (48, 84) - 48 frames, 84 features (42 joints * 2 coords)
+            keypoints: numpy array of shape (64, 84) - 64 frames, 84 features (42 joints * 2 coords)
         Returns:
             dict with top-5 predictions and top-1 prediction
         """
@@ -54,13 +54,13 @@ class Model:
         """
         Format keypoints for model input
         Args:
-            keypoints: numpy array of shape (48, 84)
+            keypoints: numpy array of shape (64, 84)
         Returns:
-            numpy array of shape (1, 48, 84) with z-scoring applied
+            numpy array of shape (1, 64, 84) with z-scoring applied
         """
         # Ensure we have the right shape
-        if keypoints.shape != (48, 84):
-            raise ValueError(f"Expected keypoints shape (48, 84), got {keypoints.shape}")
+        if keypoints.shape != (64, 84):
+            raise ValueError(f"Expected keypoints shape (64, 84), got {keypoints.shape}")
         
         # Apply z-scoring using training statistics
         x_normalized = (keypoints - self.mean) / self.std
@@ -74,7 +74,7 @@ class Model:
         """
         Get model prediction
         Args:
-            keypoints: numpy array of shape (1, 48, 84)
+            keypoints: numpy array of shape (1, 64, 84)
         Returns:
             numpy array of shape (num_classes,) - softmax probabilities
         """
@@ -87,7 +87,7 @@ class Model:
         """
         Predict assuming x_normalized_batch is already z-scored and batched.
         Args:
-            x_normalized_batch: numpy array (1, 48, 84)
+            x_normalized_batch: numpy array (1, 64, 84)
         Returns:
             numpy array (num_classes,) softmax
         """

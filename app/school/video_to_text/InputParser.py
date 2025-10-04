@@ -1,7 +1,7 @@
 import numpy as np
 
 # Parameters for the new BiLSTM model with sliding window
-TARGET_FRAMES = 48  # Fixed sequence length
+TARGET_FRAMES = 64  # Fixed sequence length
 FEATURE_DIM = 84    # 42 hand keypoints * 2 coordinates (x, y)
 HAND_LANDMARKS = 21 # MediaPipe hand landmarks per hand
 
@@ -169,7 +169,7 @@ class InputParser:
         """
         Get the current ring buffer in the correct order
         Returns:
-            tuple: (keypoints, mask) both of shape (48, 84) and (48, 42)
+            tuple: (keypoints, mask) both of shape (64, 84) and (64, 42)
         """
         if not self.buffer_filled:
             # Buffer not full yet, return zeros
@@ -241,8 +241,8 @@ class InputParser:
         chunk_result = None
         end_of_phrase = False
         
-        # Generate word segments more frequently (every 48 frames when buffer is full)
-        if self.buffer_filled and len(self.activity_history) % 48 == 0:
+        # Generate word segments more frequently (every 64 frames when buffer is full)
+        if self.buffer_filled and len(self.activity_history) % 64 == 0:
             # Get current buffer for prediction
             buffer_keypoints, buffer_mask = self.get_current_buffer()
             chunk_result = buffer_keypoints

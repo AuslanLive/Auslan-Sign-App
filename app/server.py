@@ -74,7 +74,7 @@ def process_recording():
         if not isinstance(frames, list) or len(frames) == 0:
             return jsonify({"error": "No frames provided"}), 400
 
-        # Build tensors per spec: stride=2, hand-only, wrist-center + MCP scale, pad/trim to 48
+        # Build tensors per spec: stride=2, hand-only, wrist-center + MCP scale, pad/trim to 64
         kept = frames[::2]
         x_list = []  # (84,)
         m_list = []  # (42,)
@@ -102,7 +102,7 @@ def process_recording():
             x_list.append(feat)
             m_list.append(mask)
 
-        T = 48
+        T = 64
         if len(x_list) >= T:
             x = np.stack(x_list[:T], axis=0)
             m = np.stack(m_list[:T], axis=0)

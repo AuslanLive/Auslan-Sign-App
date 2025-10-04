@@ -12,9 +12,9 @@ def load_stats():
     return mu, sd
 
 
-def synth_word_sequence(base_amplitude: float = 0.2, timesteps: int = 48) -> np.ndarray:
+def synth_word_sequence(base_amplitude: float = 0.2, timesteps: int = 64) -> np.ndarray:
     """
-    Create a synthetic right/left hand trace (84 features) for 48 frames.
+    Create a synthetic right/left hand trace (84 features) for 64 frames.
     Start with a simple smooth sine-like motion and optional jitter amplitude.
     Returns array of shape (timesteps, 84) in the same feature layout used by the server.
     """
@@ -68,8 +68,8 @@ def test_model_sensitivity_to_shake():
     amplitudes = [0.0, 0.01, 0.05, 0.1, 0.2]
     print("Shake sensitivity probe (amplitude -> top1_prob, top1_label):")
     for amp in amplitudes:
-        x = synth_word_sequence(base_amplitude=amp, timesteps=48)
-        # Align to expected server flow: already wrist-centered and 48x84, so just z-score
+        x = synth_word_sequence(base_amplitude=amp, timesteps=64)
+        # Align to expected server flow: already wrist-centered and 64x84, so just z-score
         x_norm = zscore(x, mu, sd)
         x_batch = np.expand_dims(x_norm.astype(np.float32), axis=0)
         # get softmax
