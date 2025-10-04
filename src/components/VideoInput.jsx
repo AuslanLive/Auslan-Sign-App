@@ -149,10 +149,10 @@ const VideoInput = React.forwardRef((props, ref) => {
                             : null,
                     ];
 
-                    // Only buffer if at least one hand is detected
+                    // Only buffer if at least one hand is detected with valid landmarks
                     const lCount = keypoints[1] ? keypoints[1].length : 0;
                     const rCount = keypoints[2] ? keypoints[2].length : 0;
-                    const hasHands = lCount > 0 || rCount > 0;
+                    const hasHands = (lCount > 0 && lCount === 21) || (rCount > 0 && rCount === 21);
 
                     // Update hand detection status
                     setHasHandsDetected(hasHands);
@@ -166,6 +166,11 @@ const VideoInput = React.forwardRef((props, ref) => {
                         // Save to a rolling buffer for batch upload
                         frameBuffer.current.push({ keypoints });
                         if (frameBuffer.current.length > 300) frameBuffer.current.shift();
+                    } else {
+                        // Debug: log when hands are not detected
+                        if (lCount > 0 || rCount > 0) {
+                            console.log(`Partial hand detection -> L:${lCount} R:${rCount} (expected 21 each)`);
+                        }
                     }
                 }
             });
@@ -277,7 +282,9 @@ const VideoInput = React.forwardRef((props, ref) => {
         startTransmission,
         pauseTransmission,
         resumeTransmission,
-        hasHandsDetected,
+        get hasHandsDetected() {
+            return hasHandsDetected;
+        },
     }));
 
     const toggleCamera = () => {

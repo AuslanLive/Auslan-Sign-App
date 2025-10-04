@@ -124,6 +124,11 @@ const TranslateApp = () => {
     };
     const get_sign_trans = async () => {
         try {
+            // CRITICAL: Only process if hands are detected and no modal is open
+            if (!hasHandsDetected || showWordSelectionModal || redoCooldown) {
+                return;
+            }
+
             const response = await fetch(
                 API_BASE_URL + "/get_sign_to_text",
                 {
@@ -194,9 +199,10 @@ const TranslateApp = () => {
     // setInterval(get_sign_trans, 1000);
 
     // new code - only trigger when mode is videoToText and polling is enabled
+    // CRITICAL: Don't poll when modal is open or during redo cooldown
     useEffect(() => {
         let interval;
-        if (mode === "videoToText" && isPolling) {
+        if (mode === "videoToText" && isPolling && !showWordSelectionModal && !redoCooldown) {
             interval = setInterval(function () {
                 get_sign_trans();
                 getGemFlag();
@@ -206,7 +212,7 @@ const TranslateApp = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode, isPolling]);
+    }, [mode, isPolling, showWordSelectionModal, redoCooldown]);
 
 
     
@@ -243,7 +249,7 @@ const TranslateApp = () => {
     // Monitor hand detection status
     useEffect(() => {
         const interval = setInterval(() => {
-            if (videoInputRef.current && isPolling && !showWordSelectionModal) {
+            if (videoInputRef.current && isPolling && !showWordSelectionModal && !redoCooldown) {
                 const handsDetected = videoInputRef.current.hasHandsDetected;
                 setHasHandsDetected(handsDetected);
                 
@@ -252,11 +258,15 @@ const TranslateApp = () => {
                 } else {
                     setModelStatus("Ready to detect signs - show your hands");
                 }
+            } else if (showWordSelectionModal) {
+                setModelStatus("Sign detected! Please select from options below");
+            } else if (redoCooldown) {
+                setModelStatus("Cooldown period - sign a new word to continue");
             }
         }, 500); // Check every 500ms
 
         return () => clearInterval(interval);
-    }, [isPolling, showWordSelectionModal]);
+    }, [isPolling, showWordSelectionModal, redoCooldown]);
 
     // Clear any stale state on component mount (handles page refresh)
     useEffect(() => {
