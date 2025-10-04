@@ -53,8 +53,6 @@ const VideoInput = React.forwardRef((props, ref) => {
                 smoothLandmarks: true,
                 enableSegmentation: true,
                 smoothSegmentation: true,
-                minDetectionConfidence: 0.3,
-                minTrackingConfidence: 0.3,
             });
 
             holisticRef.current = holistic;
@@ -149,26 +147,28 @@ const VideoInput = React.forwardRef((props, ref) => {
                             : null,
                     ];
 
-                    // Only buffer if at least one hand is detected with valid landmarks
+                    // Check for hand detection using original MediaPipe results
+                    const leftHandDetected = results.leftHandLandmarks && results.leftHandLandmarks.length > 0;
+                    const rightHandDetected = results.rightHandLandmarks && results.rightHandLandmarks.length > 0;
+                    const hasHands = leftHandDetected || rightHandDetected;
+                    
+                    // Get counts for debugging
                     const lCount = keypoints[1] ? keypoints[1].length : 0;
                     const rCount = keypoints[2] ? keypoints[2].length : 0;
-                    const hasHands = lCount === 21 || rCount === 21;
 
                     // Update hand detection status
                     setHasHandsDetected(hasHands);
 
                     if (hasHands) {
                         // Debug: show counts in console
-                        console.log(`✅ HANDS DETECTED -> L:${lCount} R:${rCount}`);
+                        console.log(`    HANDS DETECTED -> L:${lCount} R:${rCount} (Left: ${leftHandDetected}, Right: ${rightHandDetected})`);
 
                         // Save to a rolling buffer for batch upload
                         frameBuffer.current.push({ keypoints });
                         if (frameBuffer.current.length > 300) frameBuffer.current.shift();
                     } else {
                         // Debug: log when hands are not detected
-                        if (lCount > 0 || rCount > 0) {
-                            console.log(`❌ NO HANDS -> L:${lCount} R:${rCount} (need exactly 21 each)`);
-                        }
+                        console.log(`  NO HANDS -> L:${lCount} R:${rCount} (Left: ${leftHandDetected}, Right: ${rightHandDetected})`);
                     }
                 }
             });
@@ -280,9 +280,7 @@ const VideoInput = React.forwardRef((props, ref) => {
         startTransmission,
         pauseTransmission,
         resumeTransmission,
-        get hasHandsDetected() {
-            return hasHandsDetected;
-        },
+        hasHandsDetected,
     }));
 
     const toggleCamera = () => {

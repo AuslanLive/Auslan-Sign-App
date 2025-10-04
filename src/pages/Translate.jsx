@@ -259,7 +259,7 @@ const TranslateApp = () => {
                     setModelStatus("Hands detected - recording sign...");
                     console.log(" Translate: Hands detected, ready for sign detection");
                 } else {
-                    setModelStatus("Ready to detect signs - show your hands");
+                    setModelStatus("Waiting for hands...");
                     console.log(" Translate: No hands detected, waiting for hands");
                 }
             } else if (showWordSelectionModal) {
