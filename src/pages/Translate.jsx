@@ -126,9 +126,11 @@ const TranslateApp = () => {
         try {
             // CRITICAL: Only process if hands are detected and no modal is open
             if (!hasHandsDetected || showWordSelectionModal || redoCooldown) {
+                console.log(" get_sign_trans: Skipping - hands:", hasHandsDetected, "modal:", showWordSelectionModal, "cooldown:", redoCooldown);
                 return;
             }
 
+            console.log(" get_sign_trans: Making API call to detect sign...");
             const response = await fetch(
                 API_BASE_URL + "/get_sign_to_text",
                 {
@@ -255,13 +257,17 @@ const TranslateApp = () => {
                 
                 if (handsDetected) {
                     setModelStatus("Hands detected - recording sign...");
+                    console.log(" Translate: Hands detected, ready for sign detection");
                 } else {
                     setModelStatus("Ready to detect signs - show your hands");
+                    console.log(" Translate: No hands detected, waiting for hands");
                 }
             } else if (showWordSelectionModal) {
                 setModelStatus("Sign detected! Please select from options below");
+                console.log(" Translate: Modal is open, waiting for user selection");
             } else if (redoCooldown) {
                 setModelStatus("Cooldown period - sign a new word to continue");
+                console.log(" Translate: Redo cooldown active");
             }
         }, 500); // Check every 500ms
 

@@ -53,8 +53,8 @@ const VideoInput = React.forwardRef((props, ref) => {
                 smoothLandmarks: true,
                 enableSegmentation: true,
                 smoothSegmentation: true,
-                minDetectionConfidence: 0.5,
-                minTrackingConfidence: 0.5,
+                minDetectionConfidence: 0.3,
+                minTrackingConfidence: 0.3,
             });
 
             holisticRef.current = holistic;
@@ -152,16 +152,14 @@ const VideoInput = React.forwardRef((props, ref) => {
                     // Only buffer if at least one hand is detected with valid landmarks
                     const lCount = keypoints[1] ? keypoints[1].length : 0;
                     const rCount = keypoints[2] ? keypoints[2].length : 0;
-                    const hasHands = (lCount > 0 && lCount === 21) || (rCount > 0 && rCount === 21);
+                    const hasHands = lCount === 21 || rCount === 21;
 
                     // Update hand detection status
                     setHasHandsDetected(hasHands);
 
                     if (hasHands) {
                         // Debug: show counts in console
-                        if ((lCount + rCount) % 21 === 0) {
-                            console.log(`Frame keypoints -> L:${lCount} R:${rCount}`);
-                        }
+                        console.log(`✅ HANDS DETECTED -> L:${lCount} R:${rCount}`);
 
                         // Save to a rolling buffer for batch upload
                         frameBuffer.current.push({ keypoints });
@@ -169,7 +167,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                     } else {
                         // Debug: log when hands are not detected
                         if (lCount > 0 || rCount > 0) {
-                            console.log(`Partial hand detection -> L:${lCount} R:${rCount} (expected 21 each)`);
+                            console.log(`❌ NO HANDS -> L:${lCount} R:${rCount} (need exactly 21 each)`);
                         }
                     }
                 }
