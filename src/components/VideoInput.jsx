@@ -242,19 +242,20 @@ const VideoInput = React.forwardRef((props, ref) => {
     const uploadRecording = async () => {
         try {
             const frames = frameBuffer.current.map((f) => f);
-            console.log(`Uploading recording: ${frames.length} frames`);
+            console.log(` Uploading recording: ${frames.length} frames`);
             const res = await fetch(API_BASE_URL + "/recording", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ frames }),
             });
             const data = await res.json();
-            console.log("WORD:", data?.top_1?.label || "-");
-            console.log("Top-5:", data?.top_5 || []);
+            console.log(" Recording Response:", data);
+            console.log(" WORD:", data?.top_1?.label || "-");
+            console.log(" Top-5:", data?.top_5 || []);
             // Clear buffer after successful upload to start fresh window
             frameBuffer.current = [];
         } catch (e) {
-            console.error("Recording upload failed", e);
+            console.error(" Recording upload failed", e);
         }
     };
 
@@ -265,7 +266,10 @@ const VideoInput = React.forwardRef((props, ref) => {
             intervalId = setInterval(() => {
                 // Send only if we have a reasonable number of frames
                 if (frameBuffer.current.length >= 24) {
+                    console.log(` Sending ${frameBuffer.current.length} frames to model...`);
                     uploadRecording();
+                } else {
+                    console.log(` Buffering frames: ${frameBuffer.current.length}/24`);
                 }
             }, 2000); // every 2s
         }
