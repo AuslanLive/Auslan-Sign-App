@@ -8,6 +8,22 @@ import { Toaster, toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
 import '../styles/TranslateStyles.css';
 
+// Add pulse animation CSS
+const pulseKeyframes = `
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+`;
+
+// Inject CSS
+if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.textContent = pulseKeyframes;
+    document.head.appendChild(style);
+}
+
 
 const API_BASE_URL = "/api"
 
@@ -28,7 +44,10 @@ const TranslateApp = () => {
     const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
     const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
     const [top5Predictions, setTop5Predictions] = useState([]); // top 5 predictions here
-    const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection 
+    const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection
+    const [modelStatus, setModelStatus] = useState("Ready to detect signs"); // Current model status
+    const [currentSign, setCurrentSign] = useState(""); // Current sign being recorded
+    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection 
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -40,6 +59,8 @@ const TranslateApp = () => {
 
     const pauseVideoProcessing = () => {
         setIsPolling(false);
+        setModelStatus("Processing paused - waiting for your selection");
+        setCurrentSign("");
         if (videoInputRef.current) {
             videoInputRef.current.pauseTransmission();
         }
@@ -47,6 +68,8 @@ const TranslateApp = () => {
 
     const resumeVideoProcessing = () => {
         setIsPolling(true);
+        setModelStatus("Ready to detect signs");
+        setCurrentSign("");
         if (videoInputRef.current) {
             videoInputRef.current.resumeTransmission();
         }
@@ -116,6 +139,8 @@ const TranslateApp = () => {
             if (data.top_5 && data.top_5.length > 0) {
                 setTop5Predictions(data.top_5);
                 setShowWordSelectionModal(true);
+                setModelStatus("Sign detected! Please select from options below");
+                setCurrentSign(data.top_1?.label || "Unknown sign");
                 pauseVideoProcessing();
                 // Don't automatically set translated text - wait for user selection
             } else if (data.translation) {
@@ -124,6 +149,7 @@ const TranslateApp = () => {
             }
         } catch (error) {
             console.error("Error:", error);
+            setModelStatus("Error connecting to model");
             setTranslatedText(
                 `Error: ${error.message}. Please check the API and input.`
             );
@@ -206,6 +232,33 @@ const TranslateApp = () => {
         }
     }, [translatedText, showClearButton]);
 
+    // Monitor hand detection status
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (videoInputRef.current && isPolling && !showWordSelectionModal) {
+                const handsDetected = videoInputRef.current.hasHandsDetected;
+                setHasHandsDetected(handsDetected);
+                
+                if (handsDetected) {
+                    setModelStatus("Hands detected - recording sign...");
+                } else {
+                    setModelStatus("Ready to detect signs - show your hands");
+                }
+            }
+        }, 500); // Check every 500ms
+
+        return () => clearInterval(interval);
+    }, [isPolling, showWordSelectionModal]);
+
+    // Clear any stale state on component mount (handles page refresh)
+    useEffect(() => {
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+        setModelStatus("Ready to detect signs");
+        setCurrentSign("");
+        setHasHandsDetected(false);
+    }, []);
+
     // Function to handle word selection from top 5 predictions
     const handleWordSelection = (selectedWord) => {
         // Add the selected word to the sentence
@@ -248,6 +301,8 @@ const TranslateApp = () => {
             setSentence(""); // Also clear the sentence
             setShowWordSelectionModal(false);
             setTop5Predictions([]);
+            setModelStatus("Ready to detect signs");
+            setCurrentSign("");
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -373,6 +428,47 @@ const TranslateApp = () => {
                         },
                     }}
                 />
+                
+                {/* Permanent status toast */}
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1000,
+                    background: 'rgba(26, 26, 46, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 20px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    minWidth: '300px',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: showWordSelectionModal ? '#ffc107' : isPolling ? '#00ff00' : '#ff4444',
+                        animation: isPolling && !showWordSelectionModal ? 'pulse 2s infinite' : 'none'
+                    }}></div>
+                    <span>{modelStatus}</span>
+                    {currentSign && (
+                        <span style={{ 
+                            color: '#00f2fe', 
+                            fontWeight: '600',
+                            marginLeft: '8px'
+                        }}>
+                            "{currentSign}"
+                        </span>
+                    )}
+                </div>
                 {mode === "videoToText" ? (
                     <>
                         <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
