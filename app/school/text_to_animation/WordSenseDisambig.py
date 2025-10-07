@@ -1,19 +1,29 @@
 import json
 import os
-from transformers import pipeline
+# Set environment variable to disable tokenizers parallelism warning
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 import spacy
 
 class WordSenseDisambiguation:
     
-    # must be init with pytorch backend to avoid keras version conflict issues
-    # this is because keras is used in the Model_Owner.py file
-    # and transformers uses keras as well, so we need to use pytorch backend
     def __init__(self):
         """Initialize the word sense disambiguation with the ambiguous dictionary."""
         self.ambiguous_dict = self._load_ambiguous_dict()
-        self.classifier = pipeline("zero-shot-classification", 
-                                 model="facebook/bart-large-mnli",
-                                 framework="pt")
+        
+        # Load custom trained model - point to model directory, not the safetensors file
+        model_path = os.path.join(os.path.dirname(__file__), 
+                                 "wsd_models", "model")
+        try:
+            self.model = SentenceTransformer(model_path)
+            print(f"Loaded custom MPNet model from: {model_path}")
+        except Exception as e:
+            print(f"Failed to load custom model: {e}")
+            print("Falling back to base model...")
+            self.model = SentenceTransformer('all-mpnet-base-v2')
+        
         """Load spaCy with only lemmatization capabilities."""
         self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner", "tagger"])
         
@@ -21,7 +31,7 @@ class WordSenseDisambiguation:
     def _load_ambiguous_dict(self):
         """Load the ambiguous words dictionary from JSON file."""
         dict_path = os.path.join(os.path.dirname(__file__), 
-                                "ambiguous_dict.json")
+                                "ambiguous_dict_lowercase.json")
         try:
             with open(dict_path, 'r') as file:
                 return json.load(file)
@@ -30,7 +40,7 @@ class WordSenseDisambiguation:
             return {}
 
     def disambiguate_words(self, sentence):
-        """Disambiguates words in a sentence based on context.
+        """Disambiguates words in a sentence based on context using semantic similarity.
 
         Args:
             sentence (str): The input sentence containing words to disambiguate.
@@ -45,18 +55,14 @@ class WordSenseDisambiguation:
         # Check if sentence contains any words that need disambiguation
         # split sentence into list of individual words
         words = sentence.lower().split()
-        
+
+        print("(WordSenseDisambig) Starting word sense disambiguation with words..." + str(words))
+
         for word in words:
-            
-            ## Also check if lemmatized word is in the ambiguous dictionary
-            # lemmatize the word using spaCy
-            # load spaCy with only lemmatisation capabilities
-            doc = self.nlp(word)
-            lemmatized_word = doc[0].lemma_
 
             # check json file dictionary for words and their senses
             if word in self.ambiguous_dict:
-                # disambiguate words based on context using zero-shot classification model
+                # disambiguate words based on context using semantic similarity
                 print(f"Disambiguating word: {word}")
                 
                 # Get the possible senses for the word
@@ -64,10 +70,19 @@ class WordSenseDisambiguation:
                 print(f"Possible senses for '{word}': {senses}")
                 
                 if len(senses) > 1:
-                    # feed json values to the model as labels and get the most probable sense
-                    result = self.classifier(sentence, senses)
-                    best_sense = result['labels'][0]  # Most probable sense
-                    print(f"Best sense for '{word}': {best_sense} with confidence {result['scores'][0]}")
+                    # Encode sentence and all possible senses
+                    sentence_embedding = self.model.encode([sentence])
+                    sense_embeddings = self.model.encode(senses)
+                    
+                    # Calculate cosine similarities
+                    similarities = cosine_similarity(sentence_embedding, sense_embeddings)[0]
+                    
+                    # Get the sense with highest similarity
+                    best_sense_idx = np.argmax(similarities)
+                    best_sense = senses[best_sense_idx]
+                    confidence = similarities[best_sense_idx]
+                    
+                    print(f"Best sense for '{word}': {best_sense} with similarity {confidence}")
                     disambiguated_words[word] = best_sense
                 else:
                     # Only one sense available

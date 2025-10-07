@@ -72,9 +72,9 @@ class Connectinator:
             self.logger.info(
                 'Model Output Processed Successfully! Message: %s', processed_output)
 
-            # Pass this then to a variable being used for the react front end.
-            if processed_output is not None:
-                self.front_end_translation_variable = processed_output
+        # Pass this then to a variable being used for the react front end.
+        if processed_output is not None:
+            self.front_end_translation_variable = processed_output
 
             with open('model_output.txt', 'a+') as f:
                 f.write(
@@ -82,7 +82,7 @@ class Connectinator:
         else:
             self.logger.info('No model output received')
 
-    # Return auslan grammer sentence
+    # Return auslan grammar sentence
     def format_sign_text(self, input):
 
         processed_t2s_phrase = self.grammar_parser.parse_text_to_auslan_grammar(input)
@@ -96,7 +96,7 @@ class Connectinator:
 
         return processed_t2s_phrase
 
-    def get_transltion(self):
+    def get_translation(self):
         return self.front_end_translation_variable
 
     def get_gem_flag(self):
@@ -179,7 +179,6 @@ class Connectinator:
     # TODO: LISTENER FOR RECEIVE OUTPUT FROM MODEL, ADD TO LIST, SEND TO RESULTS PARSER
 
 # Custom list class so that it can access run async and check when stuff is added
-
 
 class AsyncResultsList(list):
     def __init__(self, connectinator_instance: Connectinator, *args):

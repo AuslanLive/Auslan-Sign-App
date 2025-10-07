@@ -54,25 +54,25 @@ def trim_pose(pose, start=True, end=True):
 #     return pose
 
 def concatenate_poses(poses: List[Pose], filenames: List[str]) -> tuple[Pose, List[tuple[int, int, str]]]:
-    print('Reducing poses...')
+    # print('Reducing poses...')
     poses = [reduce_holistic(p) for p in poses]
 
-    print('Normalizing poses...')
+    #print('Normalizing poses...')
     poses = [normalize_pose(p) for p in poses]
 
-    print('Trimming poses...')
+    # print('Trimming poses...')
     poses = [trim_pose(p, i > 0, i < len(poses) - 1) for i, p in enumerate(poses)]
 
     # Concatenate all poses
-    print('Smooth concatenating poses...')
+    # print('Smooth concatenating poses...')
     concatenated_pose = smooth_concatenate_poses(poses)
 
     # Correct the wrists
-    print('Correcting wrists...')
+    # print('Correcting wrists...')
     concatenated_pose = correct_wrists(concatenated_pose)
 
     # Scale the newly created pose
-    print('Scaling pose...')
+    # print('Scaling pose...')
     new_width = 500
     shift = 1.25
     shift_vec = np.full(shape=(concatenated_pose.body.data.shape[-1]), fill_value=shift, dtype=np.float32)
