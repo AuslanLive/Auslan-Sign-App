@@ -53,6 +53,8 @@ const VideoInput = React.forwardRef((props, ref) => {
                 smoothLandmarks: true,
                 enableSegmentation: true,
                 smoothSegmentation: true,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5,
             });
 
             holisticRef.current = holistic;
@@ -147,28 +149,23 @@ const VideoInput = React.forwardRef((props, ref) => {
                             : null,
                     ];
 
-                    // Check for hand detection using original MediaPipe results
-                    const leftHandDetected = results.leftHandLandmarks && results.leftHandLandmarks.length > 0;
-                    const rightHandDetected = results.rightHandLandmarks && results.rightHandLandmarks.length > 0;
-                    const hasHands = leftHandDetected || rightHandDetected;
-                    
-                    // Get counts for debugging
+                    // Only buffer if at least one hand is detected
                     const lCount = keypoints[1] ? keypoints[1].length : 0;
                     const rCount = keypoints[2] ? keypoints[2].length : 0;
+                    const hasHands = lCount > 0 || rCount > 0;
 
                     // Update hand detection status
                     setHasHandsDetected(hasHands);
 
                     if (hasHands) {
                         // Debug: show counts in console
-                        console.log(`    HANDS DETECTED -> L:${lCount} R:${rCount} (Left: ${leftHandDetected}, Right: ${rightHandDetected})`);
+                        if ((lCount + rCount) % 21 === 0) {
+                            console.log(`Frame keypoints -> L:${lCount} R:${rCount}`);
+                        }
 
                         // Save to a rolling buffer for batch upload
                         frameBuffer.current.push({ keypoints });
                         if (frameBuffer.current.length > 300) frameBuffer.current.shift();
-                    } else {
-                        // Debug: log when hands are not detected
-                        console.log(`  NO HANDS -> L:${lCount} R:${rCount} (Left: ${leftHandDetected}, Right: ${rightHandDetected})`);
                     }
                 }
             });
@@ -186,7 +183,7 @@ const VideoInput = React.forwardRef((props, ref) => {
 
             cameraRef.current.start();
             setIsCameraOn(true);
-            
+
             // Notify parent that camera started (to resume polling)
             if (props.onCameraStart) {
                 props.onCameraStart();
@@ -242,20 +239,19 @@ const VideoInput = React.forwardRef((props, ref) => {
     const uploadRecording = async () => {
         try {
             const frames = frameBuffer.current.map((f) => f);
-            console.log(` Uploading recording: ${frames.length} frames`);
+            console.log(`Uploading recording: ${frames.length} frames`);
             const res = await fetch(API_BASE_URL + "/recording", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ frames }),
             });
             const data = await res.json();
-            console.log(" Recording Response:", data);
-            console.log(" WORD:", data?.top_1?.label || "-");
-            console.log(" Top-5:", data?.top_5 || []);
+            console.log("WORD:", data?.top_1?.label || "-");
+            console.log("Top-5:", data?.top_5 || []);
             // Clear buffer after successful upload to start fresh window
             frameBuffer.current = [];
         } catch (e) {
-            console.error(" Recording upload failed", e);
+            console.error("Recording upload failed", e);
         }
     };
 
@@ -266,10 +262,7 @@ const VideoInput = React.forwardRef((props, ref) => {
             intervalId = setInterval(() => {
                 // Send only if we have a reasonable number of frames
                 if (frameBuffer.current.length >= 24) {
-                    console.log(` Sending ${frameBuffer.current.length} frames to model...`);
                     uploadRecording();
-                } else {
-                    console.log(` Buffering frames: ${frameBuffer.current.length}/24`);
                 }
             }, 2000); // every 2s
         }

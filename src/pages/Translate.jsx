@@ -47,8 +47,8 @@ const TranslateApp = () => {
     const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection
     const [modelStatus, setModelStatus] = useState("Ready to detect signs"); // Current model status
     const [currentSign, setCurrentSign] = useState(""); // Current sign being recorded
-    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection
-    const [redoCooldown, setRedoCooldown] = useState(false); // Prevent immediate modals after redo 
+    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection 
+
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -79,7 +79,7 @@ const TranslateApp = () => {
     // Function to swap between modes
     const handleSwap = () => {
         if (isAnimating) return; // Prevent multiple swaps during animation
-        
+
         setIsAnimating(true);
         setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
@@ -107,13 +107,13 @@ const TranslateApp = () => {
             setMode((prevMode) =>
                 prevMode === "videoToText" ? "textToVideo" : "videoToText"
             );
-            
+
             // Handle translate button enter animation - starts with panel slide-in
             if (mode === "videoToText") {
                 setShowTranslateButton(true);
                 setTranslateButtonAnimation('translate-button-enter');
             }
-            
+
             // Reset animation state - synchronized with panel animation completion
             setTimeout(() => {
                 setIsAnimating(false);
@@ -124,13 +124,6 @@ const TranslateApp = () => {
     };
     const get_sign_trans = async () => {
         try {
-            // CRITICAL: Only process if hands are detected and no modal is open
-            if (!hasHandsDetected || showWordSelectionModal || redoCooldown) {
-                console.log(" get_sign_trans: Skipping - hands:", hasHandsDetected, "modal:", showWordSelectionModal, "cooldown:", redoCooldown);
-                return;
-            }
-
-            console.log(" get_sign_trans: Making API call to detect sign...");
             const response = await fetch(
                 API_BASE_URL + "/get_sign_to_text",
                 {
@@ -144,14 +137,14 @@ const TranslateApp = () => {
             console.log("Full response:", data);
 
             // Check if we have new predictions to show
-            if (data.top_5 && data.top_5.length > 0 && !redoCooldown && !showWordSelectionModal) {
-                // Print top 5 to terminal
-                console.log("=== TOP 5 PREDICTIONS ===");
-                data.top_5.forEach((prediction, index) => {
-                    console.log(`${index + 1}. ${prediction[0]} (${(prediction[1] * 100).toFixed(1)}%)`);
-                });
-                console.log("========================");
-                
+            if (data.top_5 && data.top_5.length > 0) {
+
+
+
+
+
+
+
                 setTop5Predictions(data.top_5);
                 setShowWordSelectionModal(true);
                 setModelStatus("Sign detected! Please select from options below");
@@ -201,10 +194,9 @@ const TranslateApp = () => {
     // setInterval(get_sign_trans, 1000);
 
     // new code - only trigger when mode is videoToText and polling is enabled
-    // CRITICAL: Don't poll when modal is open or during redo cooldown
     useEffect(() => {
         let interval;
-        if (mode === "videoToText" && isPolling && !showWordSelectionModal && !redoCooldown) {
+        if (mode === "videoToText" && isPolling) {
             interval = setInterval(function () {
                 get_sign_trans();
                 getGemFlag();
@@ -214,10 +206,10 @@ const TranslateApp = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode, isPolling, showWordSelectionModal, redoCooldown]);
+    }, [mode, isPolling]);
 
 
-    
+
     const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
         const words = text.split(/\s+/).map(word => encodeURIComponent(word.toLowerCase()));
@@ -227,7 +219,7 @@ const TranslateApp = () => {
 
         // Filter out words that do not exist in the existing words set
         const missingWords = words.filter(word => !existingWords.has(word));
-    
+
         if (missingWords.length > 0) {
             console.log(`The following words do not exist: ${missingWords}`);
             toast.error(`The following words do not exist: ${missingWords.join(', ')}`);
@@ -251,48 +243,40 @@ const TranslateApp = () => {
     // Monitor hand detection status
     useEffect(() => {
         const interval = setInterval(() => {
-            if (videoInputRef.current && isPolling && !showWordSelectionModal && !redoCooldown) {
+            if (videoInputRef.current && isPolling && !showWordSelectionModal) {
                 const handsDetected = videoInputRef.current.hasHandsDetected;
                 setHasHandsDetected(handsDetected);
-                
+
                 if (handsDetected) {
                     setModelStatus("Hands detected - recording sign...");
-                    console.log(" Translate: Hands detected, ready for sign detection");
                 } else {
-                    setModelStatus("Waiting for hands...");
-                    console.log(" Translate: No hands detected, waiting for hands");
+                    setModelStatus("Ready to detect signs - show your hands");
                 }
-            } else if (showWordSelectionModal) {
-                setModelStatus("Sign detected! Please select from options below");
-                console.log(" Translate: Modal is open, waiting for user selection");
-            } else if (redoCooldown) {
-                setModelStatus("Cooldown period - sign a new word to continue");
-                console.log(" Translate: Redo cooldown active");
             }
         }, 500); // Check every 500ms
 
         return () => clearInterval(interval);
-    }, [isPolling, showWordSelectionModal, redoCooldown]);
+    }, [isPolling, showWordSelectionModal]);
 
     // Clear any stale state on component mount (handles page refresh)
     useEffect(() => {
-        // Force clear all modal-related state
+
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
         setModelStatus("Ready to detect signs");
         setCurrentSign("");
         setHasHandsDetected(false);
-        setTranslatedText("");
-        setSentence("");
-        setRedoCooldown(false);
-        setIsPolling(false);
-        
-        // Stop any ongoing transmission
-        if (videoInputRef.current) {
-            videoInputRef.current.stopTransmission();
-        }
-        
-        console.log("Page refreshed - all state cleared");
+
+
+
+
+
+
+
+
+
+
+
     }, []);
 
     // Function to handle word selection from top 5 predictions
@@ -304,11 +288,11 @@ const TranslateApp = () => {
             setTranslatedText(newSentence);
             return newSentence;
         });
-        
+
         // Hide the modal
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
-        
+
         // Resume video processing after selection
         resumeVideoProcessing();
     };
@@ -317,16 +301,16 @@ const TranslateApp = () => {
     const handleRedo = () => {
         setShowWordSelectionModal(false);
         setTop5Predictions([]);
-        setRedoCooldown(true);
-        setModelStatus("Cooldown period - sign a new word to continue");
-        setCurrentSign("");
-        
-        // Set cooldown for 3 seconds
-        setTimeout(() => {
-            setRedoCooldown(false);
-            setModelStatus("Ready to detect signs");
-        }, 3000);
-        
+
+
+
+
+
+
+
+
+
+
         // Resume video processing after redo
         resumeVideoProcessing();
     };
@@ -349,7 +333,7 @@ const TranslateApp = () => {
             setTop5Predictions([]);
             setModelStatus("Ready to detect signs");
             setCurrentSign("");
-            setRedoCooldown(false); // Reset redo cooldown
+
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -417,7 +401,7 @@ const TranslateApp = () => {
             setLoading(false); // Set loading to false after fetching video
         }
     };
-    
+    // React code for UI rendering
     return (
         <div style={{
             display: "flex",
@@ -452,7 +436,7 @@ const TranslateApp = () => {
                     AuslanLive
                 </h1>
             </div>
-            
+
             <div style={{
                 display: "flex",
                 flexDirection: "row",
@@ -475,7 +459,7 @@ const TranslateApp = () => {
                         },
                     }}
                 />
-                
+
                 {/* Permanent status toast */}
                 <div style={{
                     position: 'fixed',
@@ -502,8 +486,8 @@ const TranslateApp = () => {
                         width: '8px',
                         height: '8px',
                         borderRadius: '50%',
-                        backgroundColor: showWordSelectionModal ? '#ffc107' : redoCooldown ? '#ff6b35' : isPolling ? '#00ff00' : '#ff4444',
-                        animation: isPolling && !showWordSelectionModal && !redoCooldown ? 'pulse 2s infinite' : 'none'
+                        backgroundColor: showWordSelectionModal ? '#ffc107' : isPolling ? '#00ff00' : '#ff4444',
+                        animation: isPolling && !showWordSelectionModal ? 'pulse 2s infinite' : 'none'
                     }}></div>
                     <span>{modelStatus}</span>
                     {currentSign && (
@@ -637,7 +621,7 @@ const TranslateApp = () => {
                     </>
                 )}
             </div>
-            
+
             {/* Word Selection Modal */}
             <WordSelectionModal
                 isOpen={showWordSelectionModal}
@@ -649,5 +633,3 @@ const TranslateApp = () => {
         </div>
     );
 };
-
-export default TranslateApp;
