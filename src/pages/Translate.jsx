@@ -1,11 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
+import WordSelectionModal from "../components/WordSelectionModal";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
 import '../styles/TranslateStyles.css';
+
+// Add pulse animation CSS
+const pulseKeyframes = `
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+`;
+
+// Inject CSS
+if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.textContent = pulseKeyframes;
+    document.head.appendChild(style);
+}
 
 
 const API_BASE_URL = "/api"
@@ -15,6 +32,7 @@ const TranslateApp = () => {
     const [mode, setMode] = useState("videoToText");
     const [sourceText, setSourceText] = useState("");
     const [translatedText, setTranslatedText] = useState("");
+    const [sentence, setSentence] = useState(""); // New state for building sentences
     const [animatedSignVideo, setAnimatedSignVideo] = useState(null);
     const videoInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -25,6 +43,12 @@ const TranslateApp = () => {
     const [swapButtonRepositioning, setSwapButtonRepositioning] = useState(false);
     const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
     const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
+    const [top5Predictions, setTop5Predictions] = useState([]); // top 5 predictions here
+    const [showWordSelectionModal, setShowWordSelectionModal] = useState(false); // for modal selection
+    const [modelStatus, setModelStatus] = useState("Ready to detect signs"); // Current model status
+    const [currentSign, setCurrentSign] = useState(""); // Current sign being recorded
+    const [hasHandsDetected, setHasHandsDetected] = useState(false); // Track hand detection 
+
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -34,13 +58,34 @@ const TranslateApp = () => {
         }
     };
 
+    const pauseVideoProcessing = () => {
+        setIsPolling(false);
+        setModelStatus("Processing paused - waiting for your selection");
+        setCurrentSign("");
+        if (videoInputRef.current) {
+            videoInputRef.current.pauseTransmission();
+        }
+    };
+
+    const resumeVideoProcessing = () => {
+        setIsPolling(true);
+        setModelStatus("Ready to detect signs");
+        setCurrentSign("");
+        if (videoInputRef.current) {
+            videoInputRef.current.resumeTransmission();
+        }
+    };
+
     // Function to swap between modes
     const handleSwap = () => {
         if (isAnimating) return; // Prevent multiple swaps during animation
-        
+
         setIsAnimating(true);
         setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
+        setSentence(""); // Clear the sentence on swap
+        setShowWordSelectionModal(false); // Hide word selection modal on swap
+        setTop5Predictions([]); // Clear predictions on swap
 
         // Handle translate button exit animation if switching from textToVideo
         if (mode === "textToVideo") {
@@ -62,13 +107,13 @@ const TranslateApp = () => {
             setMode((prevMode) =>
                 prevMode === "videoToText" ? "textToVideo" : "videoToText"
             );
-            
+
             // Handle translate button enter animation - starts with panel slide-in
             if (mode === "videoToText") {
                 setShowTranslateButton(true);
                 setTranslateButtonAnimation('translate-button-enter');
             }
-            
+
             // Reset animation state - synchronized with panel animation completion
             setTimeout(() => {
                 setIsAnimating(false);
@@ -91,11 +136,28 @@ const TranslateApp = () => {
             // Output parsed sentence to console
             console.log("Full response:", data);
 
-            // Set translated text or handle fallback
-            const translatedText = data.translation;
-            setTranslatedText(translatedText);
+            // Check if we have new predictions to show
+            if (data.top_5 && data.top_5.length > 0) {
+
+
+
+
+
+
+
+                setTop5Predictions(data.top_5);
+                setShowWordSelectionModal(true);
+                setModelStatus("Sign detected! Please select from options below");
+                setCurrentSign(data.top_1?.label || "Unknown sign");
+                pauseVideoProcessing();
+                // Don't automatically set translated text - wait for user selection
+            } else if (data.translation) {
+                // Fallback to old behavior if no top_5 data
+                setTranslatedText(data.translation);
+            }
         } catch (error) {
             console.error("Error:", error);
+            setModelStatus("Error connecting to model");
             setTranslatedText(
                 `Error: ${error.message}. Please check the API and input.`
             );
@@ -147,7 +209,7 @@ const TranslateApp = () => {
     }, [mode, isPolling]);
 
 
-    
+
     const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
         const words = text.split(/\s+/).map(word => encodeURIComponent(word.toLowerCase()));
@@ -157,7 +219,7 @@ const TranslateApp = () => {
 
         // Filter out words that do not exist in the existing words set
         const missingWords = words.filter(word => !existingWords.has(word));
-    
+
         if (missingWords.length > 0) {
             console.log(`The following words do not exist: ${missingWords}`);
             toast.error(`The following words do not exist: ${missingWords.join(', ')}`);
@@ -178,11 +240,100 @@ const TranslateApp = () => {
         }
     }, [translatedText, showClearButton]);
 
+    // Monitor hand detection status
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (videoInputRef.current && isPolling && !showWordSelectionModal) {
+                const handsDetected = videoInputRef.current.hasHandsDetected;
+                setHasHandsDetected(handsDetected);
+
+                if (handsDetected) {
+                    setModelStatus("Hands detected - recording sign...");
+                } else {
+                    setModelStatus("Ready to detect signs - show your hands");
+                }
+            }
+        }, 500); // Check every 500ms
+
+        return () => clearInterval(interval);
+    }, [isPolling, showWordSelectionModal]);
+
+    // Clear any stale state on component mount (handles page refresh)
+    useEffect(() => {
+
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+        setModelStatus("Ready to detect signs");
+        setCurrentSign("");
+        setHasHandsDetected(false);
+
+
+
+
+
+
+
+
+
+
+
+    }, []);
+
+    // Function to handle word selection from top 5 predictions
+    const handleWordSelection = (selectedWord) => {
+        // Add the selected word to the sentence
+        setSentence(prevSentence => {
+            const newSentence = prevSentence ? `${prevSentence} ${selectedWord}` : selectedWord;
+            // Update the displayed text with the new sentence
+            setTranslatedText(newSentence);
+            return newSentence;
+        });
+
+        // Hide the modal
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+
+        // Resume video processing after selection
+        resumeVideoProcessing();
+    };
+
+    // Function to handle "Redo" option
+    const handleRedo = () => {
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+
+
+
+
+
+
+
+
+
+
+        // Resume video processing after redo
+        resumeVideoProcessing();
+    };
+
+    // Function to close modal
+    const handleCloseModal = () => {
+        setShowWordSelectionModal(false);
+        setTop5Predictions([]);
+        // Resume video processing after closing modal
+        resumeVideoProcessing();
+    };
+
     // Function to clear translated text
     const handleClearText = () => {
         setClearButtonAnimation('clear-button-exit');
         setTimeout(() => {
             setTranslatedText("");
+            setSentence(""); // Also clear the sentence
+            setShowWordSelectionModal(false);
+            setTop5Predictions([]);
+            setModelStatus("Ready to detect signs");
+            setCurrentSign("");
+
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -285,7 +436,7 @@ const TranslateApp = () => {
                     AuslanLive
                 </h1>
             </div>
-            
+
             <div style={{
                 display: "flex",
                 flexDirection: "row",
@@ -308,6 +459,47 @@ const TranslateApp = () => {
                         },
                     }}
                 />
+
+                {/* Permanent status toast */}
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1000,
+                    background: 'rgba(26, 26, 46, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 20px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    minWidth: '300px',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: showWordSelectionModal ? '#ffc107' : isPolling ? '#00ff00' : '#ff4444',
+                        animation: isPolling && !showWordSelectionModal ? 'pulse 2s infinite' : 'none'
+                    }}></div>
+                    <span>{modelStatus}</span>
+                    {currentSign && (
+                        <span style={{ 
+                            color: '#00f2fe', 
+                            fontWeight: '600',
+                            marginLeft: '8px'
+                        }}>
+                            "{currentSign}"
+                        </span>
+                    )}
+                </div>
                 {mode === "videoToText" ? (
                     <>
                         <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
@@ -429,8 +621,15 @@ const TranslateApp = () => {
                     </>
                 )}
             </div>
+
+            {/* Word Selection Modal */}
+            <WordSelectionModal
+                isOpen={showWordSelectionModal}
+                top5Predictions={top5Predictions}
+                onWordSelect={handleWordSelection}
+                onRedo={handleRedo}
+                onClose={handleCloseModal}
+            />
         </div>
     );
 };
-
-export default TranslateApp;

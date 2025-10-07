@@ -33,6 +33,8 @@ const VideoInput = React.forwardRef((props, ref) => {
     const [isCameraOn, setIsCameraOn] = useState(false); // State to track if the camera is on
     const [error, setError] = useState(null); // State to handle errors
     const [isTransmitting, setIsTransmitting] = useState(true); // State to control keypoint transmission
+    const [isPaused, setIsPaused] = useState(false); // State to control pause/resume
+    const [hasHandsDetected, setHasHandsDetected] = useState(false); // track the hands
 
     useEffect(() => {
         const loadMediaPipe = async () => {
@@ -100,22 +102,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                     canvasElement.height
                 );
 
-                // Draw Pose and Hands Landmarks
-                if (results.poseLandmarks) {
-                    window.drawConnectors(
-                        canvasCtx,
-                        results.poseLandmarks,
-                        window.POSE_CONNECTIONS,
-                        {
-                            color: "#00FF00",
-                            lineWidth: 4,
-                        }
-                    );
-                    window.drawLandmarks(canvasCtx, results.poseLandmarks, {
-                        color: "#FF0000",
-                        lineWidth: 2,
-                    });
-                }
+                // Hide face/pose overlays for cleaner UI; only draw hands if desired
                 if (results.leftHandLandmarks) {
                     window.drawConnectors(
                         canvasCtx,
@@ -149,40 +136,37 @@ const VideoInput = React.forwardRef((props, ref) => {
                 }
                 canvasCtx.restore();
 
-                // Only send keypoints if transmission is enabled
-                if (isTransmitting) {
-                    // Prepare keypoints to send to backend
+                // Buffer frames when transmitting and not paused (for batch send)
+                if (isTransmitting && !isPaused) {
+                    // Prepare keypoints (pose ignored, only hands)
                     const keypoints = [
-                        results.poseLandmarks,
+                        null,
                         results.leftHandLandmarks
-                            ? results.leftHandLandmarks.map((landmark) => ({
-                                  ...landmark,
-                                  visibility: 0.0,
-                              }))
+                            ? results.leftHandLandmarks.map((lm) => ({ ...lm, visibility: 0.0 }))
                             : null,
                         results.rightHandLandmarks
-                            ? results.rightHandLandmarks.map((landmark) => ({
-                                  ...landmark,
-                                  visibility: 0.0,
-                              }))
+                            ? results.rightHandLandmarks.map((lm) => ({ ...lm, visibility: 0.0 }))
                             : null,
                     ];
 
-                    // Send keypoints data to backend
-                    fetch(API_BASE_URL + "/keypoints", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ keypoints }), // Convert data to JSON
-                    })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            console.log("Data saved successfully:", data);
-                        })
-                        .catch((error) => {
-                            console.error("Error saving data:", error);
-                        });
+                    // Only buffer if at least one hand is detected
+                    const lCount = keypoints[1] ? keypoints[1].length : 0;
+                    const rCount = keypoints[2] ? keypoints[2].length : 0;
+                    const hasHands = lCount > 0 || rCount > 0;
+
+                    // Update hand detection status
+                    setHasHandsDetected(hasHands);
+
+                    if (hasHands) {
+                        // Debug: show counts in console
+                        if ((lCount + rCount) % 21 === 0) {
+                            console.log(`Frame keypoints -> L:${lCount} R:${rCount}`);
+                        }
+
+                        // Save to a rolling buffer for batch upload
+                        frameBuffer.current.push({ keypoints });
+                        if (frameBuffer.current.length > 300) frameBuffer.current.shift();
+                    }
                 }
             });
 
@@ -199,7 +183,7 @@ const VideoInput = React.forwardRef((props, ref) => {
 
             cameraRef.current.start();
             setIsCameraOn(true);
-            
+
             // Notify parent that camera started (to resume polling)
             if (props.onCameraStart) {
                 props.onCameraStart();
@@ -231,18 +215,69 @@ const VideoInput = React.forwardRef((props, ref) => {
         }
     };
 
+    // Recording buffer for batch mode
+    const frameBuffer = useRef([]);
+
     const stopTransmission = () => {
         setIsTransmitting(false);
     };
 
     const startTransmission = () => {
+        frameBuffer.current = [];
         setIsTransmitting(true);
+        setIsPaused(false);
     };
+
+    const pauseTransmission = () => {
+        setIsPaused(true);
+    };
+
+    const resumeTransmission = () => {
+        setIsPaused(false);
+    };
+
+    const uploadRecording = async () => {
+        try {
+            const frames = frameBuffer.current.map((f) => f);
+            console.log(`Uploading recording: ${frames.length} frames`);
+            const res = await fetch(API_BASE_URL + "/recording", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ frames }),
+            });
+            const data = await res.json();
+            console.log("WORD:", data?.top_1?.label || "-");
+            console.log("Top-5:", data?.top_5 || []);
+            // Clear buffer after successful upload to start fresh window
+            frameBuffer.current = [];
+        } catch (e) {
+            console.error("Recording upload failed", e);
+        }
+    };
+
+    // Auto-send recordings periodically while transmitting and not paused
+    useEffect(() => {
+        let intervalId;
+        if (isCameraOn && isTransmitting && !isPaused) {
+            intervalId = setInterval(() => {
+                // Send only if we have a reasonable number of frames
+                if (frameBuffer.current.length >= 24) {
+                    uploadRecording();
+                }
+            }, 2000); // every 2s
+        }
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [isCameraOn, isTransmitting, isPaused]);
 
     React.useImperativeHandle(ref, () => ({
         stopCamera,
         stopTransmission,
         startTransmission,
+        pauseTransmission,
+        resumeTransmission,
+        hasHandsDetected,
     }));
 
     const toggleCamera = () => {
@@ -310,6 +345,13 @@ const VideoInput = React.forwardRef((props, ref) => {
             >
                 {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
             </button>
+            {isCameraOn && (
+                <div style={{ position: 'absolute', bottom: 20, right: 20, display: 'flex', gap: 12 }}>
+                    <button onClick={startTransmission} style={styles.button}>Start Recording</button>
+                    <button onClick={stopTransmission} style={styles.button}>Stop Recording</button>
+                    <button onClick={uploadRecording} style={styles.button}>Send Recording</button>
+                </div>
+            )}
         </div>
     );
 });

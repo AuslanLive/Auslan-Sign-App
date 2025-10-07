@@ -17,7 +17,7 @@ def create_logger():
     file_handler = logging.FileHandler('app.log')
     file_handler.setLevel(logging.INFO)  # Set the file logging level
 
-    # Create a console handler to log messages to the terminal
+    # Create a console handler to log messages to the terminalj
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)  # Set the console logging level
 
@@ -61,21 +61,26 @@ class Connectinator:
 
     # Process the model output
     def format_model_output(self, output):
-        processed_output = self.results_parser.parse_model_output(output)
+        # For the new BiLSTM model, output is already formatted
+        # Extract the top-1 prediction for the main translation
+        if output and len(output) > 0:
+            # Get the top prediction (highest probability)
+            top_prediction = max(output, key=lambda x: x[1])
+            processed_output = top_prediction[0]  # Get the label
+            
+            # Update log file
+            self.logger.info(
+                'Model Output Processed Successfully! Message: %s', processed_output)
 
-        # Update log file
-        self.logger.info(
-            'Model Output Processed Successfully! Message: %s', processed_output)
+            # Pass this then to a variable being used for the react front end.
+            if processed_output is not None:
+                self.front_end_translation_variable = processed_output
 
-        # Pass this then to a variable being used for the react front end.
-        if processed_output is not None:
-            self.front_end_translation_variable = processed_output
-
-        # print("DONEEE")
-
-        with open('model_output.txt', 'a+') as f:
-            f.write(
-                f"\nTime: {str(time())}, Phrase: {self.front_end_translation_variable}")
+            with open('model_output.txt', 'a+') as f:
+                f.write(
+                    f"\nTime: {str(time())}, Phrase: {self.front_end_translation_variable}")
+        else:
+            self.logger.info('No model output received')
 
     # Return auslan grammar sentence
     def format_sign_text(self, input):
@@ -91,56 +96,90 @@ class Connectinator:
 
         return processed_t2s_phrase
 
-    def get_translation(self):
+    def get_transltion(self):
         return self.front_end_translation_variable
 
     def get_gem_flag(self):
         return self.geminiFlag
+    
+    def get_top_predictions(self):
+        """Get the top-5 predictions from the last model output"""
+        if hasattr(self, 'last_model_output') and self.last_model_output:
+            return self.last_model_output.get('top_5', [])
+        return []
+    
+    def get_top_1_prediction(self):
+        """Get the top-1 prediction from the last model output"""
+        if hasattr(self, 'last_model_output') and self.last_model_output:
+            return self.last_model_output.get('top_1', {})
+        return {}
 
     # Process frame
     async def process_frame(self, keypoints):
-        # print(keypoints)
-        full_chunk, self.end_phrase_flag = self.inputProc.process_frame(
-            keypoints)
-        # print(keypoints)
-        # full_chunk, self.end_phrase_flag = self.inputProc.process_frame(
-        #     keypoints)
+        # Reduced logging - only log occasionally
+        if not hasattr(self, 'frame_count'):
+            self.frame_count = 0
+        self.frame_count += 1
+        
+        if self.frame_count % 30 == 0:  # Log every 30th frame
+            print(f"CONSOLE: Processed {self.frame_count} frames - keypoints with {len(keypoints.get('keypoints', []))} components")
+        
+        # Process frame through sliding window
+        word_chunk, self.end_phrase_flag = self.inputProc.process_frame(keypoints)
+        
         if self.end_phrase_flag == True and self.prevFlag == False:
-            # print("meow meow meow meow")
             self.prevFlag = True
-            # print(self.end_phrase_flag, self.prevFlag)
+            print("CONSOLE: End of phrase detected, parsing results...")
             self.full_phrase.parse_results()
             self.prevFlag = False
 
-            # print(f"End Phrase: {self.end_phrase_flag}")
-
-        if full_chunk is not None:
-            # print("AAAAAAAAa SENT TO THE MODEL")
+        # Check if we have a word segment ready for prediction
+        if word_chunk is not None:
+            print(f"Processing word segment...")
             self.prevFlag = False
 
-            # async predict the work and then add it to the self.full_phrase
+            # Get model prediction
+            predicted_result = await self.predict_model(word_chunk)
 
-            predicted_result = await self.predict_model(full_chunk)
-
+            # Store the full model output for top-5 predictions
+            self.last_model_output = predicted_result
+            
             with open('ball.txt', 'a+') as f:
                 f.write(f"time: {str(time())}, predict:")
                 f.write(json.dumps(str(predicted_result)))
                 f.write("\n\n")
                 
-            print(predicted_result['model_output'])
+            # Console logging for committed predictions
+            top_1 = predicted_result['top_1']
+            top_5 = predicted_result['top_5']
+            
+            # Simple console output - just show the word
+            print(f"WORD: {top_1['label']}")
+            print(f"Top-5: {[f'{label}({prob:.2f})' for label, prob in top_5]}")
+            
+            # Update frontend translation immediately
+            self.front_end_translation_variable = top_1['label']
+            
+            # Add to phrase for final translation
             self.full_phrase.append(predicted_result['model_output'])
+        else:
+            if self.frame_count % 30 == 0:  # Log every 30th frame
+                print(f"DEBUG: No word chunk received - frame: {self.frame_count}")
 
     # TODO: LISTENER FOR RECEIVE FROM SAVE CHUNK, SEND TO MODEL
 
     # Get model prediction
 
     async def predict_model(self, keypoints):
-        # print("SENT TO PREDICT")
-        return await self.model.query_model(keypoints)
+        self.logger.info(f"TERMINAL: Sending keypoints to model - shape: {keypoints.shape}")
+        result = await self.model.query_model(keypoints)
+        self.logger.info(f"TERMINAL: Model prediction completed - top-1: {result['top_1']['label']} ({result['top_1']['probability']:.4f})")
+        return result
 
     # TODO: LISTENER FOR RECEIVE OUTPUT FROM MODEL, ADD TO LIST, SEND TO RESULTS PARSER
 
 # Custom list class so that it can access run async and check when stuff is added
+
 
 class AsyncResultsList(list):
     def __init__(self, connectinator_instance: Connectinator, *args):
@@ -162,7 +201,8 @@ class AsyncResultsList(list):
         self.clear()
 
         # Reset the flag
-        self.connectinator.logger.info("Parsing results asynchronously...")
+        self.connectinator.logger.info("TERMINAL: Parsing results asynchronously...")
+        self.connectinator.logger.info(f"TERMINAL: Processing {len(self.saved_results)} word predictions")
    
         # change to pass saves results
         self.connectinator.format_model_output(self.saved_results)

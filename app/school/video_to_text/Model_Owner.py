@@ -1,83 +1,119 @@
-# Import torch for model
-import pandas as pd
-from tensorflow.keras.models import *
 import json
 import numpy as np
-import tensorflow as tf
 import asyncio
 import os
-
-# Define a custom layer so that the model can load
-CLASS_LABEL_PATH = os.path.join('app', r"class_label_index.json")
-
-@tf.keras.utils.register_keras_serializable()
-class ExpandAxisLayer(tf.keras.layers.Layer):
-    def __init__(self, axis=1, **kwargs):
-        super(ExpandAxisLayer, self).__init__(**kwargs)
-        self.axis = axis
-
-    def call(self, inputs):
-        return tf.expand_dims(inputs, axis=self.axis)
-
-    def get_config(self):
-        config = super(ExpandAxisLayer, self).get_config()
-        config.update({"axis": self.axis})
-        return config
-
+import logging
 
 class Model:
     def __init__(self, model_path):
-        # Setting base variables
-        self.model_path = model_path
+        self.logger = logging.getLogger("connectinator")
 
-        # Just remember that indexed are strings
-        # Opening the classes
-        with open(CLASS_LABEL_PATH) as f:
-            self.outputs = json.load(f)
+        # ---- resolve app directory for stats/labels, independent of CWD ----
+        # this file: .../app/school/video_to_text/Model_Owner.py
+        THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+        APP_DIR = os.path.normpath(os.path.join(THIS_DIR, "..", ".."))  # .../app
 
-        # Create model here
-        self.model = load_model(filepath=model_path)
+        # sanity check model path
+        self.model_path = os.path.abspath(model_path)
+        if not os.path.exists(self.model_path):
+            raise FileNotFoundError(f"Model file not found: {self.model_path}")
+
+        # Load label map (gloss -> class index)
+        label_map_path = os.path.join(APP_DIR, 'label_map.json')
+        with open(label_map_path, encoding="utf-8") as f:
+            self.label_map = json.load(f)
+
+        # Create reverse mapping (class index -> gloss)
+        self.index_to_gloss = {v: k for k, v in self.label_map.items()}
+
+        # Load stats for z-scoring
+        stats_path = os.path.join(APP_DIR, 'stats.json')
+        with open(stats_path, encoding="utf-8") as f:
+            stats = json.load(f)
+            self.mean = np.array(stats['mean'], dtype=np.float32)
+            self.std = np.array(stats['std'], dtype=np.float32)
+            # Avoid division by zero for very small std values
+            self.std = np.where(self.std < 1e-8, 1.0, self.std)
+
+        # ---- Load the BiLSTM model robustly (.h5/SavedModel via tf.keras, .keras via Keras 3) ----
+        self.model = None
+        # 1) try tf.keras (for SavedModel or .h5)
+        try:
+            import tensorflow as tf
+            self.logger.info(f"Loading model with tf.keras from {self.model_path}")
+            self.model = tf.keras.models.load_model(self.model_path, compile=False)
+            self.logger.info("Loaded model with tf.keras")
+        except Exception as e:
+            self.logger.warning(f"tf.keras load failed: {type(e).__name__}: {e}")
+
+        # 2) fallback to Keras 3 loader (for .keras format)
+        if self.model is None:
+            try:
+                import keras  # Keras 3 (separate package)
+                self.logger.info(f"Loading model with keras (Keras 3) from {self.model_path}")
+                self.model = keras.models.load_model(self.model_path, compile=False, safe_mode=False)
+                self.logger.info("Loaded model with keras (Keras 3)")
+            except Exception as e:
+                self.logger.error(f"Keras 3 load failed: {type(e).__name__}: {e}")
+                raise
+
+        print(f"Model loaded successfully. Number of classes: {len(self.index_to_gloss)}")
 
     async def query_model(self, keypoints):
-        # print("IN QUERY")
-        # Format keypoints so it fits the model
+        """
+        keypoints: numpy array (64, 84)
+        returns: dict with top-5 predictions and top-1 prediction
+        """
         formatted_keypoints = self.__format_input_keypoints(keypoints)
-
-        # Query the model
         result = await self.__get_model_result(formatted_keypoints)
-
-        # Parse results so it fits the formate needed
         final_result = self.__format_model_results(result)
-        # print("FORMATTE RESSULTS")
         return final_result
 
-    ############################# Private helper functions needed for query model #############################
     def __format_input_keypoints(self, keypoints):
-        #! PLEASE GIVE SHAPE WITH (number_of_frames, number_of_keypoints, 1, features)
+        if keypoints.shape != (64, 84):
+            raise ValueError(f"Expected keypoints shape (64, 84), got {keypoints.shape}")
+        x_normalized = (keypoints - self.mean) / self.std
+        x_batch = np.expand_dims(x_normalized, axis=0)
+        return x_batch
 
-        # probs just padd the dataframe so it fits the inputs
-        keypoints = np.expand_dims(keypoints, axis=0)  # Add a batch dimension
+    async def __get_model_result(self, keypoints_batch):
+        """
+        keypoints_batch: numpy array (1, 64, 84)
+        returns: numpy array (num_classes,) softmax probabilities
+        """
+        # defer to a thread so we don't block the event loop
+        def _predict():
+            return self.model.predict(keypoints_batch, verbose=0)
 
-        return keypoints
-
-    async def __get_model_result(self, keypoints):
-        # print("CALLINGTHE MODEEL")
-        # just query the model
-        result = await asyncio.to_thread(self.model.predict, keypoints, verbose=2)
+        result = await asyncio.to_thread(_predict)
         return result[0]
 
-    def __format_model_results(self, result):
-        # Loop through resuklts and append the correct class to the probability
+    async def predict_from_normalized(self, x_normalized_batch):
+        """
+        x_normalized_batch: numpy array (1, 64, 84) already z-scored
+        returns: numpy array (num_classes,) softmax
+        """
+        def _predict():
+            return self.model.predict(x_normalized_batch, verbose=0)
 
-        fomated_results = {"model_output": []}
-        for i in range(len(result)):
-            # Adding the results
-            str_index = str(i)
-            fomated_results['model_output'].append(
-                [self.outputs[str_index], result[i]])
+        result = await asyncio.to_thread(_predict)
+        return result[0]
 
-        fomated_results['model_output'] = sorted(
-            fomated_results['model_output'], key=lambda x: float(x[1]), reverse=True)[:10]
+    def __format_model_results(self, probs):
+        # top-5
+        top_5_indices = np.argsort(probs)[-5:][::-1]
+        top_5_predictions = [[self.index_to_gloss[int(i)], float(probs[int(i)])] for i in top_5_indices]
+        # top-1
+        top_1_idx = int(np.argmax(probs))
+        top_1 = {
+            "label": self.index_to_gloss[top_1_idx],
+            "probability": float(probs[top_1_idx]),
+        }
+        return {
+            "model_output": top_5_predictions,
+            "top_1": top_1,
+            "top_5": top_5_predictions,
+        }
 
-        return fomated_results
-    ############################# Private helper functions needed for query model #############################
+
+   
