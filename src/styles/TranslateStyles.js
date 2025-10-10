@@ -175,7 +175,7 @@ export const styles = {
         alignItems: "center",
         overflow: "hidden",
         borderRadius: "16px",
-        background: "#0D0E1A",
+        background: "black",
         backdropFilter: "blur(10px)",
         border: "1px solid rgba(255, 255, 255, 0.05)",
         position: "relative",

@@ -281,10 +281,12 @@ const TranslateApp = () => {
             maxWidth: "100vw",
             margin: "0 auto",
             padding: "10px",
-            minHeight: "100vh",
             background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
             position: "relative",
             boxSizing: "border-box",
+            minHeight: "100vh",
+            overflow: "visible",
+            height: "auto",
         }}>
             <link rel="icon" href="/Interpreter-Symbol-s-text.ico" />
             <div style={{

@@ -319,3 +319,10 @@
 .panel-swap-animation {
     transition: none !important;
 }
+
+html, body, #root {
+  min-height: 100vh;
+  height: auto; 
+    margin: 0;
+  padding: 0;
+}
