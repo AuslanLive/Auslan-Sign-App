@@ -64,6 +64,15 @@ const VideoInput = React.forwardRef((props, ref) => {
             stopCamera(); // Cleanup the camera on component unmount
         };
     }, []);
+    
+    function resizeCanvasToDisplaySize(canvas) {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+        }
+    }
 
     const startCamera = async () => {
         try {
@@ -86,6 +95,8 @@ const VideoInput = React.forwardRef((props, ref) => {
             holistic.onResults((results) => {
                 // Clear the canvas and draw the video and landmarks
                 canvasCtx.save();
+                resizeCanvasToDisplaySize(canvasElement);
+
                 canvasCtx.clearRect(
                     0,
                     0,
