@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
+import ToasterWithMax from "../components/ToasterWithMax";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
 import '../styles/TranslateStyles.css';
 
 
 const API_BASE_URL = "/api"
-
 
 const TranslateApp = () => {
     const [mode, setMode] = useState("videoToText");
@@ -25,6 +25,7 @@ const TranslateApp = () => {
     const [swapButtonRepositioning, setSwapButtonRepositioning] = useState(false);
     const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
     const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -74,7 +75,7 @@ const TranslateApp = () => {
                 setIsAnimating(false);
                 setSwapButtonRepositioning(false);
                 setTranslateButtonAnimation('');
-            }, 800); // 50% faster from 1200ms
+            }, 500); // 50% faster from 1200ms
         }, 400); // 50% faster from 600ms
     };
     const get_sign_trans = async () => {
@@ -146,7 +147,20 @@ const TranslateApp = () => {
         };
     }, [mode, isPolling]);
 
+    // Update size on window change
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768)
+        }
 
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
+        return () =>{
+            window.removeEventListener("resize", handleResize);
+        }
+    }, []);
     
     const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
@@ -157,7 +171,7 @@ const TranslateApp = () => {
 
         // Filter out words that do not exist in the existing words set
         const missingWords = words.filter(word => !existingWords.has(word));
-    
+        console.log(missingWords)
         if (missingWords.length > 0) {
             console.log(`The following words do not exist: ${missingWords}`);
             toast.error(`The following words do not exist: ${missingWords.join(', ')}`);
@@ -195,7 +209,13 @@ const TranslateApp = () => {
 
     const handleTextToVideo = async () => {
         const fixedSourceText = sourceText.trim();
-        console.log("Sending Source Text:", fixedSourceText);
+        console.log("Sending Source Text:", fixedSourceText.length);
+        if (fixedSourceText === null || fixedSourceText === undefined || fixedSourceText.trim().length === 0) {
+            console.log(`No text to translate: ${fixedSourceText}`);
+            toast.error(`No text to translate`);
+            return;
+        };
+
         checkTextAgainstWordListJson(fixedSourceText);
         setLoading(true); // Set loading to true while fetching video
 
@@ -261,11 +281,14 @@ const TranslateApp = () => {
             maxWidth: "100vw",
             margin: "0 auto",
             padding: "10px",
-            minHeight: "100vh",
             background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
             position: "relative",
             boxSizing: "border-box",
+            minHeight: "100vh",
+            overflow: "visible",
+            height: "auto",
         }}>
+            <link rel="icon" href="/Interpreter-Symbol-s-text.ico" />
             <div style={{
                 textAlign: 'center',
                 marginBottom: '2rem',
@@ -288,7 +311,7 @@ const TranslateApp = () => {
             
             <div style={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: isMobile ? "column" : "row",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "25px",
@@ -296,7 +319,8 @@ const TranslateApp = () => {
                 maxWidth: "100vw",
                 flex: 1,
             }}>
-                <Toaster 
+                <ToasterWithMax 
+                    max={3}
                     position="top-right"
                     toastOptions={{
                         style: {
@@ -313,11 +337,11 @@ const TranslateApp = () => {
                         <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
                             <div style={styles.videoInputContainer}>
-                                <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} />
+                                <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} isMobile={isMobile} />
                             </div>
                         </div>
 
-                        <div style={styles.buttons}>
+                        <div style={{...styles.buttons, ...(isMobile ? styles.buttonsMobileTag : {})}}>
                             <button 
                                 onClick={handleSwap} 
                                 style={styles.swapButton} 
@@ -326,20 +350,20 @@ const TranslateApp = () => {
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
-                                    Swap
+                                    {isMobile ? "" : "Swap"}
                                 </div>
                             </button>
                         </div>
 
-                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                        <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Text</h2>
                             {loading ? (
-                                <div style={styles.loadingPlaceholder}>
+                                <div style={{...styles.loadingPlaceholder, ...(isMobile ? styles.loadingPlaceholderMobile : {})}}>
                                     <div style={styles.spinner}></div>
                                     <p style={styles.loadingText}>Processing sign language...</p>
                                 </div>
                             ) : (
-                                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                <div style={{ position: 'relative', width: '100%',  display: 'flex', flexDirection: 'column', flex: 1,  minHeight: 0, }}>
                                     <textarea
                                         placeholder='Translation will appear here...'
                                         value={translatedText}
@@ -361,7 +385,7 @@ const TranslateApp = () => {
                     </>
                 ) : (
                     <>
-                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                        <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Text</h2>
                             <textarea
                                 placeholder='Enter text to convert to sign language...'
@@ -371,7 +395,7 @@ const TranslateApp = () => {
                             />
                         </div>
 
-                        <div style={styles.buttons}>
+                        <div style={{...styles.buttons, ...(isMobile ? styles.buttonsMobileTag : {})}}>
                             <button 
                                 onClick={handleSwap} 
                                 style={styles.swapButton} 
@@ -380,7 +404,7 @@ const TranslateApp = () => {
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
-                                    Swap
+                                    {isMobile ? "" : "Swap"}
                                 </div>
                             </button>
                             {showTranslateButton && (
@@ -397,10 +421,10 @@ const TranslateApp = () => {
                             )}
                         </div>
 
-                        <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
+                        <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
                             {loading ? (
-                                <div style={styles.loadingPlaceholder}>
+                                <div style={{...styles.loadingPlaceholder, ...(isMobile ? styles.loadingPlaceholderMobile : {})}}>
                                     <div style={styles.spinner}></div>
                                     <p style={styles.loadingText}>Generating sign language video...</p>
                                 </div>

@@ -19,7 +19,7 @@ class ResultsParser:
     # Function for lazy loading for efficiency
     def _initialize_model(self):
         if self.model is None:
-            self.model = genai.GenerativeModel("gemini-1.5-flash")
+            self.model = genai.GenerativeModel("gemini-2.5-flash")
 
     def parse_model_output(self, model_output):
         print(model_output)
@@ -44,8 +44,7 @@ class ResultsParser:
 
             # print("GETTING RESULT")
             response = self.model.generate_content(
-                "Convert these words into a correct English sentence, each of the words are separated by a comma and wrap the phrase in **: " + best_model_phrase
-                )
+                "Convert these words into a correct English sentence, each of the words are separated by a comma and wrap the phrase in **: " + best_model_phrase)
 
             # Parse the response
             response_dict = response.to_dict()

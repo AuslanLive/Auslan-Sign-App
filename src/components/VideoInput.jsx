@@ -64,6 +64,15 @@ const VideoInput = React.forwardRef((props, ref) => {
             stopCamera(); // Cleanup the camera on component unmount
         };
     }, []);
+    
+    function resizeCanvasToDisplaySize(canvas) {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+        }
+    }
 
     const startCamera = async () => {
         try {
@@ -86,6 +95,8 @@ const VideoInput = React.forwardRef((props, ref) => {
             holistic.onResults((results) => {
                 // Clear the canvas and draw the video and landmarks
                 canvasCtx.save();
+                resizeCanvasToDisplaySize(canvasElement);
+
                 canvasCtx.clearRect(
                     0,
                     0,
@@ -289,11 +300,10 @@ const VideoInput = React.forwardRef((props, ref) => {
                     <canvas
                         ref={canvasRef}
                         className='output_canvas'
-                        width='1280'
-                        height='720'
                         style={{
                             ...styles.canvas,
-                            display: isCameraOn ? 'block' : 'none'
+                            display: isCameraOn ? 'block' : 'none', 
+                            backgroundColor: "#333333",
                         }}
                     />
                 </>
@@ -317,26 +327,31 @@ const VideoInput = React.forwardRef((props, ref) => {
 const styles = {
     container: {
         position: "relative",
+        display: "flex",
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         width: "100%",
         height: "100%",
+        minHeight: 0,
         padding: "1px",
-        boxSizing: "border-box",
-        outline: "2px solid #007bff",
-        borderRadius: "8px",
-        backgroundColor: "#333333",
+        borderRadius: "16px",
+        
     },
     canvas: {
+        position: "relative", 
+        flex: 1,
+        minHeight: 0,
         width: "100%",
-        height: "100%",
         objectFit: "cover",
-        borderRadius: "10px",
+        borderRadius: "16px",
         boxSizing: "border-box",
         transform: "scaleX(-1)",
     },
     button: {
-        position: "absolute",
-        bottom: "20px",
-        left: "20px",
+        marginTop: "5px",
+        marginBottom: "10px",
         padding: "12px 24px",
         fontSize: "14px",
         fontWeight: "600",
@@ -345,19 +360,17 @@ const styles = {
         border: "none",
         borderRadius: "25px",
         cursor: "pointer",
-        zIndex: 11,
-        transition: "all 0.3s ease",
-        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.4)",
+        zIndex: 2,
+        boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
         backdropFilter: "blur(10px)",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-        transform: "translateY(0) scale(1)",
+        transition: "all 0.3s ease",
     },
     placeholder: {
-        position: "absolute",
-        top: 0,
-        left: 0,
+        position: "relative", 
+        flex: 1,
+        minHeight: 0,
         width: "100%",
-        height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -365,10 +378,10 @@ const styles = {
         background: "#0D0E1A",
         backdropFilter: "blur(10px)",
         color: "rgba(255, 255, 255, 0.5)",
-        borderRadius: "10px",
         textAlign: "center",
         padding: "20px",
         boxSizing: "border-box",
+        borderRadius: "16px",
     },
     placeholderIcon: {
         fontSize: "32px",
