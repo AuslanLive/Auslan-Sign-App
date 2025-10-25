@@ -48,7 +48,7 @@ const TranslateApp = () => {
             setTranslateButtonAnimation('translate-button-exit');
             setTimeout(() => {
                 setShowTranslateButton(false);
-            }, 400); // 50% faster from 600ms
+            }, 400); // Matches exit animation duration (0.4s)
         }
 
         if (mode === "videoToText" && videoInputRef.current) {
@@ -70,13 +70,13 @@ const TranslateApp = () => {
                 setTranslateButtonAnimation('translate-button-enter');
             }
             
-            // Reset animation state - synchronized with panel animation completion
+            // Reset animation state - synchronized with swap button animation completion
             setTimeout(() => {
                 setIsAnimating(false);
                 setSwapButtonRepositioning(false);
                 setTranslateButtonAnimation('');
-            }, 500); // 50% faster from 1200ms
-        }, 400); // 50% faster from 600ms
+            }, 400); // Now matches both enter/exit animation duration (0.4s)
+        }, 400); // Midpoint of 800ms swap animation
     };
     const get_sign_trans = async () => {
         try {
@@ -281,7 +281,10 @@ const TranslateApp = () => {
             maxWidth: "100vw",
             margin: "0 auto",
             padding: "10px",
-            background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+            background: "radial-gradient(circle at center, #4b2794ff 0%, #241657 20%, #1B1853 50%, #0E0B2E 100%)",
+            backgroundSize: "120% 120%",
+            backgroundAttachment: "fixed",
+            animation: "gradientShift 15s ease-in-out infinite alternate",
             position: "relative",
             boxSizing: "border-box",
             minHeight: "100vh",
@@ -296,8 +299,11 @@ const TranslateApp = () => {
             }}>
                 <h1 style={{
                     fontSize: '3rem',
-                    fontWeight: 'bold',
-                    background: 'linear-gradient(135deg, #00f2fe 0%, #3b82f6 50%,  #a855f7 100%)',
+                    fontWeight: '700',
+                    fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+                    letterSpacing: '-0.03em',
+                    fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
+                    background: 'linear-gradient(135deg, #008cff 0%, #3b82f6 40%, #a855f7 70%, #9155f1ff 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -344,15 +350,29 @@ const TranslateApp = () => {
                         <div style={{...styles.buttons, ...(isMobile ? styles.buttonsMobileTag : {})}}>
                             <button 
                                 onClick={handleSwap} 
-                                style={styles.swapButton} 
+                                style={{
+                                    ...styles.swapButton,
+                                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                                }} 
                                 className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
                                 disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
-                                    {isMobile ? "" : "Swap"}
                                 </div>
                             </button>
+                            {showTranslateButton && (
+                                <button
+                                    onClick={handleTextToVideo}
+                                    style={styles.translateButton}
+                                    className={`translate-button ${translateButtonAnimation}`}
+                                >
+                                    <div style={styles.buttonContent}>
+                                        <span style={styles.translateIcon}>✨</span>
+                                        Translate
+                                    </div>
+                                </button>
+                            )}
                         </div>
 
                         <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
@@ -398,13 +418,15 @@ const TranslateApp = () => {
                         <div style={{...styles.buttons, ...(isMobile ? styles.buttonsMobileTag : {})}}>
                             <button 
                                 onClick={handleSwap} 
-                                style={styles.swapButton} 
+                                style={{
+                                    ...styles.swapButton,
+                                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                                }} 
                                 className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
                                 disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
-                                    {isMobile ? "" : "Swap"}
                                 </div>
                             </button>
                             {showTranslateButton && (

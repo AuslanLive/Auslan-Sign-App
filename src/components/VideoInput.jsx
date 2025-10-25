@@ -279,7 +279,7 @@ const VideoInput = React.forwardRef((props, ref) => {
     };
 
     return (
-        <div className='container' style={styles.container}>
+        <div className='container' style={styles.placeholder}>
             {error ? (
                 <div style={{ color: "red" }}>{error}</div>
             ) : (
@@ -308,6 +308,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                     />
                 </>
             )}
+
             <button 
                 onClick={toggleCamera} 
                 style={{
@@ -375,9 +376,9 @@ const styles = {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        background: "#0D0E1A",
+        background: "transparent",
         backdropFilter: "blur(10px)",
-        color: "rgba(255, 255, 255, 0.5)",
+        color: "rgba(255, 255, 255, 0.7)",
         textAlign: "center",
         padding: "20px",
         boxSizing: "border-box",
