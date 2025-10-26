@@ -18,7 +18,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         }}>
             <h3 style={{
                 margin: 0,
-                fontSize: '16px',
+                fontSize: '18px',
                 fontWeight: '600',
             }}>
                 Auslan Grammar Structure
@@ -59,11 +59,11 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         
         <p style={{
             margin: '0 0 12px 0',
-            fontSize: '13px',
+            fontSize: '16px',
             color: 'rgba(255, 255, 255, 0.8)',
             lineHeight: '1.4'
         }}>
-            Auslan commonly uses the structure of: Time → Topic → Comment. <br />
+            Commonly uses the structure of: Time → Topic → Comment. <br />
             <br />
             Sentences often begin with when, then what/who, followed by what happens next.<br />
             <br />
@@ -77,7 +77,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
             border: '1px solid rgba(255, 255, 255, 0.15)'
         }}>
             <code style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 color: '#ffffff',
                 fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
                 wordBreak: 'break-word'
@@ -96,7 +96,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '13px',
+                fontSize: '14px',
                 color: '#ffffff',
                 cursor: 'pointer'
             }}>
@@ -109,7 +109,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                         cursor: 'pointer'
                     }}
                 />
-                Always show
+                Always On?
             </label>
             <button
                 onClick={onCopy}
