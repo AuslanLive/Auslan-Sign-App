@@ -539,3 +539,19 @@ html, body, #root {
     contain: layout style;
     will-change: contents;
 }
+
+/* Desktop hover effects for panels */
+@media (min-width: 768px) {
+  .panel {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  }
+  
+  .panel:hover {
+    transform: translateY(-8px);
+  }
+  
+  /* Ensure hover effects don't interfere with animations */
+  .panel.panel-swap-animation:hover {
+    transform: rotateY(180deg) translateY(-8px);
+  }
+}

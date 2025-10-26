@@ -270,6 +270,50 @@ const TranslateApp = () => {
             setLoading(false); // Set loading to false after fetching video
         }
     };
+
+    // Function to handle Enter key press
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && mode === 'textToVideo' && !loading) {
+            e.preventDefault(); // Prevent default textarea behavior
+            
+            // Trigger dramatic translate button animation
+            const translateButton = document.querySelector('.translate-button');
+            if (translateButton) {
+                // Initial dramatic press effect
+                translateButton.style.transform = 'translateY(4px) scale(0.92)';
+                translateButton.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.6)';
+                
+                setTimeout(() => {
+                    // Bounce back with emphasis
+                    translateButton.style.transform = 'translateY(-4px) scale(1.08)';
+                    translateButton.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.8), 0 0 60px rgba(168, 85, 247, 0.6), 0 8px 25px rgba(0, 0, 0, 0.4)';
+                }, 100);
+                
+                setTimeout(() => {
+                    // Return to normal with slight overshoot
+                    translateButton.style.transform = 'translateY(0) scale(1.02)';
+                    translateButton.style.boxShadow = '';
+                }, 250);
+                
+                setTimeout(() => {
+                    // Final settle
+                    translateButton.style.transform = 'translateY(0) scale(1)';
+                }, 400);
+            }
+            
+            handleTextToVideo();
+        }
+    };
+
+    // Function to handle translate button click with loading check
+    const handleTranslateButtonClick = () => {
+        if (loading) {
+            toast.error("Please wait until current translation is complete!");
+            return;
+        }
+        handleTextToVideo();
+    };
+
     // React code for UI rendering
     return (
         <div style={{
@@ -281,10 +325,10 @@ const TranslateApp = () => {
             maxWidth: "100vw",
             margin: "0 auto",
             padding: "10px",
-            background: "radial-gradient(circle at center, #4b2794ff 0%, #241657 20%, #1B1853 50%, #0E0B2E 100%)",
-            backgroundSize: "120% 120%",
+            background: "linear-gradient(135deg, #0f0d2e 0%, #1a1545 15%, #2d1f65 35%, #4a2b85 60%, #5236a5 75%, #6b3cb8 90%, #7440c4 100%)",
+            backgroundSize: "100% 100%",
             backgroundAttachment: "fixed",
-            animation: "gradientShift 15s ease-in-out infinite alternate",
+            //animation: "gradientShift 15s ease-in-out infinite alternate",
             position: "relative",
             boxSizing: "border-box",
             minHeight: "100vh",
@@ -311,7 +355,7 @@ const TranslateApp = () => {
                     textShadow: 'none',
                     filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5))'
                 }}>
-                    AuslanLive
+                    👋AuslanLive
                 </h1>
             </div>
             
@@ -355,7 +399,6 @@ const TranslateApp = () => {
                                     transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                                 }} 
                                 className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
-                                disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
@@ -363,13 +406,17 @@ const TranslateApp = () => {
                             </button>
                             {showTranslateButton && (
                                 <button
-                                    onClick={handleTextToVideo}
-                                    style={styles.translateButton}
+                                    onClick={handleTranslateButtonClick}
+                                    style={{
+                                        ...styles.translateButton,
+                                        opacity: loading ? 0.6 : 1,
+                                        cursor: loading ? 'not-allowed' : 'pointer'
+                                    }}
                                     className={`translate-button ${translateButtonAnimation}`}
                                 >
                                     <div style={styles.buttonContent}>
                                         <span style={styles.translateIcon}>✨</span>
-                                        Translate
+                                        {loading ? 'Translating...' : 'Translate'}
                                     </div>
                                 </button>
                             )}
@@ -411,6 +458,7 @@ const TranslateApp = () => {
                                 placeholder='Enter text to convert to sign language...'
                                 value={sourceText}
                                 onChange={(e) => setSourceText(e.target.value)}
+                                onKeyDown={handleKeyDown}
                                 style={styles.textarea}
                             />
                         </div>
@@ -423,7 +471,6 @@ const TranslateApp = () => {
                                     transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                                 }} 
                                 className={`swap-button ${isAnimating ? 'swap-button-animation' : ''} ${swapButtonRepositioning ? 'swap-button-reposition' : ''}`}
-                                disabled={isAnimating}
                             >
                                 <div style={styles.buttonContent}>
                                     <span style={styles.swapIcon} className={isAnimating ? 'swap-icon-animation' : ''}>⇄</span>
@@ -431,8 +478,12 @@ const TranslateApp = () => {
                             </button>
                             {showTranslateButton && (
                                 <button
-                                    onClick={handleTextToVideo}
-                                    style={styles.translateButton}
+                                    onClick={handleTranslateButtonClick}
+                                    style={{
+                                        ...styles.translateButton,
+                                        opacity: loading ? 0.6 : 1,
+                                        cursor: loading ? 'not-allowed' : 'pointer'
+                                    }}
                                     className={`translate-button ${translateButtonAnimation}`}
                                 >
                                     <div style={styles.buttonContent}>
@@ -467,7 +518,7 @@ const TranslateApp = () => {
                                 <div style={{...styles.videoPlaceholder, padding: "5px"}}>
                                     <div style={styles.placeholderIcon}>🎬</div>
                                     <p style={styles.placeholderText}>
-                                        Enter text and click translate to see the sign language video
+                                        ← Enter text and click translate to generate the Auslan video!
                                     </p>
                                 </div>
                             )}
