@@ -34,7 +34,7 @@ export const styles = {
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(59, 130, 246, 0.2), 0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.1)",
+        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(168, 85, 247, 0.25), 0 0 60px rgba(168, 85, 247, 0.18), 0 0 120px rgba(168, 85, 247, 0.12), 0 0 200px rgba(59, 130, 246, 0.08)",
         position: "relative",
         overflow: "hidden",
     },
