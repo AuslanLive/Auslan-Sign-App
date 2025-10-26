@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
+import GrammarPill from "../components/GrammarPill";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +27,10 @@ const TranslateApp = () => {
     const [translateButtonAnimation, setTranslateButtonAnimation] = useState('');
     const [showTranslateButton, setShowTranslateButton] = useState(mode === "textToVideo");
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [grammarParsedText, setGrammarParsedText] = useState("");
+    const [alwaysShowGrammar, setAlwaysShowGrammar] = useState(() => 
+        localStorage.getItem("auslan:alwaysShowGrammar") === "true"
+    );
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -42,6 +47,7 @@ const TranslateApp = () => {
         setIsAnimating(true);
         setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
+        setGrammarParsedText(""); // Clear grammar text on swap
 
         // Handle translate button exit animation if switching from textToVideo
         if (mode === "textToVideo") {
@@ -236,11 +242,19 @@ const TranslateApp = () => {
             // Set translated text
             const translatedText = data.message || "No translation available.";
             setTranslatedText(translatedText);
+            
+            // Extract grammar parsed text for the hint component
+            if (Array.isArray(translatedText)) {
+                setGrammarParsedText(translatedText.join(' '));
+            } else if (typeof translatedText === 'string') {
+                setGrammarParsedText(translatedText);
+            } else {
+                setGrammarParsedText("");
+            }
 
-            // Step 2: Generate the Firebase video path using the translated text
+            // Step 2: Generate the Firebase video path using the original array format
             const firebaseURL = "gs://auslan-194e5.appspot.com/output_videos/";
             const fileType = ".mp4";
-            // const parsedVideoName = translatedText || fixedSourceText;
 
             let parsedVideoName;
             if (Array.isArray(translatedText)) {
@@ -266,6 +280,7 @@ const TranslateApp = () => {
             setTranslatedText(
                 `Error: ${error.message}. Please check the API and input.`
             );
+            setGrammarParsedText(""); // Clear grammar text on error
         } finally {
             setLoading(false); // Set loading to false after fetching video
         }
@@ -303,10 +318,22 @@ const TranslateApp = () => {
             
             handleTextToVideo();
         }
+        
+        // Prevent spacebar from triggering button clicks when textarea is focused
+        if (e.key === ' ' && e.target.tagName === 'TEXTAREA') {
+            // Allow normal spacebar behavior in textarea (adding spaces)
+            return;
+        }
     };
 
     // Function to handle translate button click with loading check
-    const handleTranslateButtonClick = () => {
+    const handleTranslateButtonClick = (e) => {
+        // Prevent spacebar activation when button is focused
+        if (e.type === 'keydown' && e.key === ' ') {
+            e.preventDefault();
+            return;
+        }
+        
         if (loading) {
             toast.error("Please wait until current translation is complete!");
             return;
@@ -479,6 +506,7 @@ const TranslateApp = () => {
                             {showTranslateButton && (
                                 <button
                                     onClick={handleTranslateButtonClick}
+                                    onKeyDown={handleTranslateButtonClick}
                                     style={{
                                         ...styles.translateButton,
                                         opacity: loading ? 0.6 : 1,
@@ -495,24 +523,76 @@ const TranslateApp = () => {
                         </div>
 
                         <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
-                            <h2 style={styles.panelTitle}>Auslan</h2>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '8px'
+                            }}>
+                                <h2 style={styles.panelTitle}>Auslan</h2>
+                            </div>
+                            
+                            {/* Grammar pill positioned absolutely in top-right corner */}
+                            <div style={{
+                                position: 'absolute',
+                                top: '16px',
+                                right: '16px',
+                                zIndex: 10
+                            }}>
+                                <GrammarPill 
+                                    grammarParsedText={grammarParsedText}
+                                    mode={mode}
+                                    isMobile={isMobile}
+                                    alwaysShowGrammar={alwaysShowGrammar}
+                                    setAlwaysShowGrammar={setAlwaysShowGrammar}
+                                />
+                            </div>
                             {loading ? (
                                 <div style={{...styles.loadingPlaceholder, ...(isMobile ? styles.loadingPlaceholderMobile : {})}}>
                                     <div style={styles.spinner}></div>
                                     <p style={styles.loadingText}>Generating sign language video...</p>
                                 </div>
                             ) : animatedSignVideo ? (
-                                <div style={styles.videoContainer}>
-                                    <video
-                                        src={animatedSignVideo}
-                                        controls
-                                        autoPlay
-                                        loop
-                                        style={styles.video}
-                                        onLoadedMetadata={(e) =>
-                                            (e.target.playbackRate = 1.0)
-                                        }
-                                    />
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '12px',
+                                    flex: 1
+                                }}>
+                                    {/* Grammar text display when alwaysShowGrammar is true */}
+                                    {alwaysShowGrammar && grammarParsedText && (
+                                        <div style={{
+                                            padding: '8px 12px',
+                                            backgroundColor: 'rgba(0, 0, 0, 0.32)',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '18px',
+                                            color: '#ffffff',
+                                            fontFamily: "Inter, 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+                                            boxShadow: '0 0 0 1px rgba(190, 155, 210, 0.3), 0 0 6px rgba(190, 155, 210, 0.15)'
+                                        }}>
+                                            <div style={{
+                                                fontSize: '16px',
+                                                color: 'rgba(255, 255, 255, 0.6)',
+                                                marginBottom: '4px',
+                                                fontWeight: '500'
+                                            }}>
+                                                Auslan Grammar:
+                                            </div>
+                                            {grammarParsedText}
+                                        </div>
+                                    )}
+                                    <div style={styles.videoContainer}>
+                                        <video
+                                            src={animatedSignVideo}
+                                            controls
+                                            autoPlay
+                                            loop
+                                            style={styles.video}
+                                            onLoadedMetadata={(e) =>
+                                                (e.target.playbackRate = 1.0)
+                                            }
+                                        />
+                                    </div>
                                 </div>
                             ) : (
                                 <div style={{...styles.videoPlaceholder, padding: "5px"}}>
