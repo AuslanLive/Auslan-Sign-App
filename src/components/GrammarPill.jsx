@@ -79,10 +79,10 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
             <code style={{
                 fontSize: '14px',
                 color: '#ffffff',
-                fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace",
+                fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
                 wordBreak: 'break-word'
             }}>
-                {grammarParsedText}
+                "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
             </code>
         </div>
         <div style={{

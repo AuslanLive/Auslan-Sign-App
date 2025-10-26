@@ -578,7 +578,7 @@ const TranslateApp = () => {
                                             }}>
                                                 Auslan Grammar:
                                             </div>
-                                            {grammarParsedText}
+                                            "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
                                         </div>
                                     )}
                                     <div style={styles.videoContainer}>
