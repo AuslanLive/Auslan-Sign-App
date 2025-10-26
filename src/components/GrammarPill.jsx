@@ -359,16 +359,20 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                         <div
                             style={{
                                 position: 'fixed',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
+                                top: '0px',
+                                left: '0px',
+                                right: '0px',
+                                bottom: '0px',
                                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                 zIndex: 1000,
-                                backdropFilter: 'blur(4px)'
+                                backdropFilter: isMobile ? 'none' : 'blur(4px)',
+                                pointerEvents: 'all',
+                                borderRadius: '24px',
+                                overflow: 'hidden' // optional: clips inner content to rounded edges
                             }}
                             onClick={() => setGrammarOpen(false)}
                         />
+
                         
                         {/* Overlay content */}
                         <div
@@ -378,20 +382,24 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                             aria-labelledby="grammar-title"
                             className={`grammar-overlay-enter ${isGrammarOpen ? 'grammar-overlay-open' : ''}`}
                             style={{
-                                position: isMobile ? 'fixed' : 'fixed',
+                                position: 'fixed',
                                 zIndex: 1001,
                                 backgroundColor: 'rgba(30, 20, 60, 0.95)',
-                                backdropFilter: 'blur(20px)',
+                                backdropFilter: isMobile ? 'none' : 'blur(20px)',
                                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: isMobile ? '16px 16px 0 0' : '12px',
+                                borderRadius: '16px',
                                 boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                                overflow: 'hidden',
+                                pointerEvents: 'all',
                                 ...(isMobile ? {
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    height: '50vh',
-                                    maxHeight: '400px',
-                                    minHeight: '200px'
+                                    left: '50%',
+                                    top: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '90vw',
+                                    maxWidth: '400px',
+                                    height: '60vh',
+                                    maxHeight: '500px',
+                                    minHeight: '300px'
                                 } : {
                                     top: '50%',
                                     left: '50%',
@@ -404,21 +412,6 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                                 })
                             }}
                         >
-                            {isMobile && (
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    padding: '8px 0 4px 0'
-                                }}>
-                                    <div style={{
-                                        width: '24px',
-                                        height: '4px',
-                                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                        borderRadius: '2px'
-                                    }} />
-                                </div>
-                            )}
-                            
                             <GrammarOverlayContent
                                 grammarParsedText={grammarParsedText}
                                 onCopy={handleCopyGrammar}
