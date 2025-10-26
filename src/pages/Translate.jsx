@@ -518,7 +518,7 @@ const TranslateApp = () => {
                                 <div style={{...styles.videoPlaceholder, padding: "5px"}}>
                                     <div style={styles.placeholderIcon}>🎬</div>
                                     <p style={styles.placeholderText}>
-                                        ← Enter text and click translate to generate the Auslan video!
+                                        Enter text to generate the Auslan video!
                                     </p>
                                 </div>
                             )}
