@@ -39,12 +39,12 @@ export const styles = {
         overflow: "hidden",
     },
     panelMobile: {
-        height: "calc(100vh - 160px)",
-        maxHeight: "40vh",
+        height: "auto",
+        maxHeight: "none",
         padding: "16px",
         margin: "0",
         minHeight: "300px",
-        overflow: "hidden",
+        overflow: "visible",
     },
     panelTitle: {
         fontSize: "28px",

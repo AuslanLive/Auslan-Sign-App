@@ -203,18 +203,11 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
         if (isGrammarOpen) {
             document.addEventListener('keydown', handleKeyDown);
             document.addEventListener('mousedown', handleClickOutside);
-            // Prevent background scroll on mobile
-            if (isMobile) {
-                document.body.style.overflow = 'hidden';
-            }
         }
 
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('mousedown', handleClickOutside);
-            if (isMobile) {
-                document.body.style.overflow = '';
-            }
         };
     }, [isGrammarOpen, isMobile]);
 
@@ -396,7 +389,8 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                                     left: 0,
                                     right: 0,
                                     bottom: 0,
-                                    height: '40vh',
+                                    height: '50vh',
+                                    maxHeight: '400px',
                                     minHeight: '200px'
                                 } : {
                                     top: '50%',

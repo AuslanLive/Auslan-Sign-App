@@ -47,7 +47,7 @@ const TranslateApp = () => {
         setIsAnimating(true);
         setSwapButtonRepositioning(true);
         setTranslatedText(""); // Clear the translated text on swap
-        setGrammarParsedText(""); // Clear grammar text on swap
+        // Remove this line: setGrammarParsedText(""); // Don't clear grammar text on swap
 
         // Handle translate button exit animation if switching from textToVideo
         if (mode === "textToVideo") {
