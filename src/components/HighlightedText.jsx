@@ -36,7 +36,6 @@ export default function HighlightedText({ text, dict, onWordClick }) {
           padding: 0 1px;
           margin: 0;
           color: #3b82f6;
-          text-decoration: underline dotted;
           cursor: pointer;
           border-radius: 4px;
           font-family: inherit;
