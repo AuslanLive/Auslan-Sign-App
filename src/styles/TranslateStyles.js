@@ -206,6 +206,8 @@ export const styles = {
     videoContainer: {
         width: "100%",
         height: "100%",
+        flex: 1,
+        minHeight: 0,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -221,6 +223,8 @@ export const styles = {
     video: {
         width: "100%",
         height: "100%",
+        maxWidth: "100%",
+        maxHeight: "100%",
         objectFit: "contain",
         borderRadius: "16px",
     },
