@@ -7,7 +7,8 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
         height: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        overflowY: 'auto'
     }}>
         {/* Header with close button */}
         <div style={{
@@ -18,7 +19,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         }}>
             <h3 style={{
                 margin: 0,
-                fontSize: '18px',
+                fontSize: window.innerWidth < 768 ? '16px' : '18px',
                 fontWeight: '600',
             }}>
                 Auslan Grammar Structure
@@ -59,7 +60,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         
         <p style={{
             margin: '0 0 12px 0',
-            fontSize: '16px',
+            fontSize: window.innerWidth < 768 ? '14px' : '16px',
             color: 'rgba(255, 255, 255, 0.8)',
             lineHeight: '1.4'
         }}>
@@ -77,7 +78,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
             border: '1px solid rgba(255, 255, 255, 0.15)'
         }}>
             <code style={{
-                fontSize: '16px',
+                fontSize: window.innerWidth < 768 ? '14px' : '16px',
                 color: '#ffffff',
                 fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
                 wordBreak: 'break-word'
@@ -96,7 +97,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '14px',
+                fontSize: window.innerWidth < 768 ? '12px' : '14px',
                 color: '#ffffff',
                 cursor: 'pointer'
             }}>
@@ -115,19 +116,22 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 onClick={onCopy}
                 style={{
                     padding: '6px 12px',
-                    fontSize: '13px',
-                    backgroundColor: 'rgba(168, 85, 247, 0.2)',
-                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                    fontSize: window.innerWidth < 768 ? '11px' : '13px',
+                    backgroundColor: 'rgba(147, 51, 234, 0.2)',
+                    border: '1px solid rgba(147, 51, 234, 0.4)',
                     borderRadius: '6px',
                     color: '#ffffff',
                     cursor: 'pointer',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    boxShadow: '0 0 8px rgba(147, 51, 234, 0.3)'
                 }}
                 onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(168, 85, 247, 0.3)';
+                    e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.3)';
+                    e.target.style.boxShadow = '0 0 15px rgba(147, 51, 234, 0.5), 0 0 25px rgba(147, 51, 234, 0.3)';
                 }}
                 onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'rgba(168, 85, 247, 0.2)';
+                    e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.2)';
+                    e.target.style.boxShadow = '0 0 8px rgba(147, 51, 234, 0.3)';
                 }}
             >
                 {copySuccess ? 'Copied!' : 'Copy'}
@@ -292,19 +296,19 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                 
                 @keyframes grammar-pill-glow {
                     0% {
-                        box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4);
+                        box-shadow: 0 0 20px rgba(220, 220, 220, 0.7), 0 0 40px rgba(220, 220, 220, 0.5);
                     }
                     25% {
-                        box-shadow: 0 0 25px rgba(59, 130, 246, 0.8), 0 0 50px rgba(59, 130, 246, 0.5), 0 0 75px rgba(59, 130, 246, 0.2);
+                        box-shadow: 0 0 25px rgba(240, 240, 240, 0.9), 0 0 50px rgba(240, 240, 240, 0.6), 0 0 75px rgba(240, 240, 240, 0.3);
                     }
                     50% {
-                        box-shadow: 0 0 25px rgba(99, 102, 241, 0.6), 0 0 50px rgba(99, 102, 241, 0.3), 0 0 75px rgba(99, 102, 241, 0.1);
+                        box-shadow: 0 0 25px rgba(255, 255, 255, 0.7), 0 0 50px rgba(255, 255, 255, 0.4), 0 0 75px rgba(255, 255, 255, 0.2);
                     }
                     75% {
-                        box-shadow: 0 0 25px rgba(168, 85, 247, 0.6), 0 0 50px rgba(168, 85, 247, 0.3), 0 0 75px rgba(168, 85, 247, 0.1);
+                        box-shadow: 0 0 25px rgba(230, 230, 230, 0.6), 0 0 50px rgba(230, 230, 230, 0.3), 0 0 75px rgba(230, 230, 230, 0.1);
                     }
                     100% {
-                        box-shadow: 0 0 8px rgba(168, 85, 247, 0.2), 0 0 16px rgba(168, 85, 247, 0.1);
+                        box-shadow: 0 0 8px rgba(200, 200, 200, 0.3), 0 0 16px rgba(200, 200, 200, 0.15);
                     }
                 }
                 
@@ -312,7 +316,7 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                     background-color: rgba(168, 85, 247, 0.15) !important;
                     border-color: rgba(168, 85, 247, 0.4) !important;
                     transform: scale(1.05);
-                    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), 0 0 30px rgba(168, 85, 247, 0.15);
+                    box-shadow: 0 0 15px rgba(220, 220, 220, 0.5), 0 0 30px rgba(220, 220, 220, 0.3);
                 }
                 
                 .grammar-pill:focus {
@@ -391,25 +395,16 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                                 boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
                                 overflow: 'hidden',
                                 pointerEvents: 'all',
-                                ...(isMobile ? {
-                                    left: '50%',
-                                    top: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: '90vw',
-                                    maxWidth: '400px',
-                                    height: '60vh',
-                                    maxHeight: '500px',
-                                    minHeight: '300px'
-                                } : {
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: '90vw',
-                                    maxWidth: '500px',
-                                    height: '60vh',
-                                    maxHeight: '600px',
-                                    minHeight: '400px'
-                                })
+                                // Match backdrop responsive sizing logic
+                                left: '50%',
+                                top: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: isMobile ? 'min(60vw, 400px)' : 'min(25vw, 600px)',
+                                height: isMobile ? 'min(30vh, 500px)' : 'min(50vh, 650px)',
+                                maxWidth: '95vw',
+                                maxHeight: '95vh',
+                                minWidth: '280px',
+                                minHeight: '250px'
                             }}
                         >
                             <GrammarOverlayContent
