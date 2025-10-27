@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
+import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
+import grammarDict from '../ambiguous_dict_lowercase.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -31,6 +33,8 @@ const TranslateApp = () => {
     const [alwaysShowGrammar, setAlwaysShowGrammar] = useState(() => 
         localStorage.getItem("auslan:alwaysShowGrammar") === "true"
     );
+    const [selectedWord, setSelectedWord] = useState(null);
+    const [selectedValue, setSelectedValue] = useState(null);
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
@@ -578,7 +582,81 @@ const TranslateApp = () => {
                                             }}>
                                                 Auslan Grammar:
                                             </div>
-                                            "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
+                                            "
+                                            <HighlightedText
+                                                text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
+                                                dict={grammarDict}
+                                                onWordClick={(word, value) => {
+                                                    setSelectedWord(word);
+                                                    setSelectedValue(value);
+                                                }}
+                                            />
+                                            ."
+                                            
+                                            {/* Word info card for always-on display */}
+                                            {selectedWord && (
+                                                <div style={{
+                                                    marginTop: '8px',
+                                                    padding: '8px',
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                                                    borderRadius: '6px',
+                                                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                                                    fontSize: '14px'
+                                                }}>
+                                                    <div style={{ 
+                                                        display: 'flex', 
+                                                        justifyContent: 'space-between', 
+                                                        alignItems: 'flex-start',
+                                                        marginBottom: '4px'
+                                                    }}>
+                                                        <strong style={{ 
+                                                            color: '#60a5fa',
+                                                            textTransform: 'capitalize'
+                                                        }}>
+                                                            {selectedWord}
+                                                        </strong>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedWord(null);
+                                                                setSelectedValue(null);
+                                                            }}
+                                                            style={{
+                                                                background: 'none',
+                                                                border: 0,
+                                                                color: 'rgba(255, 255, 255, 0.7)',
+                                                                cursor: 'pointer',
+                                                                fontSize: '14px',
+                                                                padding: '2px 4px',
+                                                                borderRadius: '3px',
+                                                                transition: 'background-color 150ms ease'
+                                                            }}
+                                                            onMouseEnter={(e) => {
+                                                                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.target.style.backgroundColor = 'transparent';
+                                                            }}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                    {typeof selectedValue === 'object' && selectedValue !== null
+                                                        ? Object.entries(selectedValue).map(([k, v]) => (
+                                                            <p key={k} style={{ 
+                                                                margin: '2px 0',
+                                                                lineHeight: '1.3'
+                                                            }}>
+                                                                <strong style={{ color: 'rgba(255, 255, 255, 0.9)' }}>{k}:</strong> {String(v)}
+                                                            </p>
+                                                        ))
+                                                        : <p style={{ 
+                                                            margin: '2px 0',
+                                                            lineHeight: '1.3'
+                                                        }}>{String(selectedValue)}</p>
+                                                    }
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                     <div style={styles.videoContainer}>
