@@ -459,7 +459,7 @@ const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, set
                                 width: isMobile ? 'min(60vw, 400px)' : 'min(22vw, 600px)',
                                 height: isMobile ? 'min(30vh, 500px)' : 'min(50vh, 650px)',
                                 maxWidth: '95vw',
-                                maxHeight: '95vh',
+                                maxHeight: '40vh',
                                 minWidth: '280px',
                                 minHeight: '250px'
                             }}
