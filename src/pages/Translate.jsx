@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
+import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
+import grammarDict from '../ambiguous_dict_lowercase.json';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -556,7 +558,9 @@ const TranslateApp = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     gap: '12px',
-                                    flex: 1
+                                    flex: 1,
+                                    minHeight: 0,
+                                    overflow: 'hidden'
                                 }}>
                                     {/* Grammar text display when alwaysShowGrammar is true */}
                                     {alwaysShowGrammar && grammarParsedText && (
@@ -568,7 +572,8 @@ const TranslateApp = () => {
                                             fontSize: '18px',
                                             color: '#ffffff',
                                             fontFamily: "Inter, 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
-                                            boxShadow: '0 0 0 1px rgba(190, 155, 210, 0.3), 0 0 6px rgba(190, 155, 210, 0.15)'
+                                            boxShadow: '0 0 0 1px rgba(190, 155, 210, 0.3), 0 0 6px rgba(190, 155, 210, 0.15)',
+                                            flexShrink: 0
                                         }}>
                                             <div style={{
                                                 fontSize: '16px',
@@ -578,10 +583,22 @@ const TranslateApp = () => {
                                             }}>
                                                 Auslan Grammar:
                                             </div>
-                                            "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
+                                            "
+                                            <HighlightedText
+                                                text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
+                                                dict={grammarDict}
+                                                onWordClick={(word, value) => {
+                                                    // Optional: Add any additional logic here
+                                                }}
+                                            />
+                                            ."
                                         </div>
                                     )}
-                                    <div style={styles.videoContainer}>
+                                    <div style={{
+                                        ...styles.videoContainer,
+                                        flex: 1,
+                                        minHeight: 0
+                                    }}>
                                         <video
                                             src={animatedSignVideo}
                                             controls
