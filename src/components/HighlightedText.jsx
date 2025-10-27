@@ -178,10 +178,12 @@ export default function HighlightedText({ text, dict, onWordClick }) {
                     onMouseEnter={(e) => {
                       e.target.style.color = '#ffffff';
                       e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      e.target.style.boxShadow = '0 0 8px rgba(220, 220, 220, 0.5), 0 0 15px rgba(240, 240, 240, 0.3)';
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.color = 'rgba(255, 255, 255, 0.6)';
                       e.target.style.backgroundColor = 'transparent';
+                      e.target.style.boxShadow = 'none';
                     }}
                     aria-label="Close"
                   >
