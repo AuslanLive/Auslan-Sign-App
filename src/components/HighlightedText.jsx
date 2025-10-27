@@ -3,11 +3,25 @@ import React, { useMemo } from "react";
 export default function HighlightedText({ text, dict, onWordClick }) {
   const normDict = useMemo(() => {
     const m = new Map();
-    for (const [k, v] of Object.entries(dict || {})) m.set(k.toLowerCase(), v);
+    // console.log("🔍 Processing dictionary entries:");
+    for (const [k, v] of Object.entries(dict || {})) {
+      // Extract only the part before parentheses for matching
+      const keyBeforeParens = k.toLowerCase().split("(")[0].trim();
+      // console.log(`  "${k}" → "${keyBeforeParens}"`);
+      // Store the original key and value, but use cleaned key for lookup
+      m.set(keyBeforeParens, { originalKey: k, value: v });
+    }
     return m;
   }, [dict]);
 
-  const tokens = useMemo(() => text.split(/(\b[\p{L}\p{N}_']+\b)/u), [text]);
+  const tokens = useMemo(() => {
+    // console.log("🔤 Original text:", `"${text}"`);
+    
+    // Split the original text (keeping parentheses) into tokens
+    const splitTokens = text.split(/(\b[\p{L}\p{N}_']+\b)/u);
+    // console.log("✂️ Split tokens:", splitTokens.map((token, i) => `[${i}]: "${token}"`));
+    return splitTokens;
+  }, [text]);
 
   return (
     <span className="hl-wrap">
@@ -15,12 +29,22 @@ export default function HighlightedText({ text, dict, onWordClick }) {
         const isWord = /\w/.test(tok);
         const key = tok.toLowerCase();
         const hit = isWord && normDict.has(key);
+        
+        // Log each token processing
+        if (isWord) {
+          // console.log(`🔍 Token "${tok}" (key: "${key}") → isWord: ${isWord}, hit: ${hit}`);
+        }
+        
         return hit ? (
           <button
             key={i}
             type="button"
             className="hl-word"
-            onClick={() => onWordClick?.(tok, normDict.get(key))}
+            onClick={() => {
+              const entry = normDict.get(key);
+              // console.log(`🎯 Clicked word "${tok}" → entry:`, entry);
+              onWordClick?.(tok, entry.value);
+            }}
           >
             {tok}
           </button>
