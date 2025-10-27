@@ -1,144 +1,231 @@
 import React, { useState, useRef, useEffect } from 'react';
+import HighlightedText from './HighlightedText';
+import grammarDict from '../ambiguous_dict_lowercase.json';
 
 // Grammar overlay content component
-const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysShowGrammar, copySuccess, onClose }) => (
-    <div style={{
-        padding: '14px',
-        fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'auto'
-    }}>
-        {/* Header with close button */}
+const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysShowGrammar, copySuccess, onClose }) => {
+    const [selectedWord, setSelectedWord] = useState(null);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    // Reset selected word when overlay closes or text changes
+    useEffect(() => {
+        setSelectedWord(null);
+        setSelectedValue(null);
+    }, [grammarParsedText]);
+
+    return (
         <div style={{
+            padding: '14px',
+            fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+            height: '100%',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '8px'
+            flexDirection: 'column',
+            overflowY: 'auto'
         }}>
-            <h3 style={{
-                margin: 0,
-                fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                fontWeight: '600',
+            {/* Header with close button */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '8px'
             }}>
-                Auslan Grammar Structure
-            </h3>
-            <button
-                onClick={onClose}
-                style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    fontSize: '18px',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '24px',
-                    height: '24px',
-                    transition: 'all 150ms ease-out',
-                    outline: 'none'
-                }}
-                onMouseEnter={(e) => {
-                    e.target.style.color = '#ffffff';
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                    e.target.style.color = 'rgba(255, 255, 255, 0.6)';
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.boxShadow = 'none';
-                }}
-                aria-label="Close"
-            >
-                ×
-            </button>
-        </div>
-        
-        <p style={{
-            margin: '0 0 12px 0',
-            fontSize: window.innerWidth < 768 ? '14px' : '16px',
-            color: 'rgba(255, 255, 255, 0.8)',
-            lineHeight: '1.4'
-        }}>
-            Commonly uses the structure of: Time → Topic → Comment. <br />
-            <br />
-            Sentences often begin with when, then what/who, followed by what happens next.<br />
-            <br />
-            For your sentence, the likely grammatical structure is shown below:
-        </p>
-        <div style={{
-            padding: '10px',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '8px',
-            marginBottom: '14px',
-            border: '1px solid rgba(255, 255, 255, 0.15)'
-        }}>
-            <code style={{
+                <h3 style={{
+                    margin: 0,
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    fontWeight: '600',
+                }}>
+                    Auslan Grammar Structure
+                </h3>
+                <button
+                    onClick={onClose}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '18px',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '24px',
+                        height: '24px',
+                        transition: 'all 150ms ease-out',
+                        outline: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.color = '#ffffff';
+                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        e.target.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.color = 'rgba(255, 255, 255, 0.6)';
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.boxShadow = 'none';
+                    }}
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+            </div>
+            
+            <p style={{
+                margin: '0 0 12px 0',
                 fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                color: 'rgba(255, 255, 255, 0.8)',
+                lineHeight: '1.4'
+            }}>
+                Commonly uses the structure of: Time → Topic → Comment. <br />
+                <br />
+                Sentences often begin with when, then what/who, followed by what happens next.<br />
+                <br />
+                For your sentence, the likely grammatical structure is shown below:
+            </p>
+            <div style={{
+                padding: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                marginBottom: '14px',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
                 color: '#ffffff',
+                fontSize: window.innerWidth < 768 ? '14px' : '16px',
                 fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
                 wordBreak: 'break-word'
             }}>
-                "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
-            </code>
-        </div>
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '12px',
-            marginTop: 'auto'
-        }}>
-            <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: window.innerWidth < 768 ? '12px' : '14px',
-                color: '#ffffff',
-                cursor: 'pointer'
-            }}>
-                <input
-                    type="checkbox"
-                    checked={alwaysShowGrammar}
-                    onChange={onToggleAlwaysShow}
-                    style={{
-                        margin: 0,
-                        cursor: 'pointer'
+                "
+                <HighlightedText
+                    text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
+                    dict={grammarDict}
+                    onWordClick={(word, value) => {
+                        setSelectedWord(word);
+                        setSelectedValue(value);
                     }}
                 />
-                Always On?
-            </label>
-            <button
-                onClick={onCopy}
-                style={{
-                    padding: '6px 12px',
-                    fontSize: window.innerWidth < 768 ? '11px' : '13px',
-                    backgroundColor: 'rgba(147, 51, 234, 0.2)',
-                    border: '1px solid rgba(147, 51, 234, 0.4)',
-                    borderRadius: '6px',
+                ."
+            </div>
+            
+            {/* Word info card */}
+            {selectedWord && (
+                <div style={{
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    marginBottom: '12px',
                     color: '#ffffff',
-                    cursor: 'pointer',
-                    fontWeight: '500',
-                    boxShadow: '0 0 8px rgba(147, 51, 234, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.3)';
-                    e.target.style.boxShadow = '0 0 15px rgba(147, 51, 234, 0.5), 0 0 25px rgba(147, 51, 234, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.2)';
-                    e.target.style.boxShadow = '0 0 8px rgba(147, 51, 234, 0.3)';
-                }}
-            >
-                {copySuccess ? 'Copied!' : 'Copy'}
-            </button>
+                    fontSize: window.innerWidth < 768 ? '13px' : '14px'
+                }}>
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'flex-start',
+                        marginBottom: '6px'
+                    }}>
+                        <strong style={{ 
+                            color: '#60a5fa',
+                            fontSize: window.innerWidth < 768 ? '14px' : '15px',
+                            textTransform: 'capitalize'
+                        }}>
+                            {selectedWord}
+                        </strong>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSelectedWord(null);
+                                setSelectedValue(null);
+                            }}
+                            style={{
+                                background: 'none',
+                                border: 0,
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                cursor: 'pointer',
+                                fontSize: '16px',
+                                padding: '2px 4px',
+                                borderRadius: '3px',
+                                transition: 'background-color 150ms ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'transparent';
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                    {typeof selectedValue === 'object' && selectedValue !== null
+                        ? Object.entries(selectedValue).map(([k, v]) => (
+                            <p key={k} style={{ 
+                                margin: '4px 0',
+                                lineHeight: '1.4'
+                            }}>
+                                <strong style={{ color: 'rgba(255, 255, 255, 0.9)' }}>{k}:</strong> {String(v)}
+                            </p>
+                        ))
+                        : <p style={{ 
+                            margin: '4px 0',
+                            lineHeight: '1.4'
+                        }}>{String(selectedValue)}</p>
+                    }
+                </div>
+            )}
+
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+                marginTop: 'auto'
+            }}>
+                <label style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: window.innerWidth < 768 ? '12px' : '14px',
+                    color: '#ffffff',
+                    cursor: 'pointer'
+                }}>
+                    <input
+                        type="checkbox"
+                        checked={alwaysShowGrammar}
+                        onChange={onToggleAlwaysShow}
+                        style={{
+                            margin: 0,
+                            cursor: 'pointer'
+                        }}
+                    />
+                    Always On?
+                </label>
+                <button
+                    onClick={onCopy}
+                    style={{
+                        padding: '6px 12px',
+                        fontSize: window.innerWidth < 768 ? '11px' : '13px',
+                        backgroundColor: 'rgba(147, 51, 234, 0.2)',
+                        border: '1px solid rgba(147, 51, 234, 0.4)',
+                        borderRadius: '6px',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        fontWeight: '500',
+                        boxShadow: '0 0 8px rgba(147, 51, 234, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.3)';
+                        e.target.style.boxShadow = '0 0 15px rgba(147, 51, 234, 0.5), 0 0 25px rgba(147, 51, 234, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.2)';
+                        e.target.style.boxShadow = '0 0 8px rgba(147, 51, 234, 0.3)';
+                    }}
+                >
+                    {copySuccess ? 'Copied!' : 'Copy'}
+                </button>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const GrammarPill = ({ grammarParsedText, mode, isMobile, alwaysShowGrammar, setAlwaysShowGrammar }) => {
     const [isGrammarOpen, setGrammarOpen] = useState(false);
