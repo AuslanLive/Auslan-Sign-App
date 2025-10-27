@@ -126,7 +126,7 @@ export default function HighlightedText({ text, dict, onWordClick }) {
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
                 width: window.innerWidth < 768 ? 'min(85vw, 350px)' : 'min(400px, 90vw)',
-                maxWidth: '200px',
+                maxWidth: '250px',
                 minWidth: '150px',
                 padding: '20px',
                 fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
@@ -139,49 +139,64 @@ export default function HighlightedText({ text, dict, onWordClick }) {
               {/* Header */}
               <div style={{
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
+                flexDirection: 'column',
                 marginBottom: '16px'
               }}>
-                <h3 id="word-info-title" style={{
-                  margin: 0,
-                  fontSize: window.innerWidth < 768 ? '18px' : '20px',
-                  fontWeight: '600',
-                  color: '#60a5fa',
-                  textTransform: 'capitalize'
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '8px'
                 }}>
-                  {selectedWord}
-                </h3>
-                <button
-                  onClick={() => setIsWordOverlayOpen(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '28px',
-                    height: '28px',
-                    transition: 'all 150ms ease-out',
-                    outline: 'none'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = '#ffffff';
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = 'rgba(255, 255, 255, 0.6)';
-                    e.target.style.backgroundColor = 'transparent';
-                  }}
-                  aria-label="Close"
-                >
-                  ×
-                </button>
+                  <h3 id="word-info-title" style={{
+                    margin: 0,
+                    fontSize: window.innerWidth < 768 ? '18px' : '20px',
+                    fontWeight: '600',
+                    color: '#60a5fa',
+                    textTransform: 'capitalize'
+                  }}>
+                      {selectedWord}
+                  </h3>
+                  <button
+                    onClick={() => setIsWordOverlayOpen(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      fontSize: '20px',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '28px',
+                      height: '28px',
+                      transition: 'all 150ms ease-out',
+                      outline: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = '#ffffff';
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = 'rgba(255, 255, 255, 0.6)';
+                      e.target.style.backgroundColor = 'transparent';
+                    }}
+                    aria-label="Close"
+                  >
+                    ×
+                  </button>
+                </div>
+                <h2 id="word-info-subtitle" style={{
+                  margin: 0,
+                  fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                  fontWeight: '400',
+                  color: 'rgba(253, 253, 253, 0.8)',
+                  textTransform: 'none'
+                }}> 
+                    other variants of this sign:
+                </h2>
               </div>
 
               {/* Content */}
@@ -191,23 +206,43 @@ export default function HighlightedText({ text, dict, onWordClick }) {
               }}>
                 {typeof selectedValue === 'object' && selectedValue !== null
                   ? Object.entries(selectedValue).map(([k, v]) => (
-                      <div key={k} style={{ marginBottom: '12px' }}>
-                        <strong style={{ 
-                          color: 'rgba(255, 255, 255, 0.9)',
-                          display: 'block',
-                          marginBottom: '4px',
-                          textTransform: 'capitalize'
+                      <div key={k} style={{ 
+                        marginBottom: '12px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '8px'
+                      }}>
+                        <span style={{ 
+                          color: 'rgba(255, 255, 255, 0.6)',
+                          fontSize: '14px',
+                          lineHeight: '1.5',
+                          marginTop: '1px'
                         }}>
-                          {k}:
-                        </strong>
-                        <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                          •
+                        </span>
+                        <span style={{ color: 'rgba(255, 255, 255, 1.0)' }}>
+                        {/* print value of dict keys here */}
                           {String(v)}
                         </span>
                       </div>
                     ))
-                  : <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                      {String(selectedValue)}
-                    </span>
+                  : <div style={{ 
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '8px'
+                    }}>
+                      <span style={{ 
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '14px',
+                        lineHeight: '1.5',
+                        marginTop: '1px'
+                      }}>
+                        •
+                      </span>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                        {String(selectedValue)}
+                      </span>
+                    </div>
                 }
               </div>
             </div>
