@@ -68,7 +68,7 @@ class GrammarParser:
             print("(GrammarParser.py): ERROR - Empty or invalid input received")
             return {"error": "Invalid input from user"}
 
-        if len(t2s_input.split()) > 2:
+        if len(t2s_input.split()) > 1:
             print(f"(GrammarParser.py): Processing multi-word sentence ({len(t2s_input.split())} words)")
 
             # 1. Lemmatise words using spaCy
@@ -113,11 +113,12 @@ class GrammarParser:
             print("(GrammarParser.py): STAGE 4 - Applying word sense disambiguation...")
             original_sentence = sentence.copy()  # Keep a copy for comparison
             for i, word in enumerate(sentence):
+                # Check if the word is in the disambiguated words dictionary (squash to lowercase for matching)
                 word_lower = word.lower()
                 if word_lower in disambiguated_words:
                     # If the word is ambiguous, replace it with its disambiguated form
                     old_word = sentence[i]
-                    sentence[i] = disambiguated_words[word_lower].upper()
+                    sentence[i] = disambiguated_words[word_lower]
                     print(f"(GrammarParser.py): Position {i}: '{old_word}' → '{sentence[i]}'")
             
             if original_sentence != sentence:
@@ -130,7 +131,12 @@ class GrammarParser:
             print(f"(GrammarParser.py): Short sentence ({len(t2s_input.split())} words) - skipping processing")
             sentence = t2s_input.split()
             print(f"(GrammarParser.py): Direct word split: {sentence}")
-
+            
+        # Convert sentence array to lowercase string for display
+        # Example: ['TOON', 'GOD', 'SOUP'] -> "toon god soup"
+        lowercase_sentence = ' '.join(word.lower() for word in sentence)
+        print(f"(GrammarParser.py): Lowercase string: '{lowercase_sentence}'")
+        
         print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
         print(f"(GrammarParser.py): Processing completed in {time.time()-start:.4f} seconds")
         return sentence
