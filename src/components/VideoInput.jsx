@@ -34,7 +34,6 @@ const VideoInput = React.forwardRef((props, ref) => {
     const [error, setError] = useState(null); // State to handle errors
     const [isTransmitting, setIsTransmitting] = useState(true); // State to control keypoint transmission
     const [isPaused, setIsPaused] = useState(false); // State to control pause/resume
-    const [hasHandsDetected, setHasHandsDetected] = useState(false); // track the hands
 
     useEffect(() => {
         const loadMediaPipe = async () => {
@@ -149,24 +148,16 @@ const VideoInput = React.forwardRef((props, ref) => {
                             : null,
                     ];
 
-                    // Only buffer if at least one hand is detected
+                    // Debug: show counts in console
                     const lCount = keypoints[1] ? keypoints[1].length : 0;
                     const rCount = keypoints[2] ? keypoints[2].length : 0;
-                    const hasHands = lCount > 0 || rCount > 0;
-
-                    // Update hand detection status
-                    setHasHandsDetected(hasHands);
-
-                    if (hasHands) {
-                        // Debug: show counts in console
-                        if ((lCount + rCount) % 21 === 0) {
-                            console.log(`Frame keypoints -> L:${lCount} R:${rCount}`);
-                        }
-
-                        // Save to a rolling buffer for batch upload
-                        frameBuffer.current.push({ keypoints });
-                        if (frameBuffer.current.length > 300) frameBuffer.current.shift();
+                    if ((lCount + rCount) % 21 === 0) {
+                        console.log(`Frame keypoints -> L:${lCount} R:${rCount}`);
                     }
+
+                    // Save to a rolling buffer for batch upload
+                    frameBuffer.current.push({ keypoints });
+                    if (frameBuffer.current.length > 300) frameBuffer.current.shift();
                 }
             });
 
@@ -277,7 +268,6 @@ const VideoInput = React.forwardRef((props, ref) => {
         startTransmission,
         pauseTransmission,
         resumeTransmission,
-        hasHandsDetected,
     }));
 
     const toggleCamera = () => {

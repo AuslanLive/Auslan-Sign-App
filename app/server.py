@@ -15,15 +15,36 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 HERE = os.path.dirname(os.path.abspath(__file__))        # .../app
 MODEL_PATH = os.path.join(HERE, "honoursmodel.keras")    # .../app/honoursmodel.keras
 
-if not os.path.exists(MODEL_PATH):
-    print(f"(server.py) Error: Model file not found at {MODEL_PATH}")
+# MAIN CLASS WHICH CONNECTS TO ALL THE SYSTEM
+try:
+    connectinator = Connectinator(MODEL_PATH)
+except Exception as e:
+    # Start API in degraded mode so frontend can still load
+    print(f"(server.py) WARNING: Failed to initialize Connectinator: {type(e).__name__}: {e}")
     print(f"(server.py) __file__={__file__}")
     print(f"(server.py) cwd={os.getcwd()}")
     print(f"(server.py) files in app/: {os.listdir(HERE)}")
-    raise SystemExit(1)
 
-# MAIN CLASS WHICH CONNECTS TO ALL THE SYSTEM
-connectinator = Connectinator(MODEL_PATH)
+    class _Degraded:
+        def __init__(self, reason):
+            self.reason = str(reason)
+            self.front_end_translation_variable = ""
+        async def process_frame(self, *_args, **_kwargs):
+            return None
+        def format_model_output(self, *_args, **_kwargs):
+            return None
+        def get_transltion(self):
+            return ""
+        def get_top_predictions(self):
+            return []
+        def get_top_1_prediction(self):
+            return {"label": "", "probability": 0.0}
+        def get_gem_flag(self):
+            return False
+        def format_sign_text(self, text):
+            return text
+
+    connectinator = _Degraded(e)
 
 # -------- optional: quick health route --------
 @app.route('/health', methods=['GET'])

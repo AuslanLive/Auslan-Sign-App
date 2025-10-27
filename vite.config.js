@@ -11,7 +11,7 @@ export default defineConfig({
     // set up a proxy to redirect API calls to the backend server
     proxy: {
       '/api': {
-        target: 'http://localhost:5173', // Adjust to the backend server URL in server.py
+        target: 'http://localhost:5001', // Flask backend server
         changeOrigin: true,
       },
     },

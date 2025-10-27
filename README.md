@@ -12,15 +12,30 @@ Dependencies
 1. Install pip (python package manager), then from the root folder, run: pip install -r requirements.txt
 2. Install FFMPeg for video conversion. This process is different between Mac and Windows, please consult the documentation online. Go to: https://ffmpeg.org/download.html
 
-In the root folder, run the below two commands in two separate terminals:
+### Quick Start (Recommended)
+
+**Option 1: Single Command (Cross-platform)**
+```bash
+python start.py
+```
+
+**Option 2: Platform-specific scripts**
+- **Windows**: Double-click `start.bat` or run `start.bat` in Command Prompt
+- **Mac/Linux**: Run `./start.sh` in terminal
+
+### Manual Start (Alternative)
+
+If you prefer to run the servers separately, use two separate terminals:
 
 1. Start the client:
-
-`npm run dev`
+```bash
+npm run dev
+```
 
 2. Start the server (Flask):
-
-`python -m app.server`
+```bash
+python -m app.server
+```
 
 ## 🌐 Deployed Live At:
 ## Currently deployed at:
