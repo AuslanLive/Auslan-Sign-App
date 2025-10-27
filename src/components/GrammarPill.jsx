@@ -13,6 +13,19 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         setSelectedValue(null);
     }, [grammarParsedText]);
 
+    // Lightweight check for highlighted words
+    const hasHighlightedWords = React.useMemo(() => {
+        if (!grammarParsedText || !grammarDict) return false;
+        
+        const words = grammarParsedText.split(/\s+/);
+        return words.some(word => {
+            const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+            return Object.keys(grammarDict).some(key => 
+                key.toLowerCase().split('(')[0].trim() === cleanWord
+            );
+        });
+    }, [grammarParsedText]);
+
     return (
         <div style={{
             padding: '14px',
@@ -104,6 +117,30 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 />
                 ."
             </div>
+
+            {hasHighlightedWords && (
+                <div style={{
+                    padding: '8px 12px',
+                    backgroundColor: 'rgba(59, 130, 246, 0.25)',
+                    border: '1px solid rgba(59, 130, 246, 0.5)',
+                    borderRadius: '6px',
+                    marginBottom: '14px',
+                    fontSize: window.innerWidth < 768 ? '12px' : '14px',
+                    color: 'rgba(255, 255, 255, 0.75)',
+                    lineHeight: '1.4',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                }}>
+                    <span style={{
+                        fontSize: '20px',
+                        color: 'rgba(59, 130, 246, 0.8)'
+                    }}>
+                        💡
+                    </span>
+                    If a word appears in blue, it has multiple signs in Auslan — click it to view a list of them.
+                </div>
+            )}
             
             <div style={{
                 display: 'flex',
