@@ -6,6 +6,7 @@ import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import grammarDict from '../ambiguous_dict_lowercase.json';
+import { cleanInputText } from '../lib/cleanInputText';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -13,14 +14,6 @@ import '../styles/TranslateStyles.css';
 
 
 const API_BASE_URL = "/api"
-
-// Helper function to clean input text
-const cleanInputText = (text) => {
-    return text.trim()
-        .replace(/[^\w\s]|_/g, "")     // Remove symbols and underscores
-        .replace(/\s+/g, " ")          // Normalize whitespace
-        .replace(/\b[Ii]\b/g, "me");   // Convert "I" to "me" for Auslan grammar
-};
 
 const TranslateApp = () => {
     const [mode, setMode] = useState("videoToText");
