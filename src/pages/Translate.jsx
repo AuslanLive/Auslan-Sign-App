@@ -2,9 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
-import Top5Selector from "../components/Top5Selector";
 import EditableWord from "../components/EditableWord";
-import InlineSelector from "../components/InlineSelector";
 import FrameProgressIndicator from "../components/FrameProgressIndicator";
 import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
@@ -39,9 +37,7 @@ const TranslateApp = () => {
         localStorage.getItem("auslan:alwaysShowGrammar") === "true"
     );
     
-    // State for honors model top-5 predictions
-    const [pendingPredictions, setPendingPredictions] = useState([]);
-    const [showTop5Selector, setShowTop5Selector] = useState(false);
+    // State for honors model predictions
     const [lastPredictionId, setLastPredictionId] = useState(null);
     
     // State for sentence with word objects (for click-to-fix)
@@ -59,51 +55,6 @@ const TranslateApp = () => {
         setIsPolling(true);
         if (videoInputRef.current) {
             videoInputRef.current.startTransmission();
-        }
-    };
-    
-    // Handle word selection from top-5
-    const handleWordSelection = async (selectedWord) => {
-        try {
-            const response = await fetch(API_BASE_URL + "/select_word", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ word: selectedWord })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Word selected:", data);
-                
-                // Clear the top-5 selector
-                setPendingPredictions([]);
-                setShowTop5Selector(false);
-                
-                // Show success toast
-                toast.success(`Added: ${selectedWord}`);
-            }
-        } catch (error) {
-            console.error("Error selecting word:", error);
-            toast.error("Failed to add word");
-        }
-    };
-    
-    // Handle skipping prediction
-    const handleSkipPrediction = async () => {
-        try {
-            await fetch(API_BASE_URL + "/skip_prediction", {
-                method: "POST"
-            });
-            
-            // Clear the top-5 selector
-            setPendingPredictions([]);
-            setShowTop5Selector(false);
-            
-            toast("Skipped prediction", { icon: "⊘" });
-        } catch (error) {
-            console.error("Error skipping prediction:", error);
         }
     };
     
@@ -278,7 +229,7 @@ const TranslateApp = () => {
         };
     }, [mode, isPolling]);
     
-    // Poll for pending top-5 predictions (honors model)
+    // Poll for pending top-5 predictions and auto-accept top prediction
     useEffect(() => {
         let interval;
         if (mode === "videoToText" && isPolling) {
@@ -291,17 +242,32 @@ const TranslateApp = () => {
                         // Create unique ID for this prediction set
                         const newId = JSON.stringify(data.predictions);
                         
-                        // Only update if predictions actually changed (prevents flickering)
+                        // Only process if predictions actually changed (prevents duplicate processing)
                         if (newId !== lastPredictionId) {
-                            setPendingPredictions(data.predictions);
-                            setShowTop5Selector(true);
+                            const topPrediction = data.predictions[0];
+                            const topWord = topPrediction.top5?.[0]?.label || topPrediction.top5?.[0]?.word;
+                            
+                            if (topWord) {
+                                // Auto-accept the top prediction
+                                try {
+                                    await fetch(API_BASE_URL + "/select_word", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({ word: topWord })
+                                    });
+                                    console.log("Auto-accepted word:", topWord);
+                                } catch (error) {
+                                    console.error("Error auto-accepting word:", error);
+                                }
+                            }
+                            
                             setLastPredictionId(newId);
                         }
                     } else if (data.predictions && data.predictions.length === 0) {
                         // Clear predictions when none pending
-                        if (showTop5Selector) {
-                            setPendingPredictions([]);
-                            setShowTop5Selector(false);
+                        if (lastPredictionId) {
                             setLastPredictionId(null);
                         }
                     }
@@ -310,15 +276,13 @@ const TranslateApp = () => {
                 }
             }, 500); // Check more frequently for responsive UX
         } else {
-            setPendingPredictions([]);
-            setShowTop5Selector(false);
             setLastPredictionId(null);
         }
 
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode, isPolling, lastPredictionId, showTop5Selector]);
+    }, [mode, isPolling, lastPredictionId]);
     
     // Poll for sentence words (for click-to-fix functionality)
     useEffect(() => {
@@ -381,8 +345,7 @@ const TranslateApp = () => {
                     setFrameStatus(data);
                     
                     // Show progress indicator when actively collecting frames
-                    // or when close to completing (> 10 frames)
-                    const shouldShow = data.frames_collected > 0 && !showTop5Selector;
+                    const shouldShow = data.frames_collected > 0;
                     setShowFrameProgress(shouldShow);
                     
                 } catch (error) {
@@ -397,7 +360,7 @@ const TranslateApp = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [mode, isPolling, showTop5Selector]);
+    }, [mode, isPolling]);
 
     // Update size on window change
     useEffect(() => {
@@ -417,8 +380,8 @@ const TranslateApp = () => {
     // Spacebar trigger for manual frame capture
     useEffect(() => {
         const handleKeyPress = async (e) => {
-            // Only in videoToText mode, when camera is active, and modal is NOT showing
-            if (mode === "videoToText" && isPolling && !showTop5Selector && e.code === 'Space') {
+            // Only in videoToText mode and when camera is active
+            if (mode === "videoToText" && isPolling && e.code === 'Space') {
                 e.preventDefault(); // Prevent page scroll
                 
                 // Trigger immediate prediction if we have enough frames
@@ -452,7 +415,7 @@ const TranslateApp = () => {
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         };
-    }, [mode, isPolling, showTop5Selector, frameStatus]);
+    }, [mode, isPolling, frameStatus]);
     
     const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
@@ -500,8 +463,6 @@ const TranslateApp = () => {
         setTimeout(() => {
             setTranslatedText("");
             setSentenceWords([]); // Clear the word objects
-            setPendingPredictions([]); // Clear pending predictions
-            setShowTop5Selector(false); // Hide selector
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -812,7 +773,7 @@ const TranslateApp = () => {
                                             paddingLeft: '28px'
                                         }}
                                     >
-                                        {sentenceWords.length === 0 && !showTop5Selector && (
+                                        {sentenceWords.length === 0 && (
                                             <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>
                                                 Translation will appear here...
                                             </span>
@@ -826,14 +787,6 @@ const TranslateApp = () => {
                                                 onReplace={handleReplaceWord}
                                             />
                                         ))}
-                                        
-                                        {showTop5Selector && pendingPredictions.length > 0 && pendingPredictions[0].top5 && (
-                                            <InlineSelector
-                                                predictions={pendingPredictions[0]}
-                                                onSelect={handleWordSelection}
-                                                onSkip={handleSkipPrediction}
-                                            />
-                                        )}
                                     </div>
                                     {showClearButton && (
                                         <button 
