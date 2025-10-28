@@ -14,6 +14,14 @@ import '../styles/TranslateStyles.css';
 
 const API_BASE_URL = "/api"
 
+// Helper function to clean input text
+const cleanInputText = (text) => {
+    return text.trim()
+        .replace(/[^\w\s]|_/g, "")     // Remove symbols and underscores
+        .replace(/\s+/g, " ")          // Normalize whitespace
+        .replace(/\b[Ii]\b/g, "me");   // Convert "I" to "me" for Auslan grammar
+};
+
 const TranslateApp = () => {
     const [mode, setMode] = useState("videoToText");
     const [sourceText, setSourceText] = useState("");
@@ -217,14 +225,16 @@ const TranslateApp = () => {
 
     const handleTextToVideo = async () => {
         const fixedSourceText = sourceText.trim();
-        console.log("Sending Source Text:", fixedSourceText.length);
-        if (fixedSourceText === null || fixedSourceText === undefined || fixedSourceText.trim().length === 0) {
-            console.log(`No text to translate: ${fixedSourceText}`);
+        const cleanedText = cleanInputText(sourceText);
+
+        console.log("Sending Source Text:", cleanedText);
+        if (cleanedText === null || cleanedText === undefined || cleanedText.trim().length === 0) {
+            console.log(`No text to translate: ${cleanedText}`);
             toast.error(`No text to translate`);
             return;
         };
 
-        checkTextAgainstWordListJson(fixedSourceText);
+        checkTextAgainstWordListJson(cleanedText);
         setLoading(true); // Set loading to true while fetching video
 
         // Step 1: API call to parse sentence to Auslan grammar
