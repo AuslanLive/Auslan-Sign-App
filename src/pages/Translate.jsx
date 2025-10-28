@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
+import Top5Selector from "../components/Top5Selector";
 import EditableWord from "../components/EditableWord";
 import FrameProgressIndicator from "../components/FrameProgressIndicator";
 import HighlightedText from "../components/HighlightedText";
@@ -37,8 +38,7 @@ const TranslateApp = () => {
         localStorage.getItem("auslan:alwaysShowGrammar") === "true"
     );
     
-    // State for honors model predictions
-    const [lastPredictionId, setLastPredictionId] = useState(null);
+    // State for honors model top-5 predictions - removed modal logic, predictions handled by backend automatically
     
     // State for sentence with word objects (for click-to-fix)
     const [sentenceWords, setSentenceWords] = useState([]);
@@ -57,6 +57,8 @@ const TranslateApp = () => {
             videoInputRef.current.startTransmission();
         }
     };
+    
+    // Word selection now handled automatically by backend - users can click on words to change them via EditableWord component
     
     // Handle word replacement (click-to-fix)
     const handleReplaceWord = async (wordId, newWord) => {
@@ -229,60 +231,7 @@ const TranslateApp = () => {
         };
     }, [mode, isPolling]);
     
-    // Poll for pending top-5 predictions and auto-accept top prediction
-    useEffect(() => {
-        let interval;
-        if (mode === "videoToText" && isPolling) {
-            interval = setInterval(async () => {
-                try {
-                    const response = await fetch(API_BASE_URL + "/get_pending_predictions");
-                    const data = await response.json();
-                    
-                    if (data.predictions && data.predictions.length > 0) {
-                        // Create unique ID for this prediction set
-                        const newId = JSON.stringify(data.predictions);
-                        
-                        // Only process if predictions actually changed (prevents duplicate processing)
-                        if (newId !== lastPredictionId) {
-                            const topPrediction = data.predictions[0];
-                            const topWord = topPrediction.top5?.[0]?.label || topPrediction.top5?.[0]?.word;
-                            
-                            if (topWord) {
-                                // Auto-accept the top prediction
-                                try {
-                                    await fetch(API_BASE_URL + "/select_word", {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify({ word: topWord })
-                                    });
-                                    console.log("Auto-accepted word:", topWord);
-                                } catch (error) {
-                                    console.error("Error auto-accepting word:", error);
-                                }
-                            }
-                            
-                            setLastPredictionId(newId);
-                        }
-                    } else if (data.predictions && data.predictions.length === 0) {
-                        // Clear predictions when none pending
-                        if (lastPredictionId) {
-                            setLastPredictionId(null);
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error fetching pending predictions:", error);
-                }
-            }, 500); // Check more frequently for responsive UX
-        } else {
-            setLastPredictionId(null);
-        }
-
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [mode, isPolling, lastPredictionId]);
+    // Removed pending predictions polling - words now automatically added to sentence by backend
     
     // Poll for sentence words (for click-to-fix functionality)
     useEffect(() => {
@@ -380,7 +329,7 @@ const TranslateApp = () => {
     // Spacebar trigger for manual frame capture
     useEffect(() => {
         const handleKeyPress = async (e) => {
-            // Only in videoToText mode and when camera is active
+            // Only in videoToText mode, when camera is active
             if (mode === "videoToText" && isPolling && e.code === 'Space') {
                 e.preventDefault(); // Prevent page scroll
                 
