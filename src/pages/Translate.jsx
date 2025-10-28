@@ -6,8 +6,11 @@ import Top5Selector from "../components/Top5Selector";
 import EditableWord from "../components/EditableWord";
 import InlineSelector from "../components/InlineSelector";
 import FrameProgressIndicator from "../components/FrameProgressIndicator";
+import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
+import grammarDict from '../ambiguous_dict_lowercase.json';
+import { cleanInputText } from '../lib/cleanInputText';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -510,15 +513,16 @@ const TranslateApp = () => {
     // Function to convert text to video
 
     const handleTextToVideo = async () => {
-        const fixedSourceText = sourceText.trim();
-        console.log("Sending Source Text:", fixedSourceText.length);
-        if (fixedSourceText === null || fixedSourceText === undefined || fixedSourceText.trim().length === 0) {
-            console.log(`No text to translate: ${fixedSourceText}`);
+        const cleanedText = cleanInputText(sourceText);
+
+        console.log("Sending Source Text:", cleanedText);
+        if (cleanedText === null || cleanedText === undefined || cleanedText.trim().length === 0) {
+            console.log(`No text to translate: ${cleanedText}`);
             toast.error(`No text to translate`);
             return;
         };
 
-        checkTextAgainstWordListJson(fixedSourceText);
+        checkTextAgainstWordListJson(cleanedText);
         setLoading(true); // Set loading to true while fetching video
 
         // Step 1: API call to parse sentence to Auslan grammar
@@ -526,7 +530,7 @@ const TranslateApp = () => {
             const response = await fetch(API_BASE_URL + "/t2s", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ t2s_input: fixedSourceText }),
+                body: JSON.stringify({ t2s_input: cleanedText }),
             });
 
             if (!response.ok)
@@ -923,7 +927,9 @@ const TranslateApp = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     gap: '12px',
-                                    flex: 1
+                                    flex: 1,
+                                    minHeight: 0,
+                                    overflow: 'hidden'
                                 }}>
                                     {/* Grammar text display when alwaysShowGrammar is true */}
                                     {alwaysShowGrammar && grammarParsedText && (
@@ -935,7 +941,8 @@ const TranslateApp = () => {
                                             fontSize: '18px',
                                             color: '#ffffff',
                                             fontFamily: "Inter, 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
-                                            boxShadow: '0 0 0 1px rgba(190, 155, 210, 0.3), 0 0 6px rgba(190, 155, 210, 0.15)'
+                                            boxShadow: '0 0 0 1px rgba(190, 155, 210, 0.3), 0 0 6px rgba(190, 155, 210, 0.15)',
+                                            flexShrink: 0
                                         }}>
                                             <div style={{
                                                 fontSize: '16px',
@@ -945,10 +952,22 @@ const TranslateApp = () => {
                                             }}>
                                                 Auslan Grammar:
                                             </div>
-                                            "{grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}."
+                                            "
+                                            <HighlightedText
+                                                text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
+                                                dict={grammarDict}
+                                                onWordClick={(word, value) => {
+                                                    // Optional: Add any additional logic here
+                                                }}
+                                            />
+                                            ."
                                         </div>
                                     )}
-                                    <div style={styles.videoContainer}>
+                                    <div style={{
+                                        ...styles.videoContainer,
+                                        flex: 1,
+                                        minHeight: 0
+                                    }}>
                                         <video
                                             src={animatedSignVideo}
                                             controls
