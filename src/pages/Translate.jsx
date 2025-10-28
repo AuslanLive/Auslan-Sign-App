@@ -224,7 +224,6 @@ const TranslateApp = () => {
     // Function to convert text to video
 
     const handleTextToVideo = async () => {
-        const fixedSourceText = sourceText.trim();
         const cleanedText = cleanInputText(sourceText);
 
         console.log("Sending Source Text:", cleanedText);
@@ -242,7 +241,7 @@ const TranslateApp = () => {
             const response = await fetch(API_BASE_URL + "/t2s", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ t2s_input: fixedSourceText }),
+                body: JSON.stringify({ t2s_input: cleanedText }),
             });
 
             if (!response.ok)
