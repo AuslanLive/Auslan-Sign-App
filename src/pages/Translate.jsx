@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
+import Top5Selector from "../components/Top5Selector";
+import EditableWord from "../components/EditableWord";
+import InlineSelector from "../components/InlineSelector";
+import FrameProgressIndicator from "../components/FrameProgressIndicator";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,12 +35,95 @@ const TranslateApp = () => {
     const [alwaysShowGrammar, setAlwaysShowGrammar] = useState(() => 
         localStorage.getItem("auslan:alwaysShowGrammar") === "true"
     );
+    
+    // State for honors model top-5 predictions
+    const [pendingPredictions, setPendingPredictions] = useState([]);
+    const [showTop5Selector, setShowTop5Selector] = useState(false);
+    const [lastPredictionId, setLastPredictionId] = useState(null);
+    
+    // State for sentence with word objects (for click-to-fix)
+    const [sentenceWords, setSentenceWords] = useState([]);
+    
+    // State for processing indicator
+    const [isProcessingActive, setIsProcessingActive] = useState(false);
+    
+    // State for frame collection progress
+    const [frameStatus, setFrameStatus] = useState(null);
+    const [showFrameProgress, setShowFrameProgress] = useState(false);
 
     // Function to handle camera start notification
     const handleCameraStart = () => {
         setIsPolling(true);
         if (videoInputRef.current) {
             videoInputRef.current.startTransmission();
+        }
+    };
+    
+    // Handle word selection from top-5
+    const handleWordSelection = async (selectedWord) => {
+        try {
+            const response = await fetch(API_BASE_URL + "/select_word", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ word: selectedWord })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Word selected:", data);
+                
+                // Clear the top-5 selector
+                setPendingPredictions([]);
+                setShowTop5Selector(false);
+                
+                // Show success toast
+                toast.success(`Added: ${selectedWord}`);
+            }
+        } catch (error) {
+            console.error("Error selecting word:", error);
+            toast.error("Failed to add word");
+        }
+    };
+    
+    // Handle skipping prediction
+    const handleSkipPrediction = async () => {
+        try {
+            await fetch(API_BASE_URL + "/skip_prediction", {
+                method: "POST"
+            });
+            
+            // Clear the top-5 selector
+            setPendingPredictions([]);
+            setShowTop5Selector(false);
+            
+            toast("Skipped prediction", { icon: "⊘" });
+        } catch (error) {
+            console.error("Error skipping prediction:", error);
+        }
+    };
+    
+    // Handle word replacement (click-to-fix)
+    const handleReplaceWord = async (wordId, newWord) => {
+        try {
+            const response = await fetch(API_BASE_URL + "/replace_word", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ word_id: wordId, new_word: newWord })
+            });
+            
+            if (response.ok) {
+                toast.success(`Changed to: ${newWord}`);
+                // Sentence words will update via polling
+            } else {
+                toast.error("Failed to replace word");
+            }
+        } catch (error) {
+            console.error("Error replacing word:", error);
+            toast.error("Error replacing word");
         }
     };
 
@@ -139,11 +226,12 @@ const TranslateApp = () => {
     // setInterval(get_sign_trans, 1000);
 
     // new code - only trigger when mode is videoToText and polling is enabled
+    // Disabled get_sign_trans() - we now use sentenceWords word-by-word system
     useEffect(() => {
         let interval;
         if (mode === "videoToText" && isPolling) {
             interval = setInterval(function () {
-                get_sign_trans();
+                // get_sign_trans(); // DISABLED - replaced by sentenceWords system
                 getGemFlag();
             }, 1000);
         }
@@ -152,6 +240,161 @@ const TranslateApp = () => {
             if (interval) clearInterval(interval);
         };
     }, [mode, isPolling]);
+    
+    // Sync sentenceWords to translatedText for display
+    useEffect(() => {
+        if (sentenceWords && sentenceWords.length > 0) {
+            const words = sentenceWords.map(item => 
+                typeof item === 'object' ? item.word : item
+            ).join(' ');
+            setTranslatedText(words);
+        }
+    }, [sentenceWords]);
+    
+    // Poll for sentence words (honors model)
+    useEffect(() => {
+        let interval;
+        if (mode === "videoToText" && isPolling) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(API_BASE_URL + "/api/get_sentence_words");
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.words && Array.isArray(data.words)) {
+                            setSentenceWords(data.words);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching sentence words:", error);
+                }
+            }, 500); // Poll every 500ms for smooth updates
+        }
+        
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [mode, isPolling]);
+    
+    // Poll for pending top-5 predictions (honors model)
+    useEffect(() => {
+        let interval;
+        if (mode === "videoToText" && isPolling) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(API_BASE_URL + "/get_pending_predictions");
+                    const data = await response.json();
+                    
+                    if (data.predictions && data.predictions.length > 0) {
+                        // Create unique ID for this prediction set
+                        const newId = JSON.stringify(data.predictions);
+                        
+                        // Only update if predictions actually changed (prevents flickering)
+                        if (newId !== lastPredictionId) {
+                            setPendingPredictions(data.predictions);
+                            setShowTop5Selector(true);
+                            setLastPredictionId(newId);
+                        }
+                    } else if (data.predictions && data.predictions.length === 0) {
+                        // Clear predictions when none pending
+                        if (showTop5Selector) {
+                            setPendingPredictions([]);
+                            setShowTop5Selector(false);
+                            setLastPredictionId(null);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching pending predictions:", error);
+                }
+            }, 500); // Check more frequently for responsive UX
+        } else {
+            setPendingPredictions([]);
+            setShowTop5Selector(false);
+            setLastPredictionId(null);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [mode, isPolling, lastPredictionId, showTop5Selector]);
+    
+    // Poll for sentence words (for click-to-fix functionality)
+    useEffect(() => {
+        let interval;
+        if (mode === "videoToText" && isPolling) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(API_BASE_URL + "/get_sentence_words");
+                    const data = await response.json();
+                    
+                    if (data.words) {
+                        setSentenceWords(data.words);
+                    }
+                } catch (error) {
+                    console.error("Error fetching sentence words:", error);
+                }
+            }, 500); // Poll at same rate as pending predictions
+        } else {
+            setSentenceWords([]);
+        }
+        
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [mode, isPolling]);
+    
+    // Poll for processing status to show visual indicator
+    useEffect(() => {
+        let interval;
+        if (mode === "videoToText" && isPolling) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(API_BASE_URL + "/get_processing_status");
+                    const data = await response.json();
+                    
+                    // Active when NOT paused and camera is on
+                    setIsProcessingActive(!data.is_paused);
+                } catch (error) {
+                    console.error("Error fetching processing status:", error);
+                }
+            }, 300); // Poll frequently for smooth UI feedback
+        } else {
+            setIsProcessingActive(false);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [mode, isPolling]);
+    
+    // Poll for frame collection status
+    useEffect(() => {
+        let interval;
+        if (mode === "videoToText" && isPolling) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await fetch(API_BASE_URL + "/get_frame_status");
+                    const data = await response.json();
+                    
+                    setFrameStatus(data);
+                    
+                    // Show progress indicator when actively collecting frames
+                    // or when close to completing (> 10 frames)
+                    const shouldShow = data.frames_collected > 0 && !showTop5Selector;
+                    setShowFrameProgress(shouldShow);
+                    
+                } catch (error) {
+                    console.error("Error fetching frame status:", error);
+                }
+            }, 100); // Poll very frequently for smooth progress bar
+        } else {
+            setFrameStatus(null);
+            setShowFrameProgress(false);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [mode, isPolling, showTop5Selector]);
 
     // Update size on window change
     useEffect(() => {
@@ -167,6 +410,46 @@ const TranslateApp = () => {
             window.removeEventListener("resize", handleResize);
         }
     }, []);
+    
+    // Spacebar trigger for manual frame capture
+    useEffect(() => {
+        const handleKeyPress = async (e) => {
+            // Only in videoToText mode, when camera is active, and modal is NOT showing
+            if (mode === "videoToText" && isPolling && !showTop5Selector && e.code === 'Space') {
+                e.preventDefault(); // Prevent page scroll
+                
+                // Trigger immediate prediction if we have enough frames
+                try {
+                    if (frameStatus && frameStatus.frames_collected >= 32) {
+                        // Force a prediction by telling backend to process current buffer
+                        toast("Capturing word...", { icon: "📸", duration: 1000 });
+                        
+                        const response = await fetch(API_BASE_URL + "/force_predict", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            toast.error("Failed to capture word");
+                        }
+                    } else {
+                        toast("Need more frames! Keep signing...", { icon: "⚠️", duration: 1500 });
+                    }
+                } catch (error) {
+                    console.error("Error triggering manual capture:", error);
+                    toast.error("Error capturing word");
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyPress);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [mode, isPolling, showTop5Selector, frameStatus]);
     
     const checkTextAgainstWordListJson = (text) => {
         // Split the text into words, encode, and convert to lowercase
@@ -199,10 +482,23 @@ const TranslateApp = () => {
     }, [translatedText, showClearButton]);
 
     // Function to clear translated text
-    const handleClearText = () => {
+    const handleClearText = async () => {
         setClearButtonAnimation('clear-button-exit');
+        
+        // Clear sentence on backend
+        try {
+            await fetch(API_BASE_URL + "/clear_sentence", {
+                method: "POST"
+            });
+        } catch (error) {
+            console.error("Error clearing sentence:", error);
+        }
+        
         setTimeout(() => {
             setTranslatedText("");
+            setSentenceWords([]); // Clear the word objects
+            setPendingPredictions([]); // Clear pending predictions
+            setShowTop5Selector(false); // Hide selector
             setIsPolling(false); // Stop API polling when clearing text
             // Stop keypoint transmission when clearing text
             if (videoInputRef.current) {
@@ -409,14 +705,57 @@ const TranslateApp = () => {
                         },
                     }}
                 />
+                
+                
                 {mode === "videoToText" ? (
                     <>
                         <div style={styles.panel} className={`panel ${isAnimating ? 'panel-swap-animation' : ''}`}>
                             <h2 style={styles.panelTitle}>Auslan</h2>
+                            
+                            {isProcessingActive && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '16px',
+                                    right: '16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '8px 12px',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                                    border: '2px solid rgba(16, 185, 129, 0.4)',
+                                    borderRadius: '20px',
+                                    zIndex: 10,
+                                    animation: 'pulse 2s ease-in-out infinite'
+                                }}>
+                                    <div style={{
+                                        width: '8px',
+                                        height: '8px',
+                                        backgroundColor: '#10b981',
+                                        borderRadius: '50%',
+                                        boxShadow: '0 0 8px #10b981',
+                                        animation: 'blink 1.5s ease-in-out infinite'
+                                    }} />
+                                    <span style={{
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        color: '#10b981',
+                                        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+                                    }}>
+                                        Processing
+                                    </span>
+                                </div>
+                            )}
+                            
                             <div style={styles.videoInputContainer}>
                                 <VideoInput ref={videoInputRef} onCameraStart={handleCameraStart} isMobile={isMobile} />
                             </div>
+                            
                         </div>
+                        
+                        <FrameProgressIndicator 
+                            frameStatus={frameStatus}
+                            isVisible={showFrameProgress}
+                        />
 
                         <div style={{...styles.buttons, ...(isMobile ? styles.buttonsMobileTag : {})}}>
                             <button 
@@ -458,12 +797,40 @@ const TranslateApp = () => {
                                 </div>
                             ) : (
                                 <div style={{ position: 'relative', width: '100%',  display: 'flex', flexDirection: 'column', flex: 1,  minHeight: 0, }}>
-                                    <textarea
-                                        placeholder='Translation will appear here...'
-                                        value={translatedText}
-                                        readOnly
-                                        style={styles.textarea}
-                                    />
+                                    <div
+                                        style={{
+                                            ...styles.textarea,
+                                            overflow: 'auto',
+                                            whiteSpace: 'normal',
+                                            fontSize: '1.5em',
+                                            lineHeight: '1.8',
+                                            padding: '20px',
+                                            paddingLeft: '28px'
+                                        }}
+                                    >
+                                        {sentenceWords.length === 0 && !showTop5Selector && (
+                                            <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>
+                                                Translation will appear here...
+                                            </span>
+                                        )}
+                                        
+                                        {/* Render editable words */}
+                                        {sentenceWords.map((wordData, index) => (
+                                            <EditableWord
+                                                key={wordData.id || index}
+                                                wordData={wordData}
+                                                onReplace={handleReplaceWord}
+                                            />
+                                        ))}
+                                        
+                                        {showTop5Selector && pendingPredictions.length > 0 && pendingPredictions[0].top5 && (
+                                            <InlineSelector
+                                                predictions={pendingPredictions[0]}
+                                                onSelect={handleWordSelection}
+                                                onSkip={handleSkipPrediction}
+                                            />
+                                        )}
+                                    </div>
                                     {showClearButton && (
                                         <button 
                                             onClick={handleClearText} 
