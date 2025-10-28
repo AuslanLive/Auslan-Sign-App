@@ -10,8 +10,8 @@ const controlUtilsUrl =
     "https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js";   
 const drawingUtilsUrl =
     "https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js";
-const holisticUrl =
-    "https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js";
+const handsUrl =
+    "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js";
 
 // Load external MediaPipe scripts dynamically
 const loadScript = (url) => {
@@ -29,7 +29,7 @@ const VideoInput = React.forwardRef((props, ref) => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const cameraRef = useRef(null); // Reference to the camera object
-    const holisticRef = useRef(null); // Reference to the holistic object
+    const handsRef = useRef(null); // Reference to the hands object
     const [isCameraOn, setIsCameraOn] = useState(false); // State to track if the camera is on
     const [error, setError] = useState(null); // State to handle errors
     const [isTransmitting, setIsTransmitting] = useState(true); // State to control keypoint transmission
@@ -39,23 +39,22 @@ const VideoInput = React.forwardRef((props, ref) => {
             await loadScript(cameraUtilsUrl);
             await loadScript(controlUtilsUrl);
             await loadScript(drawingUtilsUrl);
-            await loadScript(holisticUrl);
+            await loadScript(handsUrl);
 
-            const holistic = new window.Holistic({
+            // Initialize Hands solution
+            const hands = new window.Hands({
                 locateFile: (file) =>
-                    `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+                    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
             });
 
-            holistic.setOptions({
+            hands.setOptions({
+                maxNumHands: 2,  // Track both hands
                 modelComplexity: 1,
-                smoothLandmarks: true,
-                enableSegmentation: true,
-                smoothSegmentation: true,
                 minDetectionConfidence: 0.5,
                 minTrackingConfidence: 0.5,
             });
 
-            holisticRef.current = holistic;
+            handsRef.current = hands;
         };
 
         loadMediaPipe();
@@ -85,14 +84,15 @@ const VideoInput = React.forwardRef((props, ref) => {
             });
             videoElement.srcObject = stream;
 
-            if (!holisticRef.current) {
-                console.error("Holistic model is not initialized");
+            if (!handsRef.current) {
+                console.error("Hands model is not initialized");
                 return;
             }
 
-            const holistic = holisticRef.current;
+            const hands = handsRef.current;
 
-            holistic.onResults((results) => {
+            // Updated to handle Hands results 
+            hands.onResults((results) => {
                 // Clear the canvas and draw the video and landmarks
                 canvasCtx.save();
                 resizeCanvasToDisplaySize(canvasElement);
@@ -111,73 +111,57 @@ const VideoInput = React.forwardRef((props, ref) => {
                     canvasElement.height
                 );
 
-                // Draw Pose and Hands Landmarks
-                if (results.poseLandmarks) {
-                    window.drawConnectors(
-                        canvasCtx,
-                        results.poseLandmarks,
-                        window.POSE_CONNECTIONS,
-                        {
-                            color: "#00FF00",
-                            lineWidth: 4,
-                        }
-                    );
-                    window.drawLandmarks(canvasCtx, results.poseLandmarks, {
-                        color: "#FF0000",
-                        lineWidth: 2,
-                    });
-                }
-                if (results.leftHandLandmarks) {
-                    window.drawConnectors(
-                        canvasCtx,
-                        results.leftHandLandmarks,
-                        window.HAND_CONNECTIONS,
-                        {
-                            color: "#CC0000",
-                            lineWidth: 5,
-                        }
-                    );
-                    window.drawLandmarks(canvasCtx, results.leftHandLandmarks, {
-                        color: "#00FF00",
-                        lineWidth: 2,
-                    });
-                }
-                if (results.rightHandLandmarks) {
-                    window.drawConnectors(
-                        canvasCtx,
-                        results.rightHandLandmarks,
-                        window.HAND_CONNECTIONS,
-                        {
-                            color: "#00CC00",
-                            lineWidth: 5,
-                        }
-                    );
-                    window.drawLandmarks(
-                        canvasCtx,
-                        results.rightHandLandmarks,
-                        { color: "#FF0000", lineWidth: 2 }
-                    );
+                // Draw Hand Landmarks
+                if (results.multiHandLandmarks) {
+                    for (let i = 0; i < results.multiHandLandmarks.length; i++) {
+                        const landmarks = results.multiHandLandmarks[i];
+                        const handedness = results.multiHandedness[i].label; // "Left" or "Right"
+                        
+                        // Different colors for left and right hands
+                        const color = handedness === "Left" ? "#00FF00" : "#FF0000";
+                        const connectionColor = handedness === "Left" ? "#00CC00" : "#CC0000";
+                        
+                        window.drawConnectors(
+                            canvasCtx,
+                            landmarks,
+                            window.HAND_CONNECTIONS,
+                            {
+                                color: connectionColor,
+                                lineWidth: 5,
+                            }
+                        );
+                        window.drawLandmarks(canvasCtx, landmarks, {
+                            color: color,
+                            lineWidth: 2,
+                        });
+                    }
                 }
                 canvasCtx.restore();
 
                 // Only send keypoints if transmission is enabled
                 if (isTransmitting) {
-                    // Prepare keypoints to send to backend
-                    const keypoints = [
-                        results.poseLandmarks,
-                        results.leftHandLandmarks
-                            ? results.leftHandLandmarks.map((landmark) => ({
-                                  ...landmark,
-                                  visibility: 0.0,
-                              }))
-                            : null,
-                        results.rightHandLandmarks
-                            ? results.rightHandLandmarks.map((landmark) => ({
-                                  ...landmark,
-                                  visibility: 0.0,
-                              }))
-                            : null,
-                    ];
+                    // Extract left and right hands from results
+                    let leftHand = null;
+                    let rightHand = null;
+                    
+                    if (results.multiHandLandmarks && results.multiHandedness) {
+                        for (let i = 0; i < results.multiHandLandmarks.length; i++) {
+                            const handedness = results.multiHandedness[i].label;
+                            const landmarks = results.multiHandLandmarks[i];
+                            
+                            if (handedness === "Left") {
+                                leftHand = landmarks;
+                            } else if (handedness === "Right") {
+                                rightHand = landmarks;
+                            }
+                        }
+                    }
+                    
+                    // Prepare keypoints for honors model (hands only)
+                    const keypoints = {
+                        leftHand: leftHand,
+                        rightHand: rightHand
+                    };
 
                     // Send keypoints data to backend
                     fetch(API_BASE_URL + "/keypoints", {
@@ -189,7 +173,7 @@ const VideoInput = React.forwardRef((props, ref) => {
                     })
                         .then((response) => response.json())
                         .then((data) => {
-                            console.log("Data saved successfully:", data);
+                            // console.log("Hand keypoints sent successfully:", data);
                         })
                         .catch((error) => {
                             console.error("Error saving data:", error);
@@ -200,7 +184,7 @@ const VideoInput = React.forwardRef((props, ref) => {
             if (!cameraRef.current) {
                 const camera = new window.Camera(videoElement, {
                     onFrame: async () => {
-                        await holistic.send({ image: videoElement });
+                        await hands.send({ image: videoElement });
                     },
                     width: 1280,
                     height: 720,
