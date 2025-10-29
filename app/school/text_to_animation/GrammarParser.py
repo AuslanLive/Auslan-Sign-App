@@ -76,6 +76,8 @@ class GrammarParser:
             print("(GrammarParser.py): STAGE 1 - Starting lemmatization...")
             lemmatized_sentence = self.lemmatize(t2s_input)
             print(f"(GrammarParser.py): Original: '{t2s_input}' → Lemmatized: '{lemmatized_sentence}'")
+            
+            
 
             # 2. Use WSD to disambiguate words if necessary
             print("(GrammarParser.py): STAGE 2 - Starting word sense disambiguation...")
@@ -90,47 +92,59 @@ class GrammarParser:
             model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
             response = model.generate_content(
-                """You are a professional Auslan linguist and translator. Your task is to convert written English sentences into their Auslan equivalent using correct Auslan grammar, not word-for-word translation.
+                """You are a professional Auslan linguist and translator. Convert written English sentences into their Auslan-style English equivalent using correct Auslan grammar — not word-for-word translation.
 
-                Rules to follow:
-                Use Topic-Comment or Time-Topic-Comment structure, as appropriate for Auslan.
-                E.g., place time or topic elements at the beginning.
-                Simplify function words (like "is," "are," "the")—these are often omitted in Auslan.
-                Use all capital letters to represent Auslan signs (gloss format).
-                Maintain the meaning, not the exact English structure.
-                If relevant, use facial expressions or body shifts to indicate questions or contrast (annotate this in brackets).
+                Output rules:
+                - Output must contain English letters and spaces only. Do NOT include any symbols, punctuation, brackets, or capitalization markers.
+                - Use natural lowercase English words only.
+                - Do not add explanations or extra text.
+
+                Grammar rules to follow:
+                - Use Topic–Comment or Time–Topic–Comment structure. Place time or topic elements at the beginning.
+                - Omit function words that Auslan typically drops (e.g., is, are, was, were, the, a, to when showing motion).
+                - Use simple base verbs (go, want, see) — avoid tense inflections.
+                - Put “not” at the end of a clause for negation (e.g., yesterday he go home not).
+                - Use “finish” to indicate a completed action (e.g., lunch finish we walk park).
+                - For yes or no questions, end with a question mark (no symbols other than this).
+                - For wh-questions, put the wh-word (who, what, where, when, why) at the end.
+                - Keep names, places, and numbers as normal English words.
+                - If translation is unclear, return the input unchanged.
                 
+                - The word “has” changes meaning depending on context:
+                • If it shows **possession**, keep HAVE or use a possessive (“my/your/his/her”).
+                    Example: “She has a car.” → “She have car” or “Her car.”
+                • If it marks **completed action**, replace with FINISH.
+                    Example: “He has eaten.” → “He eat finish.”
+                • If it shows **obligation**, use MUST or NEED.
+                    Example: “He has to go.” → “He must go.”
+                • If it only supports the sentence (no meaning change), remove it entirely.
+
+                Return only the translated sentence.
+
                 Examples:
-                
-                -- START OF EXAMPLES --
-                
-                English: "I am going to the shop."
-                Auslan gloss: SHOP I GO
-                
-                English: “She is studying at university today.”
-                Auslan gloss: TODAY UNIVERSITY SHE STUDY
+                English: I am going to the shop.
+                Output: shop I go
 
-                English: “Do you want coffee?”
-                Auslan gloss: COFFEE YOU WANT (q)
-                (q = yes/no question facial expression)
+                English: She is studying at university today.
+                Output: today university she study
 
-                English: “He didn't go home yesterday.”
-                Auslan gloss: YESTERDAY HOME HE GO NOT
+                English: Do you want coffee?
+                Output: coffee you want?
 
-                English: “After lunch, we will walk to the park.”
-                Auslan gloss: LUNCH FINISH PARK WE WALK
-                
-                -- END OF EXAMPLES --
-                
-                If there is no other explanation, simply return the original input sentence.
-                
-                If it can be translated, please make sure to return only the Auslan gloss without any additional text or explanation.
-                
-                Now, convert the following sentence into Auslan grammar using gloss:
+                English: He didn't go home yesterday.
+                Output: yesterday he go home not
 
+                English: After lunch, we will walk to the park.
+                Output: lunch finish we walk park
+
+                English: Where are you meeting them?
+                Output: you meet them where?
+
+                Now, convert the following sentence into Auslan-style English:
+                
                 """ + t2s_input
             )
-
+            
             response_dict = response.to_dict()
 
             result = (
