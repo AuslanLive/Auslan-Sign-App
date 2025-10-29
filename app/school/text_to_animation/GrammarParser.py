@@ -103,7 +103,6 @@ class GrammarParser:
                 - Use simple base verbs (go, want, see) — avoid tense inflections.
                 - Put “not” at the end of a clause for negation (e.g., yesterday he go home not).
                 - Use “finish” to indicate a completed action (e.g., lunch finish we walk park).
-                - For yes or no questions, end with a question mark (no symbols other than this).
                 - For wh-questions, put the wh-word (who, what, where, when, why) at the end.
                 - Keep names, places, and numbers as normal English words.
                 - If translation is unclear, return the input unchanged.
@@ -142,7 +141,7 @@ class GrammarParser:
                 Output: today university she study
 
                 English: Do you want coffee?
-                Output: coffee you want?
+                Output: coffee you want
 
                 English: He didn't go home yesterday.
                 Output: yesterday he go home not
@@ -151,7 +150,7 @@ class GrammarParser:
                 Output: lunch finish we walk park
 
                 English: Where are you meeting them?
-                Output: you meet them where?
+                Output: you meet them where
 
                 Now, convert the following sentence into Auslan-style English:
                 
@@ -181,6 +180,7 @@ class GrammarParser:
             original_sentence = sentence.copy()  # Keep a copy for comparison
             for i, word in enumerate(sentence):
                 # Check if the word is in the disambiguated words dictionary (squash to lowercase for matching)
+                # print(f"(GrammarParser.py): Checking word for disambiguation: '{word}'")
                 word_lower = word.lower()
                 if word_lower in disambiguated_words:
                     # If the word is ambiguous, replace it with its disambiguated form
