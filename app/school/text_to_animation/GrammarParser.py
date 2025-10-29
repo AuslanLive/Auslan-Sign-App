@@ -76,8 +76,6 @@ class GrammarParser:
             print("(GrammarParser.py): STAGE 1 - Starting lemmatization...")
             lemmatized_sentence = self.lemmatize(t2s_input)
             print(f"(GrammarParser.py): Original: '{t2s_input}' → Lemmatized: '{lemmatized_sentence}'")
-            
-            
 
             # 2. Use WSD to disambiguate words if necessary
             print("(GrammarParser.py): STAGE 2 - Starting word sense disambiguation...")
@@ -118,6 +116,21 @@ class GrammarParser:
                 • If it shows **obligation**, use MUST or NEED.
                     Example: “He has to go.” → “He must go.”
                 • If it only supports the sentence (no meaning change), remove it entirely.
+                
+                NOTE: Input text will be LEMMATIZED (base forms). Do not assume English tense from verb forms.
+
+                • HAVE disambiguation (input may show 'have' for has/had):
+                - Possession: if 'have' is followed by a noun phrase (optionally with quantifier/number), keep as 'have' or convert to possessive.
+                    Example: she have car  →  she have car  /  her car
+                - Obligation: if pattern 'have to' (or OBLIGATION tag present), use 'must' or 'need'.
+                    Example: he have to go  →  he must go
+                - Completed action (perfect): use 'finish' ONLY if explicit evidence exists:
+                    time words (yesterday, before, already, just, earlier) or COMPLETED tag.
+                    Example: already he eat  →  he eat finish
+                - Otherwise, remove supportive 'have' that adds no meaning.
+
+                • Negation: map any 'do not/does not/did not' to clause-final 'not'.
+                Example: he do not go home  →  home he go not
 
                 Return only the translated sentence.
 
@@ -193,11 +206,10 @@ class GrammarParser:
             print(f"(GrammarParser.py): Direct word split: {sentence}")
             
         # Convert sentence array to lowercase string for display
-        # Example: ['TOON', 'GOD', 'SOUP'] -> "toon god soup"
         lowercase_sentence = ' '.join(word.lower() for word in sentence)
         print(f"(GrammarParser.py): Lowercase string: '{lowercase_sentence}'")
         
-        print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
+        # print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
         print(f"(GrammarParser.py): Processing completed in {time.time()-start:.4f} seconds")
         return sentence
 
