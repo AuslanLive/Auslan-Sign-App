@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import google.generativeai as genai
 from transformers import AutoTokenizer, T5ForConditionalGeneration
 import torch
 from dotenv import load_dotenv
@@ -82,28 +83,67 @@ class GrammarParser:
             disambiguated_words = self.wsd.disambiguate_words(lemmatized_sentence)
             print(f"(GrammarParser.py): Found {len(disambiguated_words)} disambiguated words: {disambiguated_words}")
 
-            # 3. Use text-to-text model for grammar parsing
-            print("(GrammarParser.py): STAGE 3 - Starting T5 model translation...")
-            input_text = self.prefix + lemmatized_sentence
-            print(f"(GrammarParser.py): Model input: '{input_text}'")
-            
-            inputs = self.tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
-            print(f"(GrammarParser.py): Tokenized input shape: {inputs['input_ids'].shape}")
-            
-            # Generate the translation
-            print("(GrammarParser.py): Generating translation with T5 model...")
-            outputs = self.model.generate(
-                **inputs,
-                max_length=512,
-                num_beams=4,
-                do_sample=True,
-                temperature=0.7,
-                top_p=0.9
+            # 3. Use model for grammar parsing here
+            # start timer to count gemini processing time
+            start_time = time.time()
+            print("(GrammarParser.py): STAGE 3 - Generating Auslan grammar using GEMINI 2.5 FLASH model...")
+            model = genai.GenerativeModel("gemini-2.5-flash-lite")
+
+            response = model.generate_content(
+                """You are a professional Auslan linguist and translator. Your task is to convert written English sentences into their Auslan equivalent using correct Auslan grammar, not word-for-word translation.
+
+                Rules to follow:
+                Use Topic-Comment or Time-Topic-Comment structure, as appropriate for Auslan.
+                E.g., place time or topic elements at the beginning.
+                Simplify function words (like "is," "are," "the")—these are often omitted in Auslan.
+                Use all capital letters to represent Auslan signs (gloss format).
+                Maintain the meaning, not the exact English structure.
+                If relevant, use facial expressions or body shifts to indicate questions or contrast (annotate this in brackets).
+                
+                Examples:
+                
+                -- START OF EXAMPLES --
+                
+                English: "I am going to the shop."
+                Auslan gloss: SHOP I GO
+                
+                English: “She is studying at university today.”
+                Auslan gloss: TODAY UNIVERSITY SHE STUDY
+
+                English: “Do you want coffee?”
+                Auslan gloss: COFFEE YOU WANT (q)
+                (q = yes/no question facial expression)
+
+                English: “He didn't go home yesterday.”
+                Auslan gloss: YESTERDAY HOME HE GO NOT
+
+                English: “After lunch, we will walk to the park.”
+                Auslan gloss: LUNCH FINISH PARK WE WALK
+                
+                -- END OF EXAMPLES --
+                
+                If there is no other explanation, simply return the original input sentence.
+                
+                If it can be translated, please make sure to return only the Auslan gloss without any additional text or explanation.
+                
+                Now, convert the following sentence into Auslan grammar using gloss:
+
+                """ + t2s_input
+            )
+
+            response_dict = response.to_dict()
+
+            result = (
+                response_dict["candidates"][0]["content"]["parts"][0]["text"].strip().replace(
+                    "\n", "").replace("\"", "")
+                
+                # if no response, set result to a default value
+                if response_dict["candidates"]
+                else "No valid response"
             )
             
-            # Decode the output
-            result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-            print(f"(GrammarParser.py): Raw model output: '{result}'")
+            time_taken = time.time() - start_time
+            print(f"(GrammarParser.py): COMPLETE GEMINI response received in {time_taken:.4f} seconds")
             
             # from the result string, create a list of words
             sentence = result.split()
