@@ -175,6 +175,12 @@ class GrammarParser:
                     sentence[i] = disambiguated_words[word_lower]
                     print(f"(GrammarParser.py): Position {i}: '{old_word}' → '{sentence[i]}'")
             
+            # Check for 'finish' and replace with 'finish (complete)'
+            for i, word in enumerate(sentence):
+                if word.lower() == 'finish':
+                    sentence[i] = 'finish (complete)'
+                    print(f"(GrammarParser.py): Position {i}: 'finish' → 'finish (complete)'")
+            
             if original_sentence != sentence:
                 print(f"(GrammarParser.py): Before disambiguation: {original_sentence}")
                 print(f"(GrammarParser.py): After disambiguation: {sentence}")
