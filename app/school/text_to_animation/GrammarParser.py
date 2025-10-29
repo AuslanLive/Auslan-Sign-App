@@ -142,7 +142,7 @@ class GrammarParser:
 
                 Now, convert the following sentence into Auslan-style English:
                 
-                """ + t2s_input
+                """ + lemmatized_sentence
             )
             
             response_dict = response.to_dict()
