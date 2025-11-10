@@ -6,6 +6,7 @@ import HighlightedText from "../components/HighlightedText";
 import { storage, ref, getDownloadURL } from "../firebase";
 import wordList from '../fullWordList.json';
 import grammarDict from '../ambiguous_dict_lowercase.json';
+import { cleanInputText } from '../lib/cleanInputText';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-hot-toast';
 import { styles } from '../styles/TranslateStyles';
@@ -216,15 +217,16 @@ const TranslateApp = () => {
     // Function to convert text to video
 
     const handleTextToVideo = async () => {
-        const fixedSourceText = sourceText.trim();
-        console.log("Sending Source Text:", fixedSourceText.length);
-        if (fixedSourceText === null || fixedSourceText === undefined || fixedSourceText.trim().length === 0) {
-            console.log(`No text to translate: ${fixedSourceText}`);
+        const cleanedText = cleanInputText(sourceText);
+
+        console.log("Sending Source Text:", cleanedText);
+        if (cleanedText === null || cleanedText === undefined || cleanedText.trim().length === 0) {
+            console.log(`No text to translate: ${cleanedText}`);
             toast.error(`No text to translate`);
             return;
         };
 
-        checkTextAgainstWordListJson(fixedSourceText);
+        checkTextAgainstWordListJson(cleanedText);
         setLoading(true); // Set loading to true while fetching video
 
         // Step 1: API call to parse sentence to Auslan grammar
@@ -232,7 +234,7 @@ const TranslateApp = () => {
             const response = await fetch(API_BASE_URL + "/t2s", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ t2s_input: fixedSourceText }),
+                body: JSON.stringify({ t2s_input: cleanedText }),
             });
 
             if (!response.ok)

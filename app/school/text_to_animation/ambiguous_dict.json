@@ -2206,6 +2206,9 @@
     "gross (crude)",
     "crude"
   ],
+  "has": [
+    "finish (complete)"
+  ],
   "hold on": [
     "hold on (wait)",
     "wait"

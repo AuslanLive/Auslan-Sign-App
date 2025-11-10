@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import google.generativeai as genai
 from transformers import AutoTokenizer, T5ForConditionalGeneration
 import torch
 from dotenv import load_dotenv
@@ -82,28 +83,93 @@ class GrammarParser:
             disambiguated_words = self.wsd.disambiguate_words(lemmatized_sentence)
             print(f"(GrammarParser.py): Found {len(disambiguated_words)} disambiguated words: {disambiguated_words}")
 
-            # 3. Use text-to-text model for grammar parsing
-            print("(GrammarParser.py): STAGE 3 - Starting T5 model translation...")
-            input_text = self.prefix + lemmatized_sentence
-            print(f"(GrammarParser.py): Model input: '{input_text}'")
-            
-            inputs = self.tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
-            print(f"(GrammarParser.py): Tokenized input shape: {inputs['input_ids'].shape}")
-            
-            # Generate the translation
-            print("(GrammarParser.py): Generating translation with T5 model...")
-            outputs = self.model.generate(
-                **inputs,
-                max_length=512,
-                num_beams=4,
-                do_sample=True,
-                temperature=0.7,
-                top_p=0.9
+            # 3. Use model for grammar parsing here
+            # start timer to count gemini processing time
+            start_time = time.time()
+            print("(GrammarParser.py): STAGE 3 - Generating Auslan grammar using GEMINI 2.5 FLASH model...")
+            model = genai.GenerativeModel("gemini-2.5-flash-lite")
+
+            response = model.generate_content(
+                """You are a professional Auslan linguist and translator. Convert written English sentences into their Auslan-style English equivalent using correct Auslan grammar — not word-for-word translation.
+
+                Output rules:
+                - Output must contain English letters and spaces only. Do NOT include any symbols, punctuation, brackets, or capitalization markers.
+                - Use natural lowercase English words only.
+                - Do not add explanations or extra text.
+
+                Grammar rules to follow:
+                - Use Topic–Comment or Time–Topic–Comment structure. Place time or topic elements at the beginning.
+                - Omit function words that Auslan typically drops (e.g., is, are, was, were, the, a, to when showing motion).
+                - Use simple base verbs (go, want, see) — avoid tense inflections.
+                - Put “not” at the end of a clause for negation (e.g., yesterday he go home not).
+                - Use “finish” to indicate a completed action (e.g., lunch finish we walk park).
+                - For wh-questions, put the wh-word (who, what, where, when, why) at the end.
+                - Keep names, places, and numbers as normal English words.
+                - If translation is unclear, return the input unchanged.
+                
+                - The word “has” changes meaning depending on context:
+                • If it shows **possession**, keep HAVE or use a possessive (“my/your/his/her”).
+                    Example: “She has a car.” → “She have car” or “Her car.”
+                • If it marks **completed action**, replace with FINISH.
+                    Example: “He has eaten.” → “He eat finish.”
+                • If it shows **obligation**, use MUST or NEED.
+                    Example: “He has to go.” → “He must go.”
+                • If it only supports the sentence (no meaning change), remove it entirely.
+                
+                NOTE: Input text will be LEMMATIZED (base forms). Do not assume English tense from verb forms.
+
+                • HAVE disambiguation (input may show 'have' for has/had):
+                - Possession: if 'have' is followed by a noun phrase (optionally with quantifier/number), keep as 'have' or convert to possessive.
+                    Example: she have car  →  she have car  /  her car
+                - Obligation: if pattern 'have to' (or OBLIGATION tag present), use 'must' or 'need'.
+                    Example: he have to go  →  he must go
+                - Completed action (perfect): use 'finish' ONLY if explicit evidence exists:
+                    time words (yesterday, before, already, just, earlier) or COMPLETED tag.
+                    Example: already he eat  →  he eat finish
+                - Otherwise, remove supportive 'have' that adds no meaning.
+
+                • Negation: map any 'do not/does not/did not' to clause-final 'not'.
+                Example: he do not go home  →  home he go not
+
+                Return only the translated sentence.
+
+                Examples:
+                English: I am going to the shop.
+                Output: shop I go
+
+                English: She is studying at university today.
+                Output: today university she study
+
+                English: Do you want coffee?
+                Output: coffee you want
+
+                English: He didn't go home yesterday.
+                Output: yesterday he go home not
+
+                English: After lunch, we will walk to the park.
+                Output: lunch finish we walk park
+
+                English: Where are you meeting them?
+                Output: you meet them where
+
+                Now, convert the following sentence into Auslan-style English:
+                
+                """ + lemmatized_sentence
             )
             
-            # Decode the output
-            result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-            print(f"(GrammarParser.py): Raw model output: '{result}'")
+            response_dict = response.to_dict()
+
+            result = (
+                response_dict["candidates"][0]["content"]["parts"][0]["text"].strip().replace(
+                    "\n", "").replace("\"", "")
+                
+                # if no response, set result to a default value
+                if response_dict["candidates"]
+                else "No valid response"
+            )
+            
+            time_taken = time.time() - start_time
+            print(f"(GrammarParser.py): COMPLETE GEMINI response received in {time_taken:.4f} seconds")
             
             # from the result string, create a list of words
             sentence = result.split()
@@ -114,12 +180,19 @@ class GrammarParser:
             original_sentence = sentence.copy()  # Keep a copy for comparison
             for i, word in enumerate(sentence):
                 # Check if the word is in the disambiguated words dictionary (squash to lowercase for matching)
+                # print(f"(GrammarParser.py): Checking word for disambiguation: '{word}'")
                 word_lower = word.lower()
                 if word_lower in disambiguated_words:
                     # If the word is ambiguous, replace it with its disambiguated form
                     old_word = sentence[i]
                     sentence[i] = disambiguated_words[word_lower]
                     print(f"(GrammarParser.py): Position {i}: '{old_word}' → '{sentence[i]}'")
+            
+            # Check for 'finish' and replace with 'finish (complete)'
+            for i, word in enumerate(sentence):
+                if word.lower() == 'finish':
+                    sentence[i] = 'finish (complete)'
+                    print(f"(GrammarParser.py): Position {i}: 'finish' → 'finish (complete)'")
             
             if original_sentence != sentence:
                 print(f"(GrammarParser.py): Before disambiguation: {original_sentence}")
@@ -133,11 +206,10 @@ class GrammarParser:
             print(f"(GrammarParser.py): Direct word split: {sentence}")
             
         # Convert sentence array to lowercase string for display
-        # Example: ['TOON', 'GOD', 'SOUP'] -> "toon god soup"
         lowercase_sentence = ' '.join(word.lower() for word in sentence)
         print(f"(GrammarParser.py): Lowercase string: '{lowercase_sentence}'")
         
-        print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
+        # print(f"(GrammarParser.py): FINAL RESULT: {sentence}")
         print(f"(GrammarParser.py): Processing completed in {time.time()-start:.4f} seconds")
         return sentence
 
