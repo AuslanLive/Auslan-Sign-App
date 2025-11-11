@@ -8,13 +8,13 @@ app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-model_path = os.path.join('app', r'sign_to_text_model.keras')
+# model_path = os.path.join('app', r'sign_to_text_model.keras')
 
-if not os.path.exists(model_path):
-    print(f"(server.py) Error: Model file not found at {model_path}")
-    print(f"(server.py) Current working directory: {os.getcwd()}")
-    print(f"(server.py) Files in app directory: {os.listdir('app') if os.path.exists('app') else 'app directory not found'}")
-    exit(1)
+# if not os.path.exists(model_path):
+#     print(f"(server.py) Error: Model file not found at {model_path}")
+#     print(f"(server.py) Current working directory: {os.getcwd()}")
+#     print(f"(server.py) Files in app directory: {os.listdir('app') if os.path.exists('app') else 'app directory not found'}")
+#     exit(1)
 
 # MAIN CLASS WHICH CONNECTS TO ALL THE SYSTEM
 connectinator = Connectinator()
