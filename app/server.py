@@ -17,7 +17,7 @@ if not os.path.exists(model_path):
     exit(1)
 
 # MAIN CLASS WHICH CONNECTS TO ALL THE SYSTEM
-connectinator = Connectinator(model_path)
+connectinator = Connectinator()
 
 @app.route('/api/keypoints', methods=['POST'])
 async def receive_keypoints():

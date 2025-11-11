@@ -116,7 +116,7 @@ const TranslateApp = () => {
         <div className="translate-app">
             <div className="header">
                 <h1 className="title">
-                    👋AuslanLive
+                    AuslanLive👋
                 </h1>
             </div>
             

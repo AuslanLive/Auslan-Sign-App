@@ -17,10 +17,6 @@ class GrammarParser:
         """Initialize the GrammarParser with WordSenseDisambiguation instance and text-to-text model."""
         self.wsd = WordSenseDisambiguation()
         
-        # Load the text-to-text model and tokenizer
-        model_path = os.path.join(os.path.dirname(__file__), "final_auslan_t5_model")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = T5ForConditionalGeneration.from_pretrained(model_path)
         self.prefix = "translate English to Auslan gloss: "
 
     def lemmatize(self, sentence):
