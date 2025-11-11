@@ -11,6 +11,7 @@ torch==2.4.1
 transformers==4.53.2
 sentencepiece==0.2.1
 spacy==3.8.7
+google-generativeai==0.8.3
 # Download the model separately in Docker: python -m spacy download en_core_web_sm
 
 # --- Cloud & APIs ---
