@@ -96,7 +96,6 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
         concat_end_time = time.time()
         print(f"(pose_video_creator) Pose concatenation completed in {concat_end_time - concat_start_time:.2f} seconds")
 
-        temp_video_path = os.path.join(tempfile.gettempdir(), f"{sentence}.gif")
         width  = visualizer.pose.header.dimensions.width
         height = visualizer.pose.header.dimensions.height
         fps    = visualizer.pose_fps
@@ -122,9 +121,10 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
         total_time = time.time() - start_time
         # print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
 
-        return temp_video_path
+        return url  # Return the Firebase URL instead of temp path
     else:
         print("Not enough .pose files to concatenate")
+        return None
 
 def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
                            resize_factor=0.5, target_fps=None):
@@ -259,14 +259,13 @@ def process_sentence(sentence):
         print("(pose_video_creator) No valid words found with corresponding .pose files.")
         return None
 
-    # Get the path to the temporary video file
-    temp_video_path = concatenate_poses_and_upload(valid_blob_names, sentence)
+    # Get the Firebase URL directly
+    firebase_url = concatenate_poses_and_upload(valid_blob_names, sentence)
 
-    if temp_video_path:
+    if firebase_url:
         overall_end_time = time.time()
         print(f"(pose_video_creator) Complete pipeline finished in {overall_end_time - overall_start_time:.2f} seconds")
-        print(f"Video saved at {temp_video_path}")
-        return temp_video_path
+        return firebase_url
     else:
         print("Not enough .pose files to concatenate")
         return None
