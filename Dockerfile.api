@@ -19,16 +19,11 @@ COPY requirements.txt .
 
 # Build wheels into /wheels
 RUN pip install --upgrade pip && \
-    pip wheel --wheel-dir=/wheels -r requirements.txt
+    pip wheel --wheel-dir=/wheels -r requirements.txt || true && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Download spaCy model (so it ends up in /wheels)
-RUN pip install --no-cache-dir spacy==3.8.7 && \
-    python -m spacy download en_core_web_sm && \
-    python <<'PY'
-import en_core_web_sm, shutil, importlib.util, pathlib, site
-p = pathlib.Path(importlib.util.find_spec("en_core_web_sm").submodule_search_locations[0])
-archive = shutil.make_archive("/wheels/en_core_web_sm", "zip", p)
-PY
+RUN python -m spacy download en_core_web_sm
 
 # Copy your source code
 COPY app/ /src
@@ -44,31 +39,22 @@ ENV PIP_NO_CACHE_DIR=1 \
 
 WORKDIR /app
 
-# Install only runtime OS dependencies (ffmpeg + minimal libs)
+# Install runtime OS dependencies (ffmpeg + minimal libs) AND temporary build tools for spaCy
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      ffmpeg libglib2.0-0 && \
+      ffmpeg libglib2.0-0 gcc libc6-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy built wheels
-COPY --from=builder /wheels /wheels
+## Copy installed Python packages and scripts from the builder image into runtime
+# This avoids rebuilding C extensions in runtime and ensures spaCy + model are available
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Install only the wheels (skip the spaCy zip)
-RUN find /wheels -type f -name '*.whl' -exec pip install --no-cache-dir {} \; && \
-    rm -rf /wheels
+# Verify spaCy is importable
+RUN python -c "import spacy; print('spaCy', getattr(spacy, '__version__', 'missing'))"
 
-# Unpack spaCy model zip
-COPY --from=builder /wheels/en_core_web_sm.zip /tmp/en_core_web_sm.zip
-RUN python <<'PY'
-import zipfile, pathlib, site
-dest = pathlib.Path(site.getsitepackages()[0], "en_core_web_sm")
-dest.parent.mkdir(parents=True, exist_ok=True)
-with zipfile.ZipFile("/tmp/en_core_web_sm.zip", "r") as z:
-    z.extractall(dest)
-(dest/"__init__.py").write_text("from . import load\n__all__=['load']")
-PY
-
-RUN rm -f /tmp/en_core_web_sm.zip
+# Remove compiler packages if present and clean apt lists
+RUN apt-get purge -y gcc libc6-dev || true && apt-get autoremove -y || true && rm -rf /var/lib/apt/lists/*
 
 # Copy source code
 COPY --from=builder /src ./app
