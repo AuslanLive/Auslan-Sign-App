@@ -1,16 +1,63 @@
-FROM python:3.9
+# ───────────────────────────────────────────────
+# Stage 1: Builder — install all wheels + build artifacts
+# ───────────────────────────────────────────────
+FROM python:3.9-slim AS builder
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Copying files
-RUN mkdir ./app
-COPY requirements.txt ./
-COPY app/. ./app
+# Install build-tools needed to compile any pip packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential gcc curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Installing requirements
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+# Copy only requirements file (so layer caches if code changes but deps don’t)
+COPY requirements.txt .
 
-RUN pip install -r ./requirements.txt
-ENV FLASK_ENV=production
+# Build wheels into /wheels
+RUN pip install --upgrade pip && \
+    pip wheel --wheel-dir=/wheels -r requirements.txt || true && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Download spaCy model (so it ends up in /wheels)
+RUN python -m spacy download en_core_web_sm
+
+# Copy your source code
+COPY app/ /src
+
+# ───────────────────────────────────────────────
+# Stage 2: Runtime — lean production image
+# ───────────────────────────────────────────────
+FROM python:3.9-slim AS runtime
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_ENV=production
+
+WORKDIR /app
+
+# Install runtime OS dependencies (ffmpeg + minimal libs) AND temporary build tools for spaCy
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ffmpeg libglib2.0-0 gcc libc6-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+## Copy installed Python packages and scripts from the builder image into runtime
+# This avoids rebuilding C extensions in runtime and ensures spaCy + model are available
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Verify spaCy is importable
+RUN python -c "import spacy; print('spaCy', getattr(spacy, '__version__', 'missing'))"
+
+# Remove compiler packages if present and clean apt lists
+RUN apt-get purge -y gcc libc6-dev || true && apt-get autoremove -y || true && rm -rf /var/lib/apt/lists/*
+
+# Copy source code
+COPY --from=builder /src ./app
 
 EXPOSE 5173
 CMD ["gunicorn", "-b", ":5173", "app.server:app"]

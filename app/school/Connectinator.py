@@ -1,7 +1,4 @@
-from app.school.video_to_text.Model_Owner import Model
-from app.school.video_to_text.InputParser import InputParser
 import logging
-from app.school.video_to_text.results_parser import ResultsParser
 from app.school.text_to_animation.GrammarParser import GrammarParser
 from time import time
 import json
@@ -34,7 +31,7 @@ def create_logger():
 
 
 class Connectinator:
-    def __init__(self, model_path=''):
+    def __init__(self):
         # Setting up the results list
         self.full_phrase = AsyncResultsList(self)
         self.end_phrase_flag = False
@@ -43,15 +40,6 @@ class Connectinator:
 
         # Creating logger
         self.logger = create_logger()
-
-        # Creating model class from the model_owner file
-        self.model = Model(model_path)
-
-        # Creating data processor class
-        self.inputProc = InputParser()
-
-        # Create result parser
-        self.results_parser = ResultsParser(self)
 
         # Create grammar parser
         self.grammar_parser = GrammarParser()

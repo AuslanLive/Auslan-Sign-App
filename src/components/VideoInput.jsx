@@ -295,6 +295,10 @@ const VideoInput = React.forwardRef((props, ref) => {
                             <p style={styles.placeholderText}>
                                 Click "Turn Camera On" to start sign language detection
                             </p>
+                            <br />
+                            <p style={styles.placeholderText}>
+                                Not currently available. Please try text-to-sign instead.
+                            </p>
                         </div>
                     )}
                     <canvas
