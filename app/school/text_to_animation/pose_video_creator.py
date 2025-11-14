@@ -40,6 +40,23 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_credentials)
     firebase_admin.initialize_app(cred, {'storageBucket': 'auslan-194e5.appspot.com'})
 
+def find_word_pose_name(word, bucket):
+    """
+    Try to find a pose file for the full word in different casings.
+    Returns the pose name (without .pose) if found, else None.
+    """
+    lowercase_blob    = bucket.blob(f"{word.lower()}.pose")
+    capitalized_blob  = bucket.blob(f"{word.capitalize()}.pose")
+    regular_case_blob = bucket.blob(f"{word}.pose")
+
+    if lowercase_blob.exists():
+        return word.lower()
+    elif capitalized_blob.exists():
+        return word.capitalize()
+    elif regular_case_blob.exists():
+        return word
+    return None
+
 # Process pose file from Firebase Storage
 def process_pose_file(blob_name):
     file_start_time = time.time()
@@ -211,42 +228,45 @@ def get_valid_blobs_from_sentence(sentence):
         sentence (list): The input sentence's words, as a list.
 
     Returns:
-        list: A list of valid blob names.
+        list: A list of valid blob names (words and/or letters).
     """
-    
     # if sentence is a string, return
     if isinstance(sentence, str):
         print("(pose_video_creator) Input sentence is a string, expected a list of words.")
         return
-    
+
     start_time = time.time()
-    # print("(pose_video_creator) Starting blob validation phase...")
-    
     valid_blob_names = []
 
     bucket = storage.bucket()
 
     for word in sentence:
-        # Check lowercase, capitalized, and title case versions of the word
-        lowercase_blob = bucket.blob(f"{word.lower()}.pose")
-        capitalized_blob = bucket.blob(f"{word.capitalize()}.pose")
-        regular_case_blob = bucket.blob(f"{word}.pose")
+        # 1) Try to find a whole-word pose first
+        pose_name = find_word_pose_name(word, bucket)
+        if pose_name is not None:
+            # Use the full word’s pose
+            valid_blob_names.append(pose_name)
+            continue
 
-        if lowercase_blob.exists():
-            valid_blob_names.append(word.lower())  # Add lowercase if exists
-        elif capitalized_blob.exists():
-            # Add capitalized if exists
-            valid_blob_names.append(word.capitalize())
-        elif regular_case_blob.exists():
-            valid_blob_names.append(word)
-        else:
-            print(f"(pose_video_creator) Skipping word '{word}', no corresponding .pose file found.")
+        # 2) No word-level pose: fall back to fingerspelling
+        print(f"(pose_video_creator) No pose for '{word}', fingerspelling instead...")
+
+        for ch in word:
+            # Only letters get fingerspelled; skip digits/punctuation
+            if not ch.isalpha():
+                continue
+
+            letter = ch.lower()   # we assume 'a.pose', 'b.pose', etc.
+            letter_blob = bucket.blob(f"{letter}.pose")
+            if letter_blob.exists():
+                valid_blob_names.append(letter)
+            else:
+                print(f"(pose_video_creator) Skipping letter '{letter}', no corresponding .pose file found.")
 
     end_time = time.time()
     # print(f"(pose_video_creator) Blob validation completed in {end_time - start_time:.2f} seconds")
     # print(f"(pose_video_creator) Valid blob names found: {valid_blob_names}")
     return valid_blob_names
-
 
 def process_sentence(sentence):
     overall_start_time = time.time()
