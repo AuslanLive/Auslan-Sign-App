@@ -82,14 +82,33 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
     <>
       <span className="hl-wrap" style={{ position: 'relative' }}>
         {tokens.map((tok, i) => {
-          const isWord = /\w/.test(tok);
+          // Check for parentheses first
+          const containsParens = tok.includes('(') || tok.includes(')');
+          // Only treat as word if it contains word characters AND doesn't contain parentheses
+          const isWord = /\w/.test(tok) && !containsParens;
           const key = tok.toLowerCase();
           const hit = isWord && normDict.has(key);
           const isInFullWordList = isWord && fullWordList && fullWordList.includes(key);
           
-          // Check if word is wrapped in parentheses
+          // Check if word is wrapped in parentheses OR immediately followed by closing parenthesis
           const isWrappedInParens = isWord && i > 0 && i < tokens.length - 1 && 
                                    tokens[i-1].includes('(') && tokens[i+1].includes(')');
+          const isFollowedByCloseParen = isWord && i < tokens.length - 1 && tokens[i+1] === ')';
+          
+          // Debug logging
+          if (tok.includes('vehicle') || containsParens || tok.includes(')')) {
+            console.log(`🔍 Token "${tok}" (index ${i}):`, {
+              containsParens,
+              isWord,
+              hit,
+              isInFullWordList,
+              isWrappedInParens,
+              isFollowedByCloseParen,
+              prevToken: i > 0 ? tokens[i-1] : 'N/A',
+              nextToken: i < tokens.length - 1 ? tokens[i+1] : 'N/A',
+              willHighlightYellow: isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen
+            });
+          }
           
           if (hit) {
             // Dictionary word - blue highlight with click functionality
@@ -106,8 +125,8 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
                 {tok}
               </button>
             );
-          } else if (isWord && !isInFullWordList && !isWrappedInParens) {
-            // Word not in fullWordList and not wrapped in parentheses - yellow highlight with click
+          } else if (isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen) {
+            // Word not in fullWordList and not wrapped in parentheses and not followed by closing paren - yellow highlight with click
             return (
               <button
                 key={i}
@@ -392,7 +411,7 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
                 lineHeight: '1.6',
                 color: 'rgba(255, 255, 255, 0.9)'
               }}>
-                If a word appears in yellow, it means we've fingerspelled it as a substitute when no direct Auslan sign exists.
+                We've fingerspelled this word as a substitute since no direct Auslan sign exists.
               </div>
             </div>
           </>
