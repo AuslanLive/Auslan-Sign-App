@@ -2,8 +2,6 @@ import os
 import json
 import time
 import google.generativeai as genai
-from transformers import AutoTokenizer, T5ForConditionalGeneration
-import torch
 from dotenv import load_dotenv
 from app.school.text_to_animation.WordSenseDisambig import WordSenseDisambiguation
 
@@ -16,12 +14,13 @@ class GrammarParser:
     def __init__(self):
         """Initialize the GrammarParser with WordSenseDisambiguation instance and text-to-text model."""
         self.wsd = WordSenseDisambiguation()
-        
-        # Load the text-to-text model and tokenizer
-        model_path = os.path.join(os.path.dirname(__file__), "final_auslan_t5_model")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = T5ForConditionalGeneration.from_pretrained(model_path)
         self.prefix = "translate English to Auslan gloss: "
+        
+        # Configure genai with API key from environment variables
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY not found in environment variables")
+        genai.configure(api_key=api_key)
 
     def lemmatize(self, sentence):
         """

@@ -1,0 +1,15 @@
+# Base production dependencies
+-r requirements.txt
+
+# --- Dev / Debug / Test ---
+ipython==8.12.3
+jupyterlab==4.0.0
+jupyter_core==5.7.2
+jupyter_client==8.6.3
+nbformat==5.10.4
+nbconvert==7.16.4
+pytest==8.3.3
+black==24.10.0
+flake8==6.1.0
+isort==6.0.0
+rich==13.9.4
