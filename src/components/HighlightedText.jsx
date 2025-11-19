@@ -95,21 +95,6 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
                                    tokens[i-1].includes('(') && tokens[i+1].includes(')');
           const isFollowedByCloseParen = isWord && i < tokens.length - 1 && tokens[i+1] === ')';
           
-          // Debug logging
-          if (tok.includes('vehicle') || containsParens || tok.includes(')')) {
-            console.log(`🔍 Token "${tok}" (index ${i}):`, {
-              containsParens,
-              isWord,
-              hit,
-              isInFullWordList,
-              isWrappedInParens,
-              isFollowedByCloseParen,
-              prevToken: i > 0 ? tokens[i-1] : 'N/A',
-              nextToken: i < tokens.length - 1 ? tokens[i+1] : 'N/A',
-              willHighlightYellow: isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen
-            });
-          }
-          
           if (hit) {
             // Dictionary word - blue highlight with click functionality
             return (
