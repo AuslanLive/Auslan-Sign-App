@@ -1,4 +1,5 @@
 import os
+import uuid
 import tempfile
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -209,20 +210,37 @@ def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
             stderr_data = proc.stderr.read().decode("utf-8", errors="ignore")
             raise RuntimeError(f"ffmpeg failed (code {ret}). stderr:\n{stderr_data}")
 
-        # Upload seekable MP4
+        # Upload to Firebase with proper metadata
         bucket = storage.bucket()
         blob = bucket.blob(gcs_path)
-        blob.cache_control = "public, max-age=31536000"
-        blob.upload_from_filename(tmp_path, content_type="video/mp4")
+        
+        # Extract just the filename without the path for the download name
+        filename_only = os.path.basename(gcs_path)
+        
+        # Set metadata to control download filename
+        blob.metadata = {
+            'firebaseStorageDownloadTokens': str(uuid.uuid4())
+        }
+        blob.content_type = 'video/mp4'
+        blob.content_disposition = f'attachment; filename="{filename_only}"'
+        blob.cache_control = 'public, max-age=31536000'
+        
+        # Upload the file
+        blob.upload_from_filename(tmp_path)
+        
+        # Make the blob publicly accessible
         blob.make_public()
+        
+        print(f"(pose_video_creator) Video uploaded successfully to {gcs_path}")
         return blob.public_url
-
+        
+    except Exception as e:
+        print(f"(pose_video_creator) Error uploading to Firebase: {e}")
+        raise e
     finally:
-        try:
-            if os.path.exists(tmp_path):
-                os.remove(tmp_path)
-        except Exception:
-            pass
+        # Clean up temp file
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
 # Check if a word has a corresponding pose file in Firebase
 def get_valid_blobs_from_sentence(sentence):
