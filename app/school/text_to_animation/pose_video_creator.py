@@ -256,7 +256,7 @@ def get_valid_blobs_from_sentence(sentence):
             if not ch.isalpha():
                 continue
 
-            letter = ch.lower()   # we assume 'a.pose', 'b.pose', etc.
+            letter = ch.upper()   # we assume 'A.pose', 'B.pose', etc.
             letter_blob = bucket.blob(f"{letter}.pose")
             if letter_blob.exists():
                 valid_blob_names.append(letter)
