@@ -27,6 +27,28 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
         });
     }, [grammarParsedText]);
 
+    // Check for yellow highlighted words (words not in fullWordList and not in parentheses)
+    const hasYellowWords = React.useMemo(() => {
+        if (!grammarParsedText || !fullWordList) return false;
+        
+        const tokens = grammarParsedText.split(/(\b[\p{L}\p{N}_']+\b)/u);
+        return tokens.some(tok => {
+            const containsParens = tok.includes('(') || tok.includes(')');
+            const isWord = /\w/.test(tok) && !containsParens;
+            const key = tok.toLowerCase();
+            const hit = isWord && grammarDict && Object.keys(grammarDict).some(dictKey => 
+                dictKey.toLowerCase().split('(')[0].trim() === key
+            );
+            const isInFullWordList = isWord && fullWordList.includes(key);
+            
+            // Check if followed by closing paren
+            const tokenIndex = tokens.indexOf(tok);
+            const isFollowedByCloseParen = isWord && tokenIndex < tokens.length - 1 && tokens[tokenIndex + 1] === ')';
+            
+            return isWord && !hit && !isInFullWordList && !isFollowedByCloseParen;
+        });
+    }, [grammarParsedText, fullWordList, grammarDict]);
+
     return (
         <div style={{
             padding: '14px',
@@ -144,27 +166,29 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 </div>
             )}
 
-            <div style={{
-                padding: '8px 12px',
-                backgroundColor: 'rgba(255, 193, 7, 0.25)',
-                border: '1px solid rgba(255, 193, 7, 0.5)',
-                borderRadius: '6px',
-                marginBottom: '14px',
-                fontSize: window.innerWidth < 768 ? '12px' : '14px',
-                color: 'rgba(255, 255, 255, 0.75)',
-                lineHeight: '1.4',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-            }}>
-                <span style={{
-                    fontSize: '20px',
-                    color: 'rgba(255, 193, 7, 0.8)'
+            {hasYellowWords && (
+                <div style={{
+                    padding: '8px 12px',
+                    backgroundColor: 'rgba(255, 193, 7, 0.25)',
+                    border: '1px solid rgba(255, 193, 7, 0.5)',
+                    borderRadius: '6px',
+                    marginBottom: '14px',
+                    fontSize: window.innerWidth < 768 ? '12px' : '14px',
+                    color: 'rgba(255, 255, 255, 0.75)',
+                    lineHeight: '1.4',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
                 }}>
-                    ✋
-                </span>
-                Yellow words are fingerspelled when no direct Auslan sign exists.
-            </div>
+                    <span style={{
+                        fontSize: '20px',
+                        color: 'rgba(255, 193, 7, 0.8)'
+                    }}>
+                        ✋
+                    </span>
+                    Yellow words are fingerspelled when no direct Auslan sign exists.
+                </div>
+            )}
             
             <div style={{
                 display: 'flex',
