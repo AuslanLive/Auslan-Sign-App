@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 
-export default function HighlightedText({ text, dict, onWordClick }) {
+export default function HighlightedText({ text, dict, fullWordList, onWordClick }) {
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
   const [isWordOverlayOpen, setIsWordOverlayOpen] = useState(false);
@@ -70,22 +70,40 @@ export default function HighlightedText({ text, dict, onWordClick }) {
           const isWord = /\w/.test(tok);
           const key = tok.toLowerCase();
           const hit = isWord && normDict.has(key);
+          const isInFullWordList = isWord && fullWordList && fullWordList.includes(key);
           
-          return hit ? (
-            <button
-              key={i}
-              type="button"
-              className="hl-word"
-              onClick={() => {
-                const entry = normDict.get(key);
-                handleWordClick(tok, entry.value);
-              }}
-            >
-              {tok}
-            </button>
-          ) : (
-            <span key={i}>{tok}</span>
-          );
+          // Check if word is wrapped in parentheses
+          const isWrappedInParens = isWord && i > 0 && i < tokens.length - 1 && 
+                                   tokens[i-1].includes('(') && tokens[i+1].includes(')');
+          
+          if (hit) {
+            // Dictionary word - blue highlight with click functionality
+            return (
+              <button
+                key={i}
+                type="button"
+                className="hl-word"
+                onClick={() => {
+                  const entry = normDict.get(key);
+                  handleWordClick(tok, entry.value);
+                }}
+              >
+                {tok}
+              </button>
+            );
+          } else if (isWord && !isInFullWordList && !isWrappedInParens) {
+            // Word not in fullWordList and not wrapped in parentheses - yellow highlight, no click
+            return (
+              <span key={i} className="hl-unknown-word">
+                {tok}
+              </span>
+            );
+          } else {
+            // Regular text or punctuation
+            return (
+              <span key={i}>{tok}</span>
+            );
+          }
         })}
         
         {/* Word info overlay */}
@@ -275,6 +293,13 @@ export default function HighlightedText({ text, dict, onWordClick }) {
           .hl-word:focus {
             outline: 2px solid rgba(59,130,246,.35);
             outline-offset: 2px;
+          }
+          .hl-unknown-word {
+            color: #ffdd1cff;
+            padding: 0 1px;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: inherit;
           }
         `}</style>
       </span>

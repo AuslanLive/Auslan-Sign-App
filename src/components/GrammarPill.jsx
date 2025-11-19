@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import HighlightedText from './HighlightedText';
 import grammarDict from '../ambiguous_dict_lowercase.json';
+import fullWordList from '../fullWordList.json';
 
 // Grammar overlay content component
 const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysShowGrammar, copySuccess, onClose }) => {
@@ -110,6 +111,7 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                 <HighlightedText
                     text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
                     dict={grammarDict}
+                    fullWordList={fullWordList}
                     onWordClick={(word, value) => {
                         setSelectedWord(word);
                         setSelectedValue(value);
@@ -141,6 +143,28 @@ const GrammarOverlayContent = ({ grammarParsedText, onCopy, onToggleAlwaysShow, 
                     If a word appears in blue, it has multiple signs in Auslan — click it to view a list of them.
                 </div>
             )}
+
+            <div style={{
+                padding: '8px 12px',
+                backgroundColor: 'rgba(255, 193, 7, 0.25)',
+                border: '1px solid rgba(255, 193, 7, 0.5)',
+                borderRadius: '6px',
+                marginBottom: '14px',
+                fontSize: window.innerWidth < 768 ? '12px' : '14px',
+                color: 'rgba(255, 255, 255, 0.75)',
+                lineHeight: '1.4',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+            }}>
+                <span style={{
+                    fontSize: '20px',
+                    color: 'rgba(255, 193, 7, 0.8)'
+                }}>
+                    ✋
+                </span>
+                Yellow words are fingerspelled when no direct Auslan sign exists.
+            </div>
             
             <div style={{
                 display: 'flex',

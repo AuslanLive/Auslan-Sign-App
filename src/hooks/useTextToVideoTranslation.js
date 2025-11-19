@@ -69,7 +69,6 @@ export const useTextToVideoTranslation = (
 
       let parsedVideoName;
       if (Array.isArray(translatedText)) {
-        // Use underscore format to match the Python backend
         parsedVideoName = translatedText.join(' ');
       } else {
         parsedVideoName = translatedText;

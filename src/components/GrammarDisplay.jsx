@@ -1,6 +1,6 @@
-import React from 'react';
 import HighlightedText from './HighlightedText';
 import grammarDict from '../ambiguous_dict_lowercase.json';
+import fullWordList from '../fullWordList.json';
 
 const GrammarDisplay = ({ grammarParsedText, alwaysShowGrammar }) => {
   if (!alwaysShowGrammar || !grammarParsedText) return null;
@@ -28,6 +28,7 @@ const GrammarDisplay = ({ grammarParsedText, alwaysShowGrammar }) => {
       <HighlightedText
         text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
         dict={grammarDict}
+        fullWordList={fullWordList}
         onWordClick={(word, value) => {
           // Optional: Add any additional logic here
         }}
