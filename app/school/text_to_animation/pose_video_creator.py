@@ -127,13 +127,17 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
         # Upload phase
         upload_start_time = time.time()
         print("(pose_video_creator) Starting Firebase upload...")
-        url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence}.mp4")
+        
+        # Convert sentence list to string for filename
+        sentence_str = " ".join(sentence)
+        
+        url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence_str}.mp4")
         upload_end_time = time.time()
         
         video_end_time = time.time()
         print(f"(pose_video_creator) Video generation completed in {video_end_time - video_start_time:.2f} seconds")
         print(f"(pose_video_creator) Firebase upload completed in {upload_end_time - upload_start_time:.2f} seconds")
-        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {url}")
+        print(f"Video uploaded to Firebase and accessible at: {url}")
 
         total_time = time.time() - start_time
         # print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
@@ -285,7 +289,7 @@ def process_sentence(sentence):
     if firebase_url:
         overall_end_time = time.time()
         print(f"(pose_video_creator) Complete pipeline finished in {overall_end_time - overall_start_time:.2f} seconds")
-        return firebase_url
+        # return firebase_url
     else:
         print("Not enough .pose files to concatenate")
         return None
