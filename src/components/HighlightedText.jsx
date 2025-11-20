@@ -416,13 +416,18 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
             margin: 0;
             color: #3b82f6;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 10px;
             font-family: inherit;
             font-size: inherit;
+            box-shadow: none !important;
+            transform: none !important;
+            transition: background-color 0.2s ease, color 0.2s ease !important;
           }
           .hl-word:hover {
             background-color: rgba(59, 130, 246, 0.1);
             color: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3), 0 0 16px rgba(59, 130, 246, 0.15) !important;
+            transform: none !important;
           }
           .hl-word:focus {
             outline: 2px solid rgba(59,130,246,.35);
@@ -436,13 +441,18 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
             margin: 0;
             color: #ffdd1c;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 8px;
             font-family: inherit;
             font-size: inherit;
+            box-shadow: none !important;
+            transform: none !important;
+            transition: background-color 0.2s ease, color 0.2s ease !important;
           }
           .hl-unknown-word:hover {
             background-color: rgba(255, 221, 28, 0.1);
             color: #ffeb6b;
+            box-shadow: 0 0 8px rgba(255, 221, 28, 0.3), 0 0 16px rgba(255, 221, 28, 0.15) !important;
+            transform: none !important;
           }
           .hl-unknown-word:focus {
             outline: 2px solid rgba(255, 221, 28, 0.35);
