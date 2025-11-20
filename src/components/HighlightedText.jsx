@@ -88,7 +88,7 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
           const isWord = /\w/.test(tok) && !containsParens;
           const key = tok.toLowerCase();
           const hit = isWord && normDict.has(key);
-          const isInFullWordList = isWord && fullWordList && fullWordList.includes(key);
+          const isInFullWordList = isWord && fullWordList && fullWordList.map(word => word.toLowerCase()).includes(key);
           
           // Check if word is wrapped in parentheses OR immediately followed by closing parenthesis
           const isWrappedInParens = isWord && i > 0 && i < tokens.length - 1 && 
