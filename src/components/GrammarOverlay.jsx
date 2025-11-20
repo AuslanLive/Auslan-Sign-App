@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HighlightedText from './HighlightedText';
 
-const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysShowGrammar, copySuccess, onClose, grammarDict, fullWordList }) => {
+const GrammarOverlay = ({ grammarParsedText, onCopy, onClose, grammarDict, fullWordList, copySuccess }) => {
     const [selectedWord, setSelectedWord] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
 
@@ -320,31 +320,10 @@ const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysS
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-end',
                 gap: '12px',
                 marginTop: 'auto'
             }}>
-                {grammarParsedText && grammarParsedText.trim() && (
-                    <label style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        fontSize: window.innerWidth < 768 ? '12px' : '14px',
-                        color: '#ffffff',
-                        cursor: 'pointer'
-                    }}>
-                        <input
-                            type="checkbox"
-                            checked={alwaysShowGrammar}
-                            onChange={onToggleAlwaysShow}
-                            style={{
-                                margin: 0,
-                                cursor: 'pointer'
-                            }}
-                        />
-                        Always On?
-                    </label>
-                )}
                 {grammarParsedText && grammarParsedText.trim() && (
                     <button
                         onClick={onCopy}
