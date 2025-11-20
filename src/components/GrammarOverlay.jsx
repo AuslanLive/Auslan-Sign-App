@@ -120,6 +120,50 @@ const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysS
                 )}
             </p>
 
+            {/* Grammar examples section when no parsed text */}
+            {(!grammarParsedText || !grammarParsedText.trim()) && (
+                <>
+                    <h4 style={{
+                        margin: '0 0 8px 0',
+                        fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                        fontWeight: '600',
+                        color: 'rgba(255, 255, 255, 0.9)'
+                    }}>
+                        Example:
+                    </h4>
+                    <div style={{
+                        padding: '12px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                        borderRadius: '8px',
+                        marginBottom: '14px',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        fontSize: window.innerWidth < 768 ? '13px' : '15px',
+                        lineHeight: '1.5'
+                    }}>
+                        <div style={{
+                            color: 'rgba(255, 255, 255, 0.85)',
+                            marginBottom: '8px'
+                        }}>
+                            <strong>English:</strong> "I'm going to the shop"
+                        </div>
+                        <div style={{
+                            color: 'rgba(255, 255, 255, 0.85)',
+                            marginBottom: '8px'
+                        }}>
+                            <strong>Auslan:</strong> SHOP ME GO
+                        </div>
+                        <div style={{
+                            padding: '8px 0',
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            fontSize: window.innerWidth < 768 ? '12px' : '14px',
+                            fontStyle: 'italic'
+                        }}>
+                            The topic (SHOP) comes first, followed by who (ME), then the action (GO). Usually the verb is the last item.
+                        </div>
+                    </div>
+                </>
+            )}
+
             {grammarParsedText && grammarParsedText.trim() && (
                 <div style={{
                     padding: '10px',
