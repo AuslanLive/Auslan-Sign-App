@@ -10,7 +10,7 @@ const GrammarToggle = ({ parseGrammar, setParseGrammar }) => {
                 fontSize: '12px',
                 color: '#ffffff'
             }}>
-                <span style={{ opacity: 0.8 }}>Grammar?</span>
+                <span style={{ opacity: 0.8 }}>Grammar On?</span>
                 <div
                     onClick={() => setParseGrammar(!parseGrammar)}
                     style={{
