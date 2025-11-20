@@ -124,41 +124,120 @@ const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysS
             {(!grammarParsedText || !grammarParsedText.trim()) && (
                 <>
                     <h4 style={{
-                        margin: '0 0 8px 0',
-                        fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                        margin: '0 0 12px 0',
+                        fontSize: window.innerWidth < 768 ? '15px' : '17px',
                         fontWeight: '600',
-                        color: 'rgba(255, 255, 255, 0.9)'
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
                     }}>
+                        <span style={{
+                            fontSize: '18px'
+                        }}>📝</span>
                         Example:
                     </h4>
                     <div style={{
-                        padding: '12px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                        borderRadius: '8px',
+                        padding: '16px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                        borderRadius: '12px',
                         marginBottom: '14px',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        fontSize: window.innerWidth < 768 ? '13px' : '15px',
-                        lineHeight: '1.5'
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        fontSize: window.innerWidth < 768 ? '14px' : '15px',
+                        lineHeight: '1.6'
                     }}>
+                        {/* English sentence */}
                         <div style={{
-                            color: 'rgba(255, 255, 255, 0.85)',
-                            marginBottom: '8px'
+                            padding: '12px 14px',
+                            backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                            borderRadius: '8px',
+                            marginBottom: '12px'
                         }}>
-                            <strong>English:</strong> "I'm going to the shop"
+                            <div style={{
+                                fontSize: window.innerWidth < 768 ? '14px' : '15px',
+                                color: 'rgba(59, 130, 246, 0.9)',
+                                fontWeight: '600',
+                                marginBottom: '4px',
+                                letterSpacing: '0.5px'
+                            }}>
+                                English
+                            </div>
+                            <div style={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                                fontWeight: '500'
+                            }}>
+                                "I'm going to the shop."
+                            </div>
                         </div>
+
+                        {/* Arrow */}
                         <div style={{
-                            color: 'rgba(255, 255, 255, 0.85)',
-                            marginBottom: '8px'
+                            textAlign: 'center',
+                            margin: '8px 0',
+                            color: 'rgba(255, 255, 255, 0.6)'
                         }}>
-                            <strong>Auslan:</strong> SHOP ME GO
+                            <span style={{
+                                fontSize: '20px',
+                                display: 'inline-block',
+                                transform: 'rotate(90deg)'
+                            }}>
+                                ➤
+                            </span>
                         </div>
+
+                        {/* Auslan sentence */}
                         <div style={{
-                            padding: '8px 0',
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            fontSize: window.innerWidth < 768 ? '12px' : '14px',
-                            fontStyle: 'italic'
+                            padding: '12px 14px',
+                            backgroundColor: 'rgba(168, 85, 247, 0.15)',
+                            border: '1px solid rgba(168, 85, 247, 0.3)',
+                            borderRadius: '8px',
+                            marginBottom: '14px'
                         }}>
-                            The topic (SHOP) comes first, followed by who (ME), then the action (GO). Usually the verb is the last item.
+                            <div style={{
+                                fontSize: window.innerWidth < 768 ? '14px' : '15px',
+                                color: 'rgba(168, 85, 247, 0.9)',
+                                fontWeight: '600',
+                                marginBottom: '4px',
+                                letterSpacing: '0.5px'
+                            }}>
+                                Auslan
+                            </div>
+                            <div style={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                                fontWeight: '600',
+                                letterSpacing: '1px'
+                            }}>
+                                "SHOP ME GO."
+                            </div>
+                        </div>
+
+                        {/* Explanation */}
+                        <div style={{
+                            padding: '12px 14px',
+                            backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                            border: '1px solid rgba(255, 193, 7, 0.2)',
+                            borderRadius: '8px',
+                            borderLeft: '4px solid rgba(255, 193, 7, 0.6)'
+                        }}>
+                            <div style={{
+                                fontSize: window.innerWidth < 768 ? '14px' : '15px',
+                                color: 'rgba(255, 193, 7, 0.8)',
+                                fontWeight: '600',
+                                marginBottom: '6px',
+                                letterSpacing: '0.5px'
+                            }}>
+                                Structure Breakdown
+                            </div>
+                            <div style={{
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                fontSize: window.innerWidth < 768 ? '13px' : '15px',
+                                lineHeight: '1.5'
+                            }}>
+                                The <strong style={{color: 'rgba(255, 255, 255, 0.95)'}}>topic</strong> (SHOP) comes first, followed by <strong style={{color: 'rgba(255, 255, 255, 0.95)'}}>who</strong> (ME), then the <strong style={{color: 'rgba(255, 255, 255, 0.95)'}}>action</strong> (GO). Usually the verb is the last item.
+                            </div>
                         </div>
                     </div>
                 </>

@@ -23,7 +23,7 @@ const GrammarDisplay = ({ grammarParsedText, alwaysShowGrammar }) => {
         marginBottom: '4px',
         fontWeight: '500'
       }}>
-        Auslan Grammar:
+        Translated Sentence:
       </div>
       <HighlightedText
         text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}

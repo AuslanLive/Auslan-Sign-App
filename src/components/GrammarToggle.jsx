@@ -112,7 +112,7 @@ const GrammarToggle = ({ parseGrammar, setParseGrammar, grammarParsedText, isMob
                 }
             `}</style>
 
-            <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}>
+            <div style={{ position: 'absolute', top: '30px', right: '30px', zIndex: 10 }}>
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
