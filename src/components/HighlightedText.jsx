@@ -331,9 +331,9 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: window.innerWidth < 768 ? 'min(85vw, 400px)' : 'min(450px, 90vw)',
-                maxWidth: '400px',
-                minWidth: '250px',
+                width: window.innerWidth < 768 ? 'min(85vw, 350px)' : 'min(400px, 90vw)',
+                maxWidth: '250px',
+                minWidth: '150px',
                 padding: '20px',
                 fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
                 color: '#ffffff',
@@ -394,10 +394,17 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
               {/* Content */}
               <div style={{
                 fontSize: window.innerWidth < 768 ? '14px' : '16px',
-                lineHeight: '1.6',
-                color: 'rgba(255, 255, 255, 0.9)'
+                lineHeight: '1.5'
               }}>
-                We've fingerspelled this word as a substitute since no direct Auslan sign exists.
+                <div style={{ 
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px'
+                }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    We've fingerspelled this word as a substitute since no direct Auslan sign exists.
+                  </span>
+                </div>
               </div>
             </div>
           </>
