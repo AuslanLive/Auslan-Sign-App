@@ -94,6 +94,7 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
           const isWrappedInParens = isWord && i > 0 && i < tokens.length - 1 && 
                                    tokens[i-1].includes('(') && tokens[i+1].includes(')');
           const isFollowedByCloseParen = isWord && i < tokens.length - 1 && tokens[i+1] === ')';
+          const isPrecededByOpenParen = isWord && i > 0 && (tokens[i-1] === '(' || tokens[i-1].endsWith('('));
           
           if (hit) {
             // Dictionary word - blue highlight with click functionality
@@ -110,8 +111,8 @@ export default function HighlightedText({ text, dict, fullWordList, onWordClick 
                 {tok}
               </button>
             );
-          } else if (isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen) {
-            // Word not in fullWordList and not wrapped in parentheses and not followed by closing paren - yellow highlight with click
+          } else if (isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen && !isPrecededByOpenParen) {
+            // Word not in fullWordList and not wrapped in parentheses and not followed by closing paren and not preceded by opening paren - yellow highlight with click
             return (
               <button
                 key={i}
