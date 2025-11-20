@@ -112,32 +112,39 @@ const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysS
                 Commonly uses the structure of: Time → Topic → Comment. <br />
                 <br />
                 Sentences often begin with when, then what/who, followed by what happens next.<br />
-                <br />
-                For your sentence, the likely grammatical structure is shown below:
+                {grammarParsedText && grammarParsedText.trim() && (
+                    <>
+                        <br />
+                        For your sentence, the likely grammatical structure is shown below:
+                    </>
+                )}
             </p>
-            <div style={{
-                padding: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: '8px',
-                marginBottom: '14px',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: '#ffffff',
-                fontSize: window.innerWidth < 768 ? '14px' : '16px',
-                fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
-                wordBreak: 'break-word'
-            }}>
-                "
-                <HighlightedText
-                    text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
-                    dict={grammarDict}
-                    fullWordList={fullWordList}
-                    onWordClick={(word, value) => {
-                        setSelectedWord(word);
-                        setSelectedValue(value);
-                    }}
-                />
-                ."
-            </div>
+
+            {grammarParsedText && grammarParsedText.trim() && (
+                <div style={{
+                    padding: '10px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px',
+                    marginBottom: '14px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#ffffff',
+                    fontSize: window.innerWidth < 768 ? '14px' : '16px',
+                    fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+                    wordBreak: 'break-word'
+                }}>
+                    "
+                    <HighlightedText
+                        text={grammarParsedText.charAt(0).toUpperCase() + grammarParsedText.slice(1)}
+                        dict={grammarDict}
+                        fullWordList={fullWordList}
+                        onWordClick={(word, value) => {
+                            setSelectedWord(word);
+                            setSelectedValue(value);
+                        }}
+                    />
+                    ."
+                </div>
+            )}
 
             {hasHighlightedWords && (
                 <div style={{
@@ -194,49 +201,53 @@ const GrammarOverlay = ({ grammarParsedText, onCopy, onToggleAlwaysShow, alwaysS
                 gap: '12px',
                 marginTop: 'auto'
             }}>
-                <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: window.innerWidth < 768 ? '12px' : '14px',
-                    color: '#ffffff',
-                    cursor: 'pointer'
-                }}>
-                    <input
-                        type="checkbox"
-                        checked={alwaysShowGrammar}
-                        onChange={onToggleAlwaysShow}
-                        style={{
-                            margin: 0,
-                            cursor: 'pointer'
-                        }}
-                    />
-                    Always On?
-                </label>
-                <button
-                    onClick={onCopy}
-                    style={{
-                        padding: '6px 12px',
-                        fontSize: window.innerWidth < 768 ? '11px' : '13px',
-                        backgroundColor: 'rgba(147, 51, 234, 0.2)',
-                        border: '1px solid rgba(147, 51, 234, 0.4)',
-                        borderRadius: '6px',
+                {grammarParsedText && grammarParsedText.trim() && (
+                    <label style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: window.innerWidth < 768 ? '12px' : '14px',
                         color: '#ffffff',
-                        cursor: 'pointer',
-                        fontWeight: '500',
-                        boxShadow: '0 0 8px rgba(147, 51, 234, 0.3)'
-                    }}
-                    onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.3)';
-                        e.target.style.boxShadow = '0 0 15px rgba(147, 51, 234, 0.5), 0 0 25px rgba(147, 51, 234, 0.3)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.2)';
-                        e.target.style.boxShadow = '0 0 8px rgba(147, 51, 234, 0.3)';
-                    }}
-                >
-                    {copySuccess ? 'Copied!' : 'Copy'}
-                </button>
+                        cursor: 'pointer'
+                    }}>
+                        <input
+                            type="checkbox"
+                            checked={alwaysShowGrammar}
+                            onChange={onToggleAlwaysShow}
+                            style={{
+                                margin: 0,
+                                cursor: 'pointer'
+                            }}
+                        />
+                        Always On?
+                    </label>
+                )}
+                {grammarParsedText && grammarParsedText.trim() && (
+                    <button
+                        onClick={onCopy}
+                        style={{
+                            padding: '6px 12px',
+                            fontSize: window.innerWidth < 768 ? '11px' : '13px',
+                            backgroundColor: 'rgba(147, 51, 234, 0.2)',
+                            border: '1px solid rgba(147, 51, 234, 0.4)',
+                            borderRadius: '6px',
+                            color: '#ffffff',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            boxShadow: '0 0 8px rgba(147, 51, 234, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.3)';
+                            e.target.style.boxShadow = '0 0 15px rgba(147, 51, 234, 0.5), 0 0 25px rgba(147, 51, 234, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = 'rgba(147, 51, 234, 0.2)';
+                            e.target.style.boxShadow = '0 0 8px rgba(147, 51, 234, 0.3)';
+                        }}
+                    >
+                        {copySuccess ? 'Copied!' : 'Copy'}
+                    </button>
+                )}
             </div>
         </div>
     );
