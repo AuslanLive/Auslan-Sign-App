@@ -3,6 +3,7 @@ import VideoInput from "../components/VideoInput";
 import ToasterWithMax from "../components/ToasterWithMax";
 import GrammarPill from "../components/GrammarPill";
 import GrammarDisplay from "../components/GrammarDisplay";
+import GrammarToggle from "../components/GrammarToggle";
 import SwapControls from "../components/SwapControls";
 import { storage } from "../firebase";
 import { toast } from 'react-hot-toast';
@@ -184,44 +185,26 @@ const TranslateApp = () => {
                 ) : (
                     <>
                         <div style={{...styles.panel, ...(isMobile ? styles.panelMobile : {})}} className={`panel ${animationState.isAnimating ? 'panel-swap-animation' : ''}`}>
-                            <h2 style={styles.panelTitle}>Text</h2>
+                            <div style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                marginBottom: '12px' 
+                            }}>
+                                <h2 style={styles.panelTitle}>Text</h2>
+                            </div>
+                            
+                            <GrammarToggle 
+                                parseGrammar={parseGrammar}
+                                setParseGrammar={setParseGrammar}
+                            />
+                            
                             <textarea
                                 placeholder='Enter text to convert to sign language...'
                                 value={sourceText}
                                 onChange={(e) => setSourceText(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                style={{...styles.textarea, marginBottom: '12px'}}
+                                style={styles.textarea}
                             />
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                fontSize: '14px',
-                                color: '#ffffff'
-                            }}>
-                                <input
-                                    type="radio"
-                                    id="parseGrammarTrue"
-                                    name="parseGrammar"
-                                    checked={parseGrammar}
-                                    onChange={() => setParseGrammar(true)}
-                                    style={{ marginRight: '4px' }}
-                                />
-                                <label htmlFor="parseGrammarTrue" style={{ marginRight: '16px', cursor: 'pointer' }}>
-                                    Parse Grammar
-                                </label>
-                                <input
-                                    type="radio"
-                                    id="parseGrammarFalse"
-                                    name="parseGrammar"
-                                    checked={!parseGrammar}
-                                    onChange={() => setParseGrammar(false)}
-                                    style={{ marginRight: '4px' }}
-                                />
-                                <label htmlFor="parseGrammarFalse" style={{ cursor: 'pointer' }}>
-                                    Raw Text
-                                </label>
-                            </div>
                         </div>
 
                         <SwapControls
