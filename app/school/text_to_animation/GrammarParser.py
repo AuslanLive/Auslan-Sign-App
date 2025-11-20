@@ -33,7 +33,7 @@ class GrammarParser:
             str: Sentence with words converted to their lemma forms
             
         Example:
-            "I am running to the stores" → "I be run to the store"
+            "I am running to the stores" → "Me be run to the store"
         """
         try:
             # Load English language model for natural language processing
@@ -75,6 +75,9 @@ class GrammarParser:
             print("(GrammarParser.py): STAGE 1 - Starting lemmatization...")
             lemmatized_sentence = self.lemmatize(t2s_input)
             print(f"(GrammarParser.py): Original: '{t2s_input}' → Lemmatized: '{lemmatized_sentence}'")
+            
+            # replace 'I' with 'me' after lemmatization
+            lemmatized_sentence = lemmatized_sentence.replace(" I ", " me ")
 
             # 2. Use WSD to disambiguate words if necessary
             print("(GrammarParser.py): STAGE 2 - Starting word sense disambiguation...")
@@ -105,6 +108,7 @@ class GrammarParser:
                 - For wh-questions, put the wh-word (who, what, where, when, why) at the end.
                 - Keep names, places, and numbers as normal English words.
                 - If translation is unclear, return the input unchanged.
+                - Where people refer to themselves as "I" or "me", convert to "me".
                 
                 - The word “has” changes meaning depending on context:
                 • If it shows **possession**, keep HAVE or use a possessive (“my/your/his/her”).

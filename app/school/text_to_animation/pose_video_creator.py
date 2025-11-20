@@ -1,4 +1,5 @@
 import os
+import uuid
 import tempfile
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -127,13 +128,17 @@ def concatenate_poses_and_upload(blob_names:list, sentence:list):
         # Upload phase
         upload_start_time = time.time()
         print("(pose_video_creator) Starting Firebase upload...")
-        url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence}.mp4")
+        
+        # Convert sentence list to string for filename
+        sentence_str = " ".join(sentence)
+        
+        url = mp4_to_firebase(frames_from_pose(visualizer, frame_ranges), width, height, fps,  f"output_videos/{sentence_str}.mp4")
         upload_end_time = time.time()
         
         video_end_time = time.time()
         print(f"(pose_video_creator) Video generation completed in {video_end_time - video_start_time:.2f} seconds")
         print(f"(pose_video_creator) Firebase upload completed in {upload_end_time - upload_start_time:.2f} seconds")
-        print(f"Video uploaded to Firebase at 'output_videos/{sentence}.mp4' and accessible at: {url}")
+        print(f"Video uploaded to Firebase and accessible at: {url}")
 
         total_time = time.time() - start_time
         # print(f"(pose_video_creator) Total processing time: {total_time:.2f} seconds")
@@ -205,20 +210,37 @@ def mp4_to_firebase(frame_iter, width, height, fps, gcs_path,
             stderr_data = proc.stderr.read().decode("utf-8", errors="ignore")
             raise RuntimeError(f"ffmpeg failed (code {ret}). stderr:\n{stderr_data}")
 
-        # Upload seekable MP4
+        # Upload to Firebase with proper metadata
         bucket = storage.bucket()
         blob = bucket.blob(gcs_path)
-        blob.cache_control = "public, max-age=31536000"
-        blob.upload_from_filename(tmp_path, content_type="video/mp4")
+        
+        # Extract just the filename without the path for the download name
+        filename_only = os.path.basename(gcs_path)
+        
+        # Set metadata to control download filename
+        blob.metadata = {
+            'firebaseStorageDownloadTokens': str(uuid.uuid4())
+        }
+        blob.content_type = 'video/mp4'
+        blob.content_disposition = f'attachment; filename="{filename_only}"'
+        blob.cache_control = 'public, max-age=31536000'
+        
+        # Upload the file
+        blob.upload_from_filename(tmp_path)
+        
+        # Make the blob publicly accessible
         blob.make_public()
+        
+        print(f"(pose_video_creator) Video uploaded successfully to {gcs_path}")
         return blob.public_url
-
+        
+    except Exception as e:
+        print(f"(pose_video_creator) Error uploading to Firebase: {e}")
+        raise e
     finally:
-        try:
-            if os.path.exists(tmp_path):
-                os.remove(tmp_path)
-        except Exception:
-            pass
+        # Clean up temp file
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
 # Check if a word has a corresponding pose file in Firebase
 def get_valid_blobs_from_sentence(sentence):
@@ -285,7 +307,7 @@ def process_sentence(sentence):
     if firebase_url:
         overall_end_time = time.time()
         print(f"(pose_video_creator) Complete pipeline finished in {overall_end_time - overall_start_time:.2f} seconds")
-        return firebase_url
+        # return firebase_url
     else:
         print("Not enough .pose files to concatenate")
         return None

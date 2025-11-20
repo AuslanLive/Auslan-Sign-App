@@ -1,10 +1,166 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 
-export default function HighlightedText({ text, dict, onWordClick }) {
+// Shared overlay component
+const WordOverlay = ({ 
+  isOpen, 
+  onClose, 
+  overlayRef, 
+  title, 
+  subtitle, 
+  content, 
+  themeColors,
+  ariaLabelledBy 
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        style={{
+          position: 'fixed',
+          top: '0px',
+          left: '0px',
+          right: '0px',
+          bottom: '0px',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1002,
+          backdropFilter: window.innerWidth < 768 ? 'none' : 'blur(4px)',
+          pointerEvents: 'all'
+        }}
+        onClick={onClose}
+      />
+
+      {/* Overlay content */}
+      <div
+        ref={overlayRef}
+        role="dialog"
+        aria-labelledby={ariaLabelledBy}
+        style={{
+          position: 'fixed',
+          zIndex: 1003,
+          backgroundColor: themeColors.background,
+          backdropFilter: window.innerWidth < 768 ? 'none' : 'blur(20px)',
+          border: `1px solid ${themeColors.border}`,
+          borderRadius: '16px',
+          boxShadow: `0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px ${themeColors.innerBorder} inset`,
+          overflow: 'hidden',
+          pointerEvents: 'all',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: window.innerWidth < 768 ? 'min(85vw, 350px)' : 'min(400px, 90vw)',
+          maxWidth: '250px',
+          minWidth: '150px',
+          padding: '20px',
+          fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+          color: '#ffffff',
+          opacity: isOpen ? 1 : 0,
+          transition: 'opacity 200ms ease-out, transform 200ms ease-out'
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          marginBottom: '16px'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '8px'
+          }}>
+            <h3 id={ariaLabelledBy} style={{
+              margin: 0,
+              fontSize: window.innerWidth < 768 ? '18px' : '20px',
+              fontWeight: '600',
+              color: themeColors.title,
+              textTransform: 'capitalize'
+            }}>
+              {title}
+            </h3>
+            <button
+              onClick={onClose}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '20px',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '28px',
+                height: '28px',
+                transition: 'all 150ms ease-out',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#ffffff';
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.boxShadow = '0 0 8px rgba(220, 220, 220, 0.5), 0 0 15px rgba(240, 240, 240, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = 'rgba(255, 255, 255, 0.6)';
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.boxShadow = 'none';
+              }}
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
+          {subtitle && (
+            <h2 style={{
+              margin: 0,
+              fontSize: window.innerWidth < 768 ? '14px' : '16px',
+              fontWeight: '400',
+              color: 'rgba(253, 253, 253, 0.8)',
+              textTransform: 'none'
+            }}> 
+              {subtitle}
+            </h2>
+          )}
+        </div>
+
+        {/* Content */}
+        <div style={{
+          fontSize: window.innerWidth < 768 ? '14px' : '16px',
+          lineHeight: '1.5'
+        }}>
+          {content}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default function HighlightedText({ text, dict, fullWordList, onWordClick }) {
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
   const [isWordOverlayOpen, setIsWordOverlayOpen] = useState(false);
+  const [selectedUnknownWord, setSelectedUnknownWord] = useState(null);
+  const [isUnknownWordOverlayOpen, setIsUnknownWordOverlayOpen] = useState(false);
   const wordOverlayRef = useRef(null);
+  const unknownWordOverlayRef = useRef(null);
+
+  // Theme configurations
+  const blueTheme = {
+    background: 'rgba(30, 20, 60, 0.95)',
+    border: 'rgba(255, 255, 255, 0.2)',
+    innerBorder: 'rgba(255, 255, 255, 0.1)',
+    title: '#60a5fa'
+  };
+
+  const yellowTheme = {
+    background: 'rgba(60, 40, 20, 0.95)',
+    border: 'rgba(255, 221, 28, 0.3)',
+    innerBorder: 'rgba(255, 221, 28, 0.1)',
+    title: '#ffdd1c'
+  };
 
   const normDict = useMemo(() => {
     const m = new Map();
@@ -36,11 +192,18 @@ export default function HighlightedText({ text, dict, onWordClick }) {
     onWordClick?.(word, value);
   };
 
+  // Handle unknown word click
+  const handleUnknownWordClick = (word) => {
+    setSelectedUnknownWord(word);
+    setIsUnknownWordOverlayOpen(true);
+  };
+
   // Handle ESC key and click outside
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isWordOverlayOpen) {
-        setIsWordOverlayOpen(false);
+      if (e.key === 'Escape') {
+        if (isWordOverlayOpen) setIsWordOverlayOpen(false);
+        if (isUnknownWordOverlayOpen) setIsUnknownWordOverlayOpen(false);
       }
     };
 
@@ -50,9 +213,14 @@ export default function HighlightedText({ text, dict, onWordClick }) {
           !wordOverlayRef.current.contains(e.target)) {
         setIsWordOverlayOpen(false);
       }
+      if (isUnknownWordOverlayOpen && 
+          unknownWordOverlayRef.current && 
+          !unknownWordOverlayRef.current.contains(e.target)) {
+        setIsUnknownWordOverlayOpen(false);
+      }
     };
 
-    if (isWordOverlayOpen) {
+    if (isWordOverlayOpen || isUnknownWordOverlayOpen) {
       document.addEventListener('keydown', handleKeyDown);
       document.addEventListener('mousedown', handleClickOutside);
     }
@@ -61,195 +229,137 @@ export default function HighlightedText({ text, dict, onWordClick }) {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isWordOverlayOpen]);
+  }, [isWordOverlayOpen, isUnknownWordOverlayOpen]);
+
+  // Render blue overlay content
+  const renderBlueOverlayContent = () => {
+    if (typeof selectedValue === 'object' && selectedValue !== null) {
+      return Object.entries(selectedValue).map(([k, v]) => (
+        <div key={k} style={{ 
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '8px'
+        }}>
+          <span style={{ 
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '14px',
+            lineHeight: '1.5',
+            marginTop: '1px'
+          }}>
+            •
+          </span>
+          <span style={{ color: 'rgba(255, 255, 255, 1.0)' }}>
+            {String(v)}
+          </span>
+        </div>
+      ));
+    }
+    
+    return (
+      <div style={{ 
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '8px'
+      }}>
+        <span style={{ 
+          color: 'rgba(255, 255, 255, 0.6)',
+          fontSize: '14px',
+          lineHeight: '1.5',
+          marginTop: '1px'
+        }}>
+          •
+        </span>
+        <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          {String(selectedValue)}
+        </span>
+      </div>
+    );
+  };
+
+  // Render yellow overlay content
+  const renderYellowOverlayContent = () => (
+    <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+      We've fingerspelled this word as a substitute since no direct Auslan sign exists.
+    </span>
+  );
 
   return (
     <>
       <span className="hl-wrap" style={{ position: 'relative' }}>
         {tokens.map((tok, i) => {
-          const isWord = /\w/.test(tok);
+          // Check for parentheses first
+          const containsParens = tok.includes('(') || tok.includes(')');
+          // Only treat as word if it contains word characters AND doesn't contain parentheses
+          const isWord = /\w/.test(tok) && !containsParens;
           const key = tok.toLowerCase();
           const hit = isWord && normDict.has(key);
+          const isInFullWordList = isWord && fullWordList && fullWordList.map(word => word.toLowerCase()).includes(key);
           
-          return hit ? (
-            <button
-              key={i}
-              type="button"
-              className="hl-word"
-              onClick={() => {
-                const entry = normDict.get(key);
-                handleWordClick(tok, entry.value);
-              }}
-            >
-              {tok}
-            </button>
-          ) : (
-            <span key={i}>{tok}</span>
-          );
+          // Check if word is wrapped in parentheses OR immediately followed by closing parenthesis
+          const isWrappedInParens = isWord && i > 0 && i < tokens.length - 1 && 
+                                   tokens[i-1].includes('(') && tokens[i+1].includes(')');
+          const isFollowedByCloseParen = isWord && i < tokens.length - 1 && tokens[i+1] === ')';
+          const isPrecededByOpenParen = isWord && i > 0 && (tokens[i-1] === '(' || tokens[i-1].endsWith('('));
+          
+          if (hit) {
+            // Dictionary word - blue highlight with click functionality
+            return (
+              <button
+                key={i}
+                type="button"
+                className="hl-word"
+                onClick={() => {
+                  const entry = normDict.get(key);
+                  handleWordClick(tok, entry.value);
+                }}
+              >
+                {tok}
+              </button>
+            );
+          } else if (isWord && !isInFullWordList && !isWrappedInParens && !isFollowedByCloseParen && !isPrecededByOpenParen) {
+            // Word not in fullWordList and not wrapped in parentheses and not followed by closing paren and not preceded by opening paren - yellow highlight with click
+            return (
+              <button
+                key={i}
+                type="button"
+                className="hl-unknown-word"
+                onClick={() => handleUnknownWordClick(tok)}
+              >
+                {tok}
+              </button>
+            );
+          } else {
+            // Regular text or punctuation
+            return (
+              <span key={i}>{tok}</span>
+            );
+          }
         })}
         
-        {/* Word info overlay */}
-        {isWordOverlayOpen && selectedWord && (
-          <>
-            {/* Backdrop - still fixed to cover entire screen */}
-            <div
-              style={{
-                position: 'fixed',
-                top: '0px',
-                left: '0px',
-                right: '0px',
-                bottom: '0px',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 1002,
-                backdropFilter: window.innerWidth < 768 ? 'none' : 'blur(4px)',
-                pointerEvents: 'all'
-              }}
-              onClick={() => setIsWordOverlayOpen(false)}
-            />
+        {/* Blue word overlay */}
+        <WordOverlay
+          isOpen={isWordOverlayOpen && selectedWord}
+          onClose={() => setIsWordOverlayOpen(false)}
+          overlayRef={wordOverlayRef}
+          title={selectedWord}
+          subtitle="other variants of this sign:"
+          content={renderBlueOverlayContent()}
+          themeColors={blueTheme}
+          ariaLabelledBy="word-info-title"
+        />
 
-            {/* Overlay content - positioned relative to nearest positioned ancestor */}
-            <div
-              ref={wordOverlayRef}
-              role="dialog"
-              aria-labelledby="word-info-title"
-              style={{
-                position: 'fixed',
-                zIndex: 1003,
-                backgroundColor: 'rgba(30, 20, 60, 0.95)',
-                backdropFilter: window.innerWidth < 768 ? 'none' : 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '16px',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                overflow: 'hidden',
-                pointerEvents: 'all',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: window.innerWidth < 768 ? 'min(85vw, 350px)' : 'min(400px, 90vw)',
-                maxWidth: '250px',
-                minWidth: '150px',
-                padding: '20px',
-                fontFamily: "'Inter', 'SF Pro Display', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
-                color: '#ffffff',
-                // Add animations for smooth appearance
-                opacity: isWordOverlayOpen ? 1 : 0,
-                transition: 'opacity 200ms ease-out, transform 200ms ease-out'
-              }}
-            >
-              {/* Header */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginBottom: '16px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  marginBottom: '8px'
-                }}>
-                  <h3 id="word-info-title" style={{
-                    margin: 0,
-                    fontSize: window.innerWidth < 768 ? '18px' : '20px',
-                    fontWeight: '600',
-                    color: '#60a5fa',
-                    textTransform: 'capitalize'
-                  }}>
-                      {selectedWord}
-                  </h3>
-                  <button
-                    onClick={() => setIsWordOverlayOpen(false)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'rgba(255, 255, 255, 0.6)',
-                      fontSize: '20px',
-                      cursor: 'pointer',
-                      padding: '4px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '28px',
-                      height: '28px',
-                      transition: 'all 150ms ease-out',
-                      outline: 'none'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = '#ffffff';
-                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                      e.target.style.boxShadow = '0 0 8px rgba(220, 220, 220, 0.5), 0 0 15px rgba(240, 240, 240, 0.3)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = 'rgba(255, 255, 255, 0.6)';
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                    aria-label="Close"
-                  >
-                    ×
-                  </button>
-                </div>
-                <h2 id="word-info-subtitle" style={{
-                  margin: 0,
-                  fontSize: window.innerWidth < 768 ? '14px' : '16px',
-                  fontWeight: '400',
-                  color: 'rgba(253, 253, 253, 0.8)',
-                  textTransform: 'none'
-                }}> 
-                    other variants of this sign:
-                </h2>
-              </div>
-
-              {/* Content */}
-              <div style={{
-                fontSize: window.innerWidth < 768 ? '14px' : '16px',
-                lineHeight: '1.5'
-              }}>
-                {typeof selectedValue === 'object' && selectedValue !== null
-                  ? Object.entries(selectedValue).map(([k, v]) => (
-                      <div key={k} style={{ 
-                        marginBottom: '12px',
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '8px'
-                      }}>
-                        <span style={{ 
-                          color: 'rgba(255, 255, 255, 0.6)',
-                          fontSize: '14px',
-                          lineHeight: '1.5',
-                          marginTop: '1px'
-                        }}>
-                          •
-                        </span>
-                        <span style={{ color: 'rgba(255, 255, 255, 1.0)' }}>
-                        {/* print value of dict keys here */}
-                          {String(v)}
-                        </span>
-                      </div>
-                    ))
-                  : <div style={{ 
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '8px'
-                    }}>
-                      <span style={{ 
-                        color: 'rgba(255, 255, 255, 0.6)',
-                        fontSize: '14px',
-                        lineHeight: '1.5',
-                        marginTop: '1px'
-                      }}>
-                        •
-                      </span>
-                      <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                        {String(selectedValue)}
-                      </span>
-                    </div>
-                }
-              </div>
-            </div>
-          </>
-        )}
+        {/* Yellow word overlay */}
+        <WordOverlay
+          isOpen={isUnknownWordOverlayOpen && selectedUnknownWord}
+          onClose={() => setIsUnknownWordOverlayOpen(false)}
+          overlayRef={unknownWordOverlayRef}
+          title={selectedUnknownWord}
+          subtitle={null}
+          content={renderYellowOverlayContent()}
+          themeColors={yellowTheme}
+          ariaLabelledBy="unknown-word-info-title"
+        />
 
         <style>{`
           .hl-wrap {
@@ -264,16 +374,46 @@ export default function HighlightedText({ text, dict, onWordClick }) {
             margin: 0;
             color: #3b82f6;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 10px;
             font-family: inherit;
             font-size: inherit;
+            box-shadow: none !important;
+            transform: none !important;
+            transition: background-color 0.2s ease, color 0.2s ease !important;
           }
           .hl-word:hover {
             background-color: rgba(59, 130, 246, 0.1);
             color: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3), 0 0 16px rgba(59, 130, 246, 0.15) !important;
+            transform: none !important;
           }
           .hl-word:focus {
             outline: 2px solid rgba(59,130,246,.35);
+            outline-offset: 2px;
+          }
+          .hl-unknown-word {
+            appearance: none;
+            background: none;
+            border: 0;
+            padding: 0 1px;
+            margin: 0;
+            color: #ffdd1c;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: inherit;
+            box-shadow: none !important;
+            transform: none !important;
+            transition: background-color 0.2s ease, color 0.2s ease !important;
+          }
+          .hl-unknown-word:hover {
+            background-color: rgba(255, 221, 28, 0.1);
+            color: #ffeb6b;
+            box-shadow: 0 0 8px rgba(255, 221, 28, 0.3), 0 0 16px rgba(255, 221, 28, 0.15) !important;
+            transform: none !important;
+          }
+          .hl-unknown-word:focus {
+            outline: 2px solid rgba(255, 221, 28, 0.35);
             outline-offset: 2px;
           }
         `}</style>

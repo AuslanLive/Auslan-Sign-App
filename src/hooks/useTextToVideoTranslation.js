@@ -69,8 +69,7 @@ export const useTextToVideoTranslation = (
 
       let parsedVideoName;
       if (Array.isArray(translatedText)) {
-        const formattedItems = translatedText.map(item => `'${item}'`);
-        parsedVideoName = `[${formattedItems.join(', ')}]`;
+        parsedVideoName = translatedText.join(' ');
       } else {
         parsedVideoName = translatedText;
       }
