@@ -25,7 +25,7 @@ export const useTextToVideoTranslation = (
     }
   }, []);
 
-  const translateText = useCallback(async (sourceText) => {
+  const translateText = useCallback(async (sourceText, parseGrammar = true) => {
     const cleanedText = cleanInputText(sourceText);
 
     console.log("Sending Source Text:", cleanedText);
@@ -42,7 +42,10 @@ export const useTextToVideoTranslation = (
       const response = await fetch(API_BASE_URL + "/t2s", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ t2s_input: cleanedText }),
+        body: JSON.stringify({ 
+          t2s_input: cleanedText,
+          parse_grammar: parseGrammar
+        }),
       });
 
       if (!response.ok)

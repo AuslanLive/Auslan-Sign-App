@@ -66,9 +66,13 @@ class Connectinator:
                 f"\nTime: {str(time())}, Phrase: {self.front_end_translation_variable}")
 
     # Return auslan grammar sentence
-    def format_sign_text(self, input):
-
-        processed_t2s_phrase = self.grammar_parser.parse_text_to_auslan_grammar(input)
+    def format_sign_text(self, input, parse_grammar):
+        
+        if parse_grammar:
+            processed_t2s_phrase = self.grammar_parser.parse_text_to_auslan_grammar(input)
+        else:
+            # turn input into list of words
+            processed_t2s_phrase = input.split()
 
         # Create video from the processed sentence
         process_sentence(processed_t2s_phrase)

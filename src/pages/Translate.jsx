@@ -30,6 +30,7 @@ const TranslateApp = () => {
     const [alwaysShowGrammar, setAlwaysShowGrammar] = useState(() => 
         localStorage.getItem("auslan:alwaysShowGrammar") === "true"
     );
+    const [parseGrammar, setParseGrammar] = useState(true);
 
     // Custom hooks
     useVideoToTextPolling(mode, isPolling, setTranslatedText, setLoading);
@@ -108,7 +109,7 @@ const TranslateApp = () => {
             toast.error("Please wait until current translation is complete!");
             return;
         }
-        translateText(sourceText);
+        translateText(sourceText, parseGrammar);
     };
 
     // React code for UI rendering
@@ -189,8 +190,38 @@ const TranslateApp = () => {
                                 value={sourceText}
                                 onChange={(e) => setSourceText(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                style={styles.textarea}
+                                style={{...styles.textarea, marginBottom: '12px'}}
                             />
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: '14px',
+                                color: '#ffffff'
+                            }}>
+                                <input
+                                    type="radio"
+                                    id="parseGrammarTrue"
+                                    name="parseGrammar"
+                                    checked={parseGrammar}
+                                    onChange={() => setParseGrammar(true)}
+                                    style={{ marginRight: '4px' }}
+                                />
+                                <label htmlFor="parseGrammarTrue" style={{ marginRight: '16px', cursor: 'pointer' }}>
+                                    Parse Grammar
+                                </label>
+                                <input
+                                    type="radio"
+                                    id="parseGrammarFalse"
+                                    name="parseGrammar"
+                                    checked={!parseGrammar}
+                                    onChange={() => setParseGrammar(false)}
+                                    style={{ marginRight: '4px' }}
+                                />
+                                <label htmlFor="parseGrammarFalse" style={{ cursor: 'pointer' }}>
+                                    Raw Text
+                                </label>
+                            </div>
                         </div>
 
                         <SwapControls
